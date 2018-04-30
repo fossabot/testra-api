@@ -1,0 +1,5 @@
+rootProject.name = 'testra-api'
+include 'domain-core'
+include 'api-rest'
+include 'persistance-db-mongo'
+include 'app-core'
