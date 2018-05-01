@@ -1,1 +1,1 @@
-web: java -jar api-rest/build/libs/api-rest-1.0-SNAPSHOT.jar
+web: java -Dserver.port=$PORT -jar api-rest/build/libs/api-rest-1.0-SNAPSHOT.jar
