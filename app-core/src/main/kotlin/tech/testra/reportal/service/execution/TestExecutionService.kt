@@ -31,8 +31,10 @@ class TestExecutionService(
                     .orElseGetException(TestExecutionNotFoundException(executionId))
             }
 
-    override fun createExecution(projectId: String,
-        testExecutionModelMono: Mono<TestExecutionModel>): Mono<TestExecution> {
+    override fun createExecution(
+        projectId: String,
+        testExecutionModelMono: Mono<TestExecutionModel>
+    ): Mono<TestExecution> {
         return _projectService.getProjectById(projectId)
             .flatMapWithResumeOnError {
                 testExecutionModelMono.flatMap {
@@ -45,9 +47,11 @@ class TestExecutionService(
             }
     }
 
-    override fun updateExecution(projectId: String,
+    override fun updateExecution(
+        projectId: String,
         executionId: String,
-        testExecutionModelMono: Mono<TestExecutionModel>): Mono<TestExecution> {
+        testExecutionModelMono: Mono<TestExecutionModel>
+    ): Mono<TestExecution> {
         return _projectService.getProjectById(projectId)
             .flatMapWithResumeOnError {
                 testExecutionModelMono.flatMap {
