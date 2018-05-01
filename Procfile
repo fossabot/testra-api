@@ -1,0 +1,1 @@
+web: java -jar api-rest/build/libs/api-rest-1.0-SNAPSHOT.jar

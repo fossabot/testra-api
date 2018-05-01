@@ -1,15 +1,23 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
 
 cache:
- directories:
- - $HOME/.gradle/caches/
- - $HOME/.gradle/wrapper/
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 
 script:
-  - ./gradlew check
-#  - ./gradlew integrationTest
-  - ./gradlew jacocoTestReport
+- "./gradlew check"
+- "./gradlew jacocoTestReport"
+
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: Dbu1jNBqzEegmZ1XnBJ+dhGQ1ksnnHzjhaxxKFLDT+psdbuUaxetqcYljDsAmT+lZvMjupey7ah4fS6f62ghlnNBDIi4YI+FibkhDTwKLAOkkDGWlxj4lxlhEQFQOFn1BlXMH/CtO1Gb1asRUZzs4R900rJ/nUVDt8b5Tap+i7FAtpQCjFUX39nUHkX28EqHvhYRt9kPLlNVxN9E7boucnh6EMU0mMCh+HPG/TzcgfExX3/Q2R2Tqcufn/UuM5i7phvJefzJUERdteF3dixyAes0kKPWIUPXPaygb+BLAibsRr6Er4gc9/+uC1syTTNjyZtl2YTDCQpfidlxmroJRql+1ftLdeoElwhxcE9G4/9WSLIw/WA8RIbPttrACG2szGxNyllI6jrCO4gTmARSwHQwTeHuxWayQHLSb7rf8q/zOa1IgeSzVzhCr7S7R+Ksdcpu0oUnL2wMDYr7nOP+97xlLQyOvKoFwCQjFT7FAmGhay6QKPKsaU7KPe+Ic4NTXzxrg9dcOeHldAJlVSCQq/IF/sSfrSOWncQ2LNv4sQdNd/PRvJHCfZCOwfO0XJgZaV1vcMgzvTJbL6c0l4kVQYKSyj4aXf7m5Ft/ZRCWA/Ni01asMlWBGSR3xQRADLSp83EgWADU2pOHSRqUicq5tc/FVMBfCjSUrVot3lBNNkI=
+  app: testra-api
+  on:
+    repo: testra-tech/testra-api
