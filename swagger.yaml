@@ -294,3 +294,14 @@ definitions:
         type: array
         items:
           type: string
+          
+  ErrorResponse:
+    title: ErrorResponse
+    type: object
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+      timestamp:
+        type: integer
