@@ -1,10 +1,10 @@
 swagger: '2.0'
 info:
-  version: '1.0'
-  title: "Testra"
+  version: '1.0-SNAPSHOT'
+  title: "Testra API"
   description: API for Testra
   license:
-    name: GNU GPLV3
+    name: GNU GPLv3
     url: https://github.com/testra-tech/testra-api/blob/master/LICENSE
 host: testra-api.herokuapp.com
 basePath: /api/v1/
@@ -19,102 +19,277 @@ paths:
     x-summary: Projects Collection
     get:
       summary: List All Projects
+      description: |
+        Returns list of all projects available
       responses:
         200:
           description: Successful Response
           schema:
             type: array
             items:
-              $ref: '#/definitions/Question'
+              $ref: '#/definitions/Project'
           examples:
             application/json:
-              - question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 2048
-                  - choice: Python
-                    votes: 1024
-                  - choice: Objective-C
-                    votes: 512
-                  - choice: Ruby
-                    votes: 256
+              - id: 5ae7ea5fb969e16b0e4cfb41
+                name: Test Project
+
     post:
       description: >-
-        You may create your own question using this action. It takes a JSON
-        object containing a question and a collection of answers in the
-        form of choices.
-      summary: Create a New Question
+        Adds a new project into Testra app. It takes a JSON
+        object containing a name that was not used before.
+      summary: Create a New Project
       parameters:
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/QuestionRequest'
+            $ref: '#/definitions/ProjectRequest'
       responses:
         201:
-          description: ''
+          description: 'Successful creation of Project'
           schema:
-            $ref: '#/definitions/Question'
+            $ref: '#/definitions/Project'
           examples:
             application/json:
-                question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 0
-                  - choice: Python
-                    votes: 0
-                  - choice: Objective-C
-                    votes: 0
-                  - choice: Ruby
-                    votes: 0
+              - id: 5ae7ea5fb969e16b0e4cfb41
+                name: Test Project
+    put:
+      description: |
+        Updates exiting project using project id
+      summary: Update project info
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectRequest'
+      responses:
+        200:
+          description: 'Successful update of given Project'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Project'
+          examples:
+            application/json:
+              - id: 5ae7ea5fb969e16b0e4cfb41
+                name: Test Project
+
+  /projects/{id}:
+    get:
+      summary: Get project by id
+      description: Returns single project info for the given id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Project Id
+      responses:
+        200:
+          description: 'Successful update of given Project'
+          schema:
+            $ref: '#/definitions/Project'
+          examples:
+            application/json:
+              - id: 5ae7ea5fb969e16b0e4cfb41
+                name: Test Project
+
 definitions:
-  Question:
-    title: Question
+  Project:
+    title: Project
     type: object
     properties:
-      question:
+      id:
         type: string
-      published_at:
+      name:
         type: string
-      choices:
+    required:
+      - id
+      - name
+
+  ProjectRequest:
+    title: Project Request
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name
+    example:
+      name: Test Project
+
+  Scenario:
+    title: Scenario
+    type: object
+    properties:
+      id:
+        type: string
+      projectId:
+        type: string
+      featureId:
+        type: string
+      name:
+        type: string
+      before:
         type: array
         items:
-          $ref: '#/definitions/Choice'
-    required:
-      - question
-      - published_at
-      - choices
-  Choice:
-    title: Choice
+          $ref: '#/definitions/TestStep'
+      after:
+        type: array
+        items:
+          $ref: '#/definitions/TestStep'
+      backgroundSteps:
+        type: array
+        items:
+          $ref: '#/definitions/TestStep'
+      steps:
+        type: array
+        items:
+          $ref: '#/definitions/TestStep'
+
+  ScenarioRequest:
+    title: Scenario Request
     type: object
     properties:
-      votes:
+      name:
+        type: string
+      featureName:
+        type: string
+      before:
+        type: array
+        items:
+          $ref: '#/definitions/TestStep'
+      after:
+        type: array
+        items:
+          $ref: '#/definitions/TestStep'
+      backgroundSteps:
+        type: array
+        items:
+          $ref: '#/definitions/TestStep'
+      steps:
+        type: array
+        items:
+          $ref: '#/definitions/TestStep'
+
+  TestStep:
+    title: TestStep
+    type: object
+    properties:
+      index:
         type: integer
-        format: int32
-      choice:
+      text:
         type: string
-    required:
-      - votes
-      - choice
-  QuestionRequest:
-    title: Question Request
+
+  TestCase:
+    title: TestCase
     type: object
     properties:
-      question:
+      id:
         type: string
-      choices:
+      projectId:
+        type: string
+      name:
+        type: string
+      namespaceId:
+        type: string
+
+  TestCaseRequest:
+    title: TestCaseRequest
+    type: object
+    properties:
+      name:
+        type: string
+      namespace:
+        type: string
+
+  TestExecution:
+    title: TestExecution
+    type: object
+    properties:
+      id:
+        type: string
+      projectId:
+        type: string
+      startTime:
+        type: integer
+      endTime:
+        type: integer
+      host:
+        type: string
+      isParallel:
+        type: boolean
+      testCases:
         type: array
         items:
           type: string
-    required:
-      - question
-      - choices
-    example:
-      question: Favourite programming language?
-      choices:
-        - Swift
-        - Python
-        - Objective-C
-        - Ruby
+      testScenarios:
+        type: array
+        items:
+          type: string
+
+  TestExecutionRequest:
+    title: TestExecutionRequest
+    type: object
+    properties:
+      isParallel:
+        type: boolean
+
+  TestResult:
+    title: TestResult
+    type: object
+    properties:
+      id:
+        type: string
+      projectId:
+        type: string
+      executionId:
+        type: string
+      targetId:
+        type: string
+      resultType:
+        type: string
+      result:
+        type: string
+      error:
+        type: string
+      durationInMs:
+        type: integer
+      startTime:
+        type: integer
+      endTime:
+        type: integer
+      retryCount:
+        type: integer
+      attachments:
+        type: array
+        items:
+          type: string
+
+  TestResultRequest:
+    title: TestResultRequest
+    type: object
+    properties:
+      targetId:
+        type: string
+      resultType:
+        type: string
+      result:
+        type: string
+      error:
+        type: string
+      durationInMs:
+        type: integer
+      startTime:
+        type: integer
+      endTime:
+        type: integer
+      retryCount:
+        type: integer
+      attachments:
+        type: array
+        items:
+          type: string
