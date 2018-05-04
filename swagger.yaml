@@ -16,7 +16,6 @@ produces:
 - application/json
 paths:
   /projects:
-    x-summary: Projects Collection
     get:
       summary: List All Projects
       description: |
@@ -53,6 +52,26 @@ paths:
             application/json:
               - id: 5ae7ea5fb969e16b0e4cfb41
                 name: Test Project
+
+  /projects/{id}:
+    get:
+      summary: Get project by id
+      description: Returns single project info for the given id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: Project Id
+      responses:
+        200:
+          description: 'Successful update of given Project'
+          schema:
+            $ref: '#/definitions/Project'
+          examples:
+            application/json:
+              - id: 5ae7ea5fb969e16b0e4cfb41
+                name: Test Project
     put:
       description: |
         Updates exiting project using project id
@@ -63,6 +82,10 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/ProjectRequest'
+        - name: id
+          in: path
+          required: true
+          type: integer
       responses:
         200:
           description: 'Successful update of given Project'
@@ -70,28 +93,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Project'
-          examples:
-            application/json:
-              - id: 5ae7ea5fb969e16b0e4cfb41
-                name: Test Project
-
-  /projects/{id}:
-    get:
-      summary: Get project by id
-      description: Returns single project info for the given id
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            minimum: 1
-          description: Project Id
-      responses:
-        200:
-          description: 'Successful update of given Project'
-          schema:
-            $ref: '#/definitions/Project'
           examples:
             application/json:
               - id: 5ae7ea5fb969e16b0e4cfb41
