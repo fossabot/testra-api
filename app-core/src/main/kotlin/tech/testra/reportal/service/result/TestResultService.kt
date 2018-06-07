@@ -81,6 +81,7 @@ class TestResultService(
                         targetId = it.targetId,
                         resultType = ResultType.valueOf(it.resultType.name),
                         result = Result.valueOf(it.result.name),
+                        error = it.error,
                         durationInMs = it.durationInMs,
                         startTime = it.startTime,
                         endTime = it.endTime
