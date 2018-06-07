@@ -1,5 +1,7 @@
 package tech.testra.reportal.model
 
+import tech.testra.reportal.domain.valueobjects.TestStepResult
+
 data class ProjectModel(
     val name: String
 )
@@ -24,7 +26,8 @@ data class TestResultModel(
     val startTime: Long,
     val endTime: Long,
     val retryCount: Long = 0,
-    val attachments: List<ByteArray> = emptyList()
+    val attachments: List<ByteArray> = emptyList(),
+    val stepResults: List<TestStepResult> = emptyList()
 )
 
 data class TestScenarioModel(
@@ -37,6 +40,13 @@ data class TestScenarioModel(
 )
 
 data class TestStep(val index: Int, val text: String)
+
+data class TestStepResult(
+    val index: Int,
+    val result: tech.testra.reportal.domain.valueobjects.Result,
+    val duration: Long,
+    val error: String = ""
+)
 
 data class CounterModel(
     val projectsSize: Long,

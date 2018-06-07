@@ -9,6 +9,7 @@ import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.Result
 import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.domain.valueobjects.TestStep
+import tech.testra.reportal.domain.valueobjects.TestStepResult
 
 interface IEntity {
     val id: String
@@ -58,7 +59,8 @@ data class TestResult(
     val startTime: Long,
     val endTime: Long,
     val retryCount: Long = 0,
-    val attachments: Map<String, ByteArray> = emptyMap()
+    val attachments: Map<String, ByteArray> = emptyMap(),
+    val stepResults: List<TestStepResult>
 ) : IEntity
 
 @Document(collection = "scenarios")

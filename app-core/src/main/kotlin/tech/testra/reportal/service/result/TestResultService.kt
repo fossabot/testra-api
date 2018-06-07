@@ -84,7 +84,8 @@ class TestResultService(
                         error = it.error,
                         durationInMs = it.durationInMs,
                         startTime = it.startTime,
-                        endTime = it.endTime
+                        endTime = it.endTime,
+                        stepResults = it.stepResults
                     )
                     _testResultRepository.save(testResult.toMono())
                 }
