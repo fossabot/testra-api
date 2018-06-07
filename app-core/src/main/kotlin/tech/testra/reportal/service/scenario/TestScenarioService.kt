@@ -6,11 +6,10 @@ import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.exception.ProjectNotFoundException
-import tech.testra.reportal.exception.TestScenarioAlreadyExistsException
 import tech.testra.reportal.exception.TestScenarioNotFoundException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
-import tech.testra.reportal.extension.onDuplicateKeyException
+import tech.testra.reportal.extension.isSame
 import tech.testra.reportal.extension.orElseGetException
 import tech.testra.reportal.extension.toDomain
 import tech.testra.reportal.model.TestScenarioModel
@@ -56,7 +55,17 @@ class TestScenarioService(
                                 featureId = it,
                                 backgroundSteps = testScenarioModel.backgroundSteps.toDomain(),
                                 steps = testScenarioModel.steps.toDomain())
-                            saveScenario(testScenario)
+
+                            val testScenarioMono = tsr.findByNameAndProjectIdAndGroupId(testScenarioModel.name, projectId, it)
+                                .filter { ts -> ts.isSame(testScenario) }
+                                .next()
+
+                            testScenarioMono
+                                .flatMap {
+                                    if (it.isSame(testScenario)) it.toMono()
+                                    else saveScenario(testScenario)
+                                }
+                                .switchIfEmpty(saveScenario(testScenario))
                         }
                 }
             }
@@ -95,11 +104,7 @@ class TestScenarioService(
             }
     }
 
-    private fun saveScenario(testScenario: TestScenario): Mono<TestScenario> {
-        return tsr.save(testScenario.toMono())
-            .flatMap { it.toMono() }
-            .onDuplicateKeyException { TestScenarioAlreadyExistsException(testScenario.name) }
-    }
+    private fun saveScenario(testScenario: TestScenario): Mono<TestScenario> = tsr.save(testScenario.toMono())
 
     override fun deleteScenarioById(id: String): Mono<Boolean> = tsr.deleteById(id)
 

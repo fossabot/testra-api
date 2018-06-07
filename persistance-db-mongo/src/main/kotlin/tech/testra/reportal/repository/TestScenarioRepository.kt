@@ -35,13 +35,14 @@ class TestScenarioRepository : ITestScenarioRepository {
         name: String,
         projectId: String,
         groupId: String
-    ): Mono<TestScenario> {
+    ): Flux<TestScenario> {
         val criteria: Criteria = Criteria().andOperator(
             Criteria.where("projectId").isEqualTo(projectId),
-            Criteria.where("groupId").isEqualTo(groupId),
+            Criteria.where("featureId").isEqualTo(groupId),
             Criteria.where("name").isEqualTo(name)
         )
-        return template.findOne(Query(criteria), TestScenario::class.java)
+
+        return template.find(Query.query(criteria), TestScenario::class.java)
     }
 
     override fun size(): Mono<Long> = findAll().count()

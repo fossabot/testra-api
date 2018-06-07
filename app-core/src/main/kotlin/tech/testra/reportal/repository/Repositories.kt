@@ -23,7 +23,7 @@ interface ITestProjectRepository : IRepository<Project> {
 
 interface ITestScenarioRepository : IRepository<TestScenario> {
     fun findAllByProjectId(projectId: String): Flux<TestScenario>
-    fun findByNameAndProjectIdAndGroupId(name: String, projectId: String, groupId: String): Mono<TestScenario>
+    fun findByNameAndProjectIdAndGroupId(name: String, projectId: String, groupId: String): Flux<TestScenario>
 }
 
 interface ITestCaseRepository : IRepository<TestCase> {

@@ -62,8 +62,6 @@ data class TestResult(
 ) : IEntity
 
 @Document(collection = "scenarios")
-@CompoundIndex(def = "{'projectId': 1, 'featureId': 1, 'name': 1}",
-    name = "compound_index_project_feature_scenario", unique = true)
 data class TestScenario(
     @Id override val id: String = generatedUniqueId(),
     val projectId: String,
