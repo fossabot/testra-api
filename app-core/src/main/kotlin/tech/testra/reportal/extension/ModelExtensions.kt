@@ -8,12 +8,12 @@ import tech.testra.reportal.model.TestStepResult as TestStepResultModel
 
 fun List<TestStepModel>.toTestStepDomain(): List<TestStep> = this.map { TestStep(it.index, it.text) }
 
-fun TestScenario.isSame(testScenario: TestScenario) : Boolean {
+fun TestScenario.isSame(testScenario: TestScenario): Boolean {
     return this.backgroundSteps.isSame(testScenario.backgroundSteps) &&
         this.steps.isSame(testScenario.steps)
 }
 
-fun List<TestStep>.isSame(testScenarioList: List<TestStep>) : Boolean {
+fun List<TestStep>.isSame(testScenarioList: List<TestStep>): Boolean {
     return when {
         this.isEmpty() -> true
         this.size != testScenarioList.size -> false
