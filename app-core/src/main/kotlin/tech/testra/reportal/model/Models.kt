@@ -1,7 +1,5 @@
 package tech.testra.reportal.model
 
-import tech.testra.reportal.domain.valueobjects.TestStepResult
-
 data class ProjectModel(
     val name: String
 )
@@ -44,7 +42,7 @@ data class TestStep(val index: Int, val text: String)
 data class TestStepResult(
     val index: Int,
     val result: tech.testra.reportal.domain.valueobjects.Result,
-    val duration: Long,
+    val durationInMs: Long = 0,
     val error: String = ""
 )
 

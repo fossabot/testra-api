@@ -8,6 +8,6 @@ data class TestStep(
 data class TestStepResult(
     val index: Int,
     val result: Result,
-    val duration: Long,
+    val durationInMs: Long,
     val error: String
 )
