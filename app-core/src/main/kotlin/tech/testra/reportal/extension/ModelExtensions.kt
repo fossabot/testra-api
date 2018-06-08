@@ -21,5 +21,5 @@ fun List<TestStep>.isSame(testScenarioList: List<TestStep>) : Boolean {
     }
 }
 
-fun List<TestStepResultModel>.toTestStepresultDomain(): List<TestStepResult> =
+fun List<TestStepResultModel>.toTestStepResultDomain(): List<TestStepResult> =
     this.map { TestStepResult(it.index, it.result, it.durationInMs, it.error) }
