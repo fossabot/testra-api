@@ -10,7 +10,7 @@ fun List<TestStepModel>.toTestStepDomain(): List<TestStep> = this.map { TestStep
 
 fun TestScenario.isSame(testScenario: TestScenario): Boolean {
     return this.backgroundSteps.isSame(testScenario.backgroundSteps) &&
-        this.steps.isSame(testScenario.steps)
+        this.steps.isSame(testScenario.steps) && this.tags.sorted() == testScenario.tags.sorted()
 }
 
 fun List<TestStep>.isSame(testScenarioList: List<TestStep>): Boolean {
