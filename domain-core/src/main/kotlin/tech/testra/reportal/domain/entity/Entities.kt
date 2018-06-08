@@ -40,9 +40,7 @@ data class TestExecution(
     val startTime: Long = System.currentTimeMillis(),
     val endTime: Long?,
     val host: String?,
-    val isParallel: Boolean,
-    val testCases: List<String> = emptyList(),
-    val testScenarios: List<String> = emptyList()
+    val isParallel: Boolean
 ) : IEntity
 
 @Document(collection = "results")
@@ -69,6 +67,7 @@ data class TestScenario(
     val projectId: String,
     val featureId: String,
     val name: String,
+    val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
     val after: List<TestStep> = emptyList(),
     val backgroundSteps: List<TestStep> = emptyList(),

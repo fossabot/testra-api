@@ -10,7 +10,7 @@ import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
 
 interface IRepository<T> {
-    fun save(mono: Mono<T>): Mono<T>
+    fun save(executionMono: Mono<T>): Mono<T>
     fun findById(id: String): Mono<T>
     fun findAll(): Flux<T>
     fun deleteById(id: String): Mono<Boolean>
