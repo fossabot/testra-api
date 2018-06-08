@@ -2,9 +2,11 @@ package tech.testra.reportal.extension
 
 import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.domain.valueobjects.TestStep
+import tech.testra.reportal.domain.valueobjects.TestStepResult
 import tech.testra.reportal.model.TestStep as TestStepModel
+import tech.testra.reportal.model.TestStepResult as TestStepResultModel
 
-fun List<TestStepModel>.toDomain(): List<TestStep> = this.map { TestStep(it.index, it.text) }
+fun List<TestStepModel>.toTestStepDomain(): List<TestStep> = this.map { TestStep(it.index, it.text) }
 
 fun TestScenario.isSame(testScenario: TestScenario) : Boolean {
     return this.backgroundSteps.isSame(testScenario.backgroundSteps) &&
@@ -19,10 +21,5 @@ fun List<TestStep>.isSame(testScenarioList: List<TestStep>) : Boolean {
     }
 }
 
-//fun TestScenarioModel.toEntity(id: String, projectId: String, groupId: String): TestScenario {
-//    val testScenario = TestScenario(projectId = projectId,
-//        name = this.name,
-//        featureId = groupId,
-//        backgroundSteps = this.backgroundSteps.toDomain(),
-//        steps = this.steps.toDomain())
-//}
+fun List<TestStepResultModel>.toTestStepresultDomain(): List<TestStepResult> =
+    this.map { TestStepResult(it.index, it.result, it.durationInMs, it.error) }

@@ -11,7 +11,7 @@ import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.isSame
 import tech.testra.reportal.extension.orElseGetException
-import tech.testra.reportal.extension.toDomain
+import tech.testra.reportal.extension.toTestStepDomain
 import tech.testra.reportal.model.TestScenarioModel
 import tech.testra.reportal.repository.ITestScenarioRepository
 import tech.testra.reportal.service.interfaces.ITestGroupService
@@ -53,8 +53,8 @@ class TestScenarioService(
                             val testScenario = TestScenario(projectId = projectId,
                                 name = testScenarioModel.name,
                                 featureId = it,
-                                backgroundSteps = testScenarioModel.backgroundSteps.toDomain(),
-                                steps = testScenarioModel.steps.toDomain())
+                                backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
+                                steps = testScenarioModel.steps.toTestStepDomain())
 
                             val testScenarioMono = tsr.findByNameAndProjectIdAndGroupId(testScenarioModel.name, projectId, it)
                                 .filter { ts -> ts.isSame(testScenario) }
@@ -94,8 +94,8 @@ class TestScenarioService(
                                         projectId = projectId,
                                         name = testScenarioModel.name,
                                         featureId = it,
-                                        backgroundSteps = testScenarioModel.backgroundSteps.toDomain(),
-                                        steps = testScenarioModel.steps.toDomain())
+                                        backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
+                                        steps = testScenarioModel.steps.toTestStepDomain())
 
                                     saveScenario(testScenario)
                                 }

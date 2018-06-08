@@ -9,6 +9,7 @@ import tech.testra.reportal.domain.valueobjects.Result
 import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
+import tech.testra.reportal.extension.toTestStepresultDomain
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.repository.ITestResultRepository
 import tech.testra.reportal.service.interfaces.ITestCaseService
@@ -85,7 +86,7 @@ class TestResultService(
                         durationInMs = it.durationInMs,
                         startTime = it.startTime,
                         endTime = it.endTime,
-                        stepResults = it.stepResults
+                        stepResults = it.stepResults.toTestStepresultDomain()
                     )
                     _testResultRepository.save(testResult.toMono())
                 }
