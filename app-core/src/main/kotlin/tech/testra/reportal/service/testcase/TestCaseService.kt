@@ -43,7 +43,7 @@ class TestCaseService(
                 testCaseModelMono.flatMap {
                     val testCaseModel = it
                     // Get feature if exists otherwise create one
-                    _testGroupService.getOrAddGroup(it.namespace, projectId)
+                    _testGroupService.getOrAddGroup(groupName = it.namespace, projectId = projectId)
                         .flatMap {
 
                             // If test case name already exists throw an exception
@@ -72,7 +72,7 @@ class TestCaseService(
                     _testCaseRepository.findById(testCaseId)
                         .flatMap {
                             // Get feature if exists otherwise create one
-                            _testGroupService.getOrAddGroup(testCaseModel.namespace, projectId)
+                            _testGroupService.getOrAddGroup(groupName = testCaseModel.namespace, projectId = projectId)
                                 .flatMap {
 
                                     // If test case name already exists throw an exception

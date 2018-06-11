@@ -46,13 +46,15 @@ class TestScenarioService(
                 testScenarioModelMono.flatMap {
                     // Get feature if exists otherwise create one
                     val testScenarioModel = it
-                    tgs.getOrAddGroup(it.featureName, projectId)
+                    tgs.getOrAddGroup(it.featureName, it.featureDescription, projectId)
                         .flatMap {
 
                             // If scenario name already exists throw an exception
                             val testScenario = TestScenario(projectId = projectId,
                                 name = testScenarioModel.name,
                                 featureId = it,
+                                featureDescription = testScenarioModel.featureDescription,
+                                tags = testScenarioModel.tags,
                                 backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
                                 steps = testScenarioModel.steps.toTestStepDomain())
 
@@ -86,7 +88,7 @@ class TestScenarioService(
                         .switchIfEmpty(TestScenarioNotFoundException(scenarioId).toMono())
                         .flatMap {
                             // Get feature if exists otherwise create one
-                            tgs.getOrAddGroup(testScenarioModel.featureName, projectId)
+                            tgs.getOrAddGroup(testScenarioModel.featureName, it.featureDescription, projectId)
                                 .flatMap {
 
                                     // If scenario name already exists throw an exception
@@ -94,6 +96,8 @@ class TestScenarioService(
                                         projectId = projectId,
                                         name = testScenarioModel.name,
                                         featureId = it,
+                                        featureDescription = testScenarioModel.featureDescription,
+                                        tags = testScenarioModel.tags,
                                         backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
                                         steps = testScenarioModel.steps.toTestStepDomain())
 

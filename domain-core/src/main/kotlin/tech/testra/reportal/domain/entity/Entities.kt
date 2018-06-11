@@ -66,6 +66,7 @@ data class TestScenario(
     @Id override val id: String = generatedUniqueId(),
     val projectId: String,
     val featureId: String,
+    val featureDescription: String,
     val name: String,
     val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
@@ -81,7 +82,8 @@ data class TestGroup(
     @Id override val id: String = generatedUniqueId(),
     val projectId: String,
     val name: String,
-    val type: GroupType
+    val type: GroupType,
+    val description: String = ""
 ) : IEntity
 
 private fun generatedUniqueId() = ObjectId().toString()

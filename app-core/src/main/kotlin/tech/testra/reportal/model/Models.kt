@@ -31,6 +31,7 @@ data class TestResultModel(
 data class TestScenarioModel(
     val name: String,
     val featureName: String,
+    val featureDescription: String = "",
     val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
     val after: List<TestStep> = emptyList(),

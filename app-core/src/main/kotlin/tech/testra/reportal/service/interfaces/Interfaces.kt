@@ -91,5 +91,5 @@ interface ITestResultService {
 }
 
 interface ITestGroupService {
-    fun getOrAddGroup(groupName: String, projectId: String): Mono<String>
+    fun getOrAddGroup(groupName: String, groupDescription: String = "", projectId: String): Mono<String>
 }
