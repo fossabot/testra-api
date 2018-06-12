@@ -11,3 +11,5 @@ data class TestStepResult(
     val durationInMs: Long,
     val error: String
 )
+
+data class Attachment(val name: String, val base64EncodedByteArray: String)

@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
+import tech.testra.reportal.domain.valueobjects.Attachment
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.Result
 import tech.testra.reportal.domain.valueobjects.ResultType
@@ -57,7 +58,7 @@ data class TestResult(
     val startTime: Long,
     val endTime: Long,
     val retryCount: Long = 0,
-    val attachments: Map<String, ByteArray> = emptyMap(),
+    val attachments: List<Attachment>,
     val stepResults: List<TestStepResult>
 ) : IEntity
 
