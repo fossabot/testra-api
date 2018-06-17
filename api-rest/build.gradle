@@ -10,7 +10,7 @@ dependencies {
     // Non module dependencies
     compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
     compile('org.springframework.boot:spring-boot-starter-webflux')
-    compile('org.jetbrains.kotlin:kotlin-stdlib-jre8')
+    compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
     compile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-devtools')

@@ -3,16 +3,19 @@ package tech.testra.reportal.service.result
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toFlux
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestResult
+import tech.testra.reportal.domain.valueobjects.AttachmentVO
 import tech.testra.reportal.domain.valueobjects.Result
 import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
-import tech.testra.reportal.extension.toAttachmentDomain
 import tech.testra.reportal.extension.toTestStepResultDomain
+import tech.testra.reportal.model.AttachmentModel
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.repository.ITestResultRepository
+import tech.testra.reportal.service.interfaces.IAttachmentService
 import tech.testra.reportal.service.interfaces.ITestCaseService
 import tech.testra.reportal.service.interfaces.ITestExecutionService
 import tech.testra.reportal.service.interfaces.ITestResultService
@@ -23,7 +26,8 @@ class TestResultService(
     val _testResultRepository: ITestResultRepository,
     val _testExecutionService: ITestExecutionService,
     val _testScenarioService: ITestScenarioService,
-    val _testCaseService: ITestCaseService
+    val _testCaseService: ITestCaseService,
+    val _attachmentService: IAttachmentService
 ) : ITestResultService {
 
     override fun getResultsByProjectIdAndExecutionId(projectId: String, executionId: String): Flux<TestResult> =
@@ -88,7 +92,7 @@ class TestResultService(
                         startTime = it.startTime,
                         endTime = it.endTime,
                         stepResults = it.stepResults.toTestStepResultDomain(),
-                        attachments = it.attachments.toAttachmentDomain()
+                        attachments = saveAttachments(it.attachments.toFlux())
                     )
                     _testResultRepository.save(testResult.toMono())
                 }
@@ -103,4 +107,11 @@ class TestResultService(
                 .flatMapWithResumeOnError { trm.toMono() }
             else -> trm.toMono()
         }
+
+    private fun saveAttachments(attachmentModels: Flux<AttachmentModel>): List<AttachmentVO> {
+        return attachmentModels
+            .flatMap { _attachmentService.addAttachment(it.name, it.base64EncodedByteArray) }
+            .map { AttachmentVO(it.id, it.name) }
+            .collectList().block()!!
+    }
 }

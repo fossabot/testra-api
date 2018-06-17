@@ -3,6 +3,7 @@ package tech.testra.reportal.service.interfaces
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import tech.testra.reportal.domain.entity.Attachment
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
@@ -92,4 +93,9 @@ interface ITestResultService {
 
 interface ITestGroupService {
     fun getOrAddGroup(groupName: String, groupDescription: String = "", projectId: String): Mono<String>
+}
+
+interface IAttachmentService {
+    fun getAttachment(id: String): Mono<Attachment>
+    fun addAttachment(name: String, base64EncodedByteArray: String): Mono<Attachment>
 }

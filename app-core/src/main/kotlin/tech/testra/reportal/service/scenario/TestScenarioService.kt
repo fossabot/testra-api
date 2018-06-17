@@ -58,9 +58,10 @@ class TestScenarioService(
                                 backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
                                 steps = testScenarioModel.steps.toTestStepDomain())
 
-                            val testScenarioMono = tsr.findByNameAndProjectIdAndGroupId(testScenarioModel.name, projectId, it)
-                                .filter { ts -> ts.isSame(testScenario) }
-                                .next()
+                            val testScenarioMono =
+                                tsr.findByNameAndProjectIdAndGroupId(testScenarioModel.name, projectId, it)
+                                    .filter { ts -> ts.isSame(testScenario) }
+                                    .next()
 
                             testScenarioMono
                                 .flatMap {

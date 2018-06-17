@@ -2,6 +2,7 @@ package tech.testra.reportal.repository
 
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import tech.testra.reportal.domain.entity.Attachment
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
@@ -10,7 +11,7 @@ import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
 
 interface IRepository<T> {
-    fun save(executionMono: Mono<T>): Mono<T>
+    fun save(entityMono: Mono<T>): Mono<T>
     fun findById(id: String): Mono<T>
     fun findAll(): Flux<T>
     fun deleteById(id: String): Mono<Boolean>
@@ -42,3 +43,5 @@ interface ITestResultRepository : IRepository<TestResult> {
 interface ITestGroupRepository : IRepository<TestGroup> {
     fun findByNameAndProjectId(name: String, projectId: String): Mono<TestGroup>
 }
+
+interface IAttachmentRepository : IRepository<Attachment>

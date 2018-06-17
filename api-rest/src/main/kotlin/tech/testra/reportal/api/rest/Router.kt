@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.router
+import tech.testra.reportal.api.rest.handlers.AttachmentHandler
 import tech.testra.reportal.api.rest.handlers.CounterHandler
 import tech.testra.reportal.api.rest.handlers.TestCaseHandler
 import tech.testra.reportal.api.rest.handlers.TestExecutionHandler
@@ -18,7 +19,8 @@ class Router(
     private val _testScenarioHandler: TestScenarioHandler,
     private val _testCaseHandler: TestCaseHandler,
     private val _testResultHandler: TestResultHandler,
-    private val _counterHandler: CounterHandler
+    private val _counterHandler: CounterHandler,
+    private val _attachmentHandler: AttachmentHandler
 ) {
 
     companion object {
@@ -28,6 +30,7 @@ class Router(
         const val TESTCASE_ID_IN_RESOURCE = "{testCaseId}"
         const val EXECUTION_ID_IN_RESOURCE = "{executionId}"
         const val RESULT_ID_IN_RESOURCE = "{resultId}"
+        const val ATTACHMENT_ID_IN_RESOURCE = "{attachmentId}"
     }
 
     @Bean
@@ -75,6 +78,9 @@ class Router(
                 }
                 "/counters".nest {
                     GET("/", _counterHandler::get)
+                }
+                "/attachments".nest {
+                    GET("/$ATTACHMENT_ID_IN_RESOURCE", _attachmentHandler::get)
                 }
             }
         }

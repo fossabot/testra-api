@@ -64,9 +64,15 @@ subprojects {
         }
         dependencies {
             dependency 'org.modelmapper:modelmapper:1.1.0'
-            dependency "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}"
+            dependency "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
             dependency 'org.apache.commons:commons-lang3:3.0'
             dependency 'io.mockk:mockk:1.7.15'
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            failOnVersionConflict()
         }
     }
 }

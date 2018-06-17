@@ -4,12 +4,14 @@ import org.springframework.boot.Banner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import tech.testra.reportal.repository.AttachmentRepository
 import tech.testra.reportal.repository.TestCaseRepository
 import tech.testra.reportal.repository.TestExecutionRepository
 import tech.testra.reportal.repository.TestGroupRepository
 import tech.testra.reportal.repository.TestProjectRepository
 import tech.testra.reportal.repository.TestResultRepository
 import tech.testra.reportal.repository.TestScenarioRepository
+import tech.testra.reportal.service.attachment.AttachmentService
 import tech.testra.reportal.service.execution.TestExecutionService
 import tech.testra.reportal.service.project.TestProjectService
 import tech.testra.reportal.service.result.TestResultService
@@ -38,6 +40,9 @@ class Application {
     fun testGroupRepository() = TestGroupRepository()
 
     @Bean
+    fun attachmentRepository() = AttachmentRepository()
+
+    @Bean
     fun testProjectService() = TestProjectService(testProjectRepository())
 
     @Bean
@@ -60,7 +65,11 @@ class Application {
         TestResultService(testResultRepository(),
             testExecutionService(),
             testScenarioService(),
-            testCaseService())
+            testCaseService(),
+            attachmentService())
+
+    @Bean
+    fun attachmentService() = AttachmentService(attachmentRepository())
 }
 
 fun main(args: Array<String>) {

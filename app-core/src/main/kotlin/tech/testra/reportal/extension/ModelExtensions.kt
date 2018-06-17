@@ -1,10 +1,8 @@
 package tech.testra.reportal.extension
 
 import tech.testra.reportal.domain.entity.TestScenario
-import tech.testra.reportal.domain.valueobjects.Attachment
 import tech.testra.reportal.domain.valueobjects.TestStep
 import tech.testra.reportal.domain.valueobjects.TestStepResult
-import tech.testra.reportal.model.Attachment as AttachmentModel
 import tech.testra.reportal.model.TestStep as TestStepModel
 import tech.testra.reportal.model.TestStepResult as TestStepResultModel
 
@@ -25,6 +23,3 @@ fun List<TestStep>.isSame(testScenarioList: List<TestStep>): Boolean {
 
 fun List<TestStepResultModel>.toTestStepResultDomain(): List<TestStepResult> =
     this.map { TestStepResult(it.index, it.result, it.durationInMs, it.error) }
-
-fun List<AttachmentModel>.toAttachmentDomain(): List<Attachment> =
-    this.map { Attachment(it.name, it.base64EncodedByteArray) }

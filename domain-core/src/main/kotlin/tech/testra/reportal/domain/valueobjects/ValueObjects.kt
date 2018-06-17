@@ -12,4 +12,4 @@ data class TestStepResult(
     val error: String
 )
 
-data class Attachment(val name: String, val base64EncodedByteArray: String)
+data class AttachmentVO(val id: String, val name: String)

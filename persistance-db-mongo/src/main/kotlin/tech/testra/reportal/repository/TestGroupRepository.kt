@@ -16,6 +16,7 @@ class TestGroupRepository : ITestGroupRepository {
     @Autowired
     lateinit var template: ReactiveMongoTemplate
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun save(testGroupMono: Mono<TestGroup>): Mono<TestGroup> = template.save(testGroupMono)
 
     override fun findById(id: String) = template.findById<TestGroup>(id)

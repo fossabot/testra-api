@@ -17,6 +17,7 @@ class TestResultRepository : ITestResultRepository {
     @Autowired
     lateinit var template: ReactiveMongoTemplate
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun save(testResultMono: Mono<TestResult>): Mono<TestResult> = template.save(testResultMono)
 
     override fun findById(id: String) = template.findById<TestResult>(id)

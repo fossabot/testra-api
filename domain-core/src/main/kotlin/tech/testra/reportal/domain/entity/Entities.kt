@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
-import tech.testra.reportal.domain.valueobjects.Attachment
+import tech.testra.reportal.domain.valueobjects.AttachmentVO
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.Result
 import tech.testra.reportal.domain.valueobjects.ResultType
@@ -28,7 +28,7 @@ data class Project(
 @CompoundIndex(def = "{'projectId': 1, 'namespaceId': 1, 'name': 1}",
     name = "compound_index_project_namespace_testcase", unique = true)
 data class TestCase(
-    @Id override val id: String = generatedUniqueId(),
+    @Id @Indexed override val id: String = generatedUniqueId(),
     val projectId: String,
     val name: String,
     val namespaceId: String
@@ -58,14 +58,14 @@ data class TestResult(
     val startTime: Long,
     val endTime: Long,
     val retryCount: Long = 0,
-    val attachments: List<Attachment>,
+    val attachments: List<AttachmentVO>,
     val stepResults: List<TestStepResult>
 ) : IEntity
 
 @Document(collection = "scenarios")
 data class TestScenario(
-    @Id override val id: String = generatedUniqueId(),
-    val projectId: String,
+    @Id @Indexed override val id: String = generatedUniqueId(),
+    @Indexed val projectId: String,
     val featureId: String,
     val featureDescription: String,
     val name: String,
@@ -85,6 +85,13 @@ data class TestGroup(
     val name: String,
     val type: GroupType,
     val description: String = ""
+) : IEntity
+
+@Document(collection = "attachments")
+data class Attachment(
+    @Id @Indexed override val id: String = generatedUniqueId(),
+    val name: String,
+    val base64EncodedByteArray: String
 ) : IEntity
 
 private fun generatedUniqueId() = ObjectId().toString()

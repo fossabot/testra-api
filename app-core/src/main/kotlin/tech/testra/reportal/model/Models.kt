@@ -24,7 +24,7 @@ data class TestResultModel(
     val startTime: Long,
     val endTime: Long,
     val retryCount: Long = 0,
-    val attachments: List<Attachment> = emptyList(),
+    val attachments: List<AttachmentModel> = emptyList(),
     val stepResults: List<TestStepResult> = emptyList()
 )
 
@@ -56,7 +56,7 @@ data class CounterModel(
     val testResultsSize: Long
 )
 
-data class Attachment(val name: String, val base64EncodedByteArray: String)
+data class AttachmentModel(val name: String, val base64EncodedByteArray: String)
 
 enum class Result {
     PASSED, FAILED, SKIPPED, PENDING, UNDEFINED

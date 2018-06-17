@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.server.ServerResponse.created
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
 import tech.testra.reportal.api.rest.extensions.getExecIdFromPath
-import tech.testra.reportal.api.rest.extensions.getProjIdFromPath
+import tech.testra.reportal.api.rest.extensions.getProjectIdFromPath
 import tech.testra.reportal.api.rest.extensions.getResultIdFromPath
 import tech.testra.reportal.exception.TestResultNotFoundException
 import tech.testra.reportal.model.TestResultModel
@@ -21,24 +21,24 @@ class TestResultHandler(
 ) {
 
     fun findAll(req: ServerRequest): Mono<ServerResponse> =
-        _testResultHandler.getResultsByProjectIdAndExecutionId(req.getProjIdFromPath(), req.getExecIdFromPath())
+        _testResultHandler.getResultsByProjectIdAndExecutionId(req.getProjectIdFromPath(), req.getExecIdFromPath())
             .onErrorResume { throw it }
             .collectList()
             .flatMap { ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun findById(req: ServerRequest): Mono<ServerResponse> =
-        _testResultHandler.getResultById(req.getProjIdFromPath(), req.getExecIdFromPath(), req.getResultIdFromPath())
+        _testResultHandler.getResultById(req.getProjectIdFromPath(), req.getExecIdFromPath(), req.getResultIdFromPath())
             .onErrorResume { throw it }
             .flatMap { ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun create(req: ServerRequest): Mono<ServerResponse> =
-        _testResultHandler.createResult(req.getProjIdFromPath(), req.getExecIdFromPath(), req.bodyToMono(TestResultModel::class.java))
+        _testResultHandler.createResult(req.getProjectIdFromPath(), req.getExecIdFromPath(), req.bodyToMono(TestResultModel::class.java))
             .onErrorResume { throw it }
             .flatMap { created(req.uri()).contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun update(req: ServerRequest): Mono<ServerResponse> =
         _testResultHandler.updateResult(
-            req.getProjIdFromPath(),
+            req.getProjectIdFromPath(),
             req.getExecIdFromPath(),
             req.getResultIdFromPath(),
             req.bodyToMono(TestResultModel::class.java)

@@ -16,6 +16,7 @@ class TestCaseRepository : ITestCaseRepository {
     @Autowired
     lateinit var template: ReactiveMongoTemplate
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun save(scenarioMono: Mono<TestCase>): Mono<TestCase> =
         template.save(scenarioMono)
 

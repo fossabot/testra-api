@@ -17,7 +17,7 @@ class TestExecutionRepository : ITestExecutionRepository {
     @Autowired
     lateinit var template: ReactiveMongoTemplate
 
-    override fun save(executionMono: Mono<TestExecution>): Mono<TestExecution> = template.save(executionMono)
+    override fun save(entityMono: Mono<TestExecution>): Mono<TestExecution> = template.save(entityMono)
 
     override fun findById(id: String) = template.findById<TestExecution>(id)
 
