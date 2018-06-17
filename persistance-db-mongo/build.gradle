@@ -1,7 +1,8 @@
 dependencies {
     compile project(':app-core')
 
-    compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
-    compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
-    compile('io.projectreactor:reactor-core')
+    compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    compile 'io.projectreactor:reactor-core'
+
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 }
