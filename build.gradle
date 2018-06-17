@@ -1,9 +1,12 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.41'
+        kotlinVersion = '1.2.50'
         springBootVersion = '2.0.0.RELEASE'
         js2pPluginVersion = '0.4.33'
         dependencyManagementVersion = '1.0.5.RELEASE'
+        kotlinLinterVersion = '1.12.0'
+        gradleDockerVersion = '1.2'
+        dependencyCheckVersion = '3.1.2'
     }
     repositories {
         mavenLocal()
@@ -11,19 +14,19 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
-        classpath "org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:${js2pPluginVersion}"
-        classpath "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.11.1"
-        classpath 'se.transmode.gradle:gradle-docker:1.2'
-        classpath 'org.owasp:dependency-check-gradle:3.1.2'
+        classpath "io.spring.gradle:dependency-management-plugin:$dependencyManagementVersion"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:$js2pPluginVersion"
+        classpath "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:$kotlinLinterVersion"
+        classpath "se.transmode.gradle:gradle-docker:$gradleDockerVersion"
+        classpath "org.owasp:dependency-check-gradle:$dependencyCheckVersion"
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC6-3"
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC7"
 }
 
 apply plugin: 'idea'
@@ -64,9 +67,10 @@ subprojects {
         }
         dependencies {
             dependency 'org.modelmapper:modelmapper:1.1.0'
-            dependency "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}"
+            dependency "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
             dependency 'org.apache.commons:commons-lang3:3.0'
             dependency 'io.mockk:mockk:1.7.15'
+            dependency 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5'
         }
     }
 }
