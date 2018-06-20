@@ -208,7 +208,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        type: integer
+        type: string
         description: Project Id
       responses:
         200:
@@ -559,7 +559,7 @@ paths:
       - name: projectId
         in: path
         required: true
-        type: integer
+        type: string
         description: Execution Id
       - name: body
         in: body
@@ -1108,3 +1108,4 @@ definitions:
         type: string
       timestamp:
         type: integer
+        format: int64
