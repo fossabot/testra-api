@@ -975,18 +975,17 @@ definitions:
         type: integer
       text:
         type: string
-
+        
   Testcase:
     title: TestCase
-    type: object
-    properties:
-      allOf:
-      - type: object
+    allOf:
+    - type: object
+      properties:
         id:
           type: string
         projectId:
-          type: string
-      - $ref: '#/definitions/TestcaseRequest'
+            type: string
+    - $ref: '#/definitions/TestcaseRequest'
 
   TestcaseRequest:
     title: TestCaseRequest
@@ -1002,16 +1001,14 @@ definitions:
 
   Execution:
     title: TestExecution
-    type: object
-    properties:
-      allOf:
-      - type: object
-        properties:
-          id:
-            type: string
-          projectId:
-            type: string
-      - $ref: '#/definitions/ExecutionRequest'
+    allOf:
+    - type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+    - $ref: '#/definitions/ExecutionRequest'
 
   ExecutionRequest:
     title: TestExecutionRequest
