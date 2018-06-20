@@ -1031,6 +1031,7 @@ definitions:
     - FAILED
     - PENDING
     - SKIPPED
+    - AMBIGUOUS
     - UNKNOWN
 
   TestResult:
