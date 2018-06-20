@@ -42,6 +42,7 @@ class TestExecutionService(
                         isParallel = it.isParallel,
                         host = it.host,
                         endTime = it.endTime,
+                        environment = it.environment,
                         branch = it.branch,
                         tags = it.tags)
                     _testExecutionRepository.save(testExecution.toMono())
@@ -68,6 +69,7 @@ class TestExecutionService(
                                 host = testExecutionModel.host,
                                 startTime = it.startTime,
                                 endTime = testExecutionModel.endTime,
+                                environment = testExecutionModel.environment,
                                 branch = testExecutionModel.branch,
                                 tags = testExecutionModel.tags)
                             _testExecutionRepository.save(testExecution.toMono())

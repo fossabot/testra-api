@@ -42,6 +42,7 @@ data class TestExecution(
     val endTime: Long?,
     val host: String?,
     val isParallel: Boolean,
+    val environment: String,
     val branch: String,
     val tags: List<String>
 ) : IEntity

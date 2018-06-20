@@ -980,14 +980,13 @@ definitions:
     title: TestCase
     type: object
     properties:
-      id:
-        type: string
-      projectId:
-        type: string
-      name:
-        type: string
-      namespaceId:
-        type: string
+      allOf:
+      - type: object
+        id:
+          type: string
+        projectId:
+          type: string
+      - $ref: '#/definitions/TestcaseRequest'
 
   TestcaseRequest:
     title: TestCaseRequest
@@ -997,25 +996,22 @@ definitions:
         type: string
       namespace:
         type: string
+    required:
+      - name
+      - namespace
 
   Execution:
     title: TestExecution
     type: object
     properties:
-      id:
-        type: string
-      projectId:
-        type: string
-      startTime:
-        type: integer
-        format: int64
-      endTime:
-        type: integer
-        format: int64
-      host:
-        type: string
-      isParallel:
-        type: boolean
+      allOf:
+      - type: object
+        properties:
+          id:
+            type: string
+          projectId:
+            type: string
+      - $ref: '#/definitions/ExecutionRequest'
 
   ExecutionRequest:
     title: TestExecutionRequest
@@ -1028,12 +1024,19 @@ definitions:
       endTime:
         type: integer
         format: int64
+      environment:
+        type: string
       branch:
         type: string
       tags:
         type: array
         items:
           type: string
+    required:
+      - isParallel
+      - host
+      - environment
+      - branch
 
   Result:
     type: string

@@ -13,8 +13,9 @@ data class TestExecutionModel(
     val host: String? = null,
     val isParallel: Boolean,
     val endTime: Long? = null,
+    val environment: String,
     val branch: String,
-    val tags: List<String>
+    val tags: List<String> = emptyList()
 )
 
 data class TestResultModel(
