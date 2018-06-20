@@ -1032,6 +1032,7 @@ definitions:
     - PENDING
     - SKIPPED
     - AMBIGUOUS
+    - UNDEFINED
     - UNKNOWN
 
   TestResult:
