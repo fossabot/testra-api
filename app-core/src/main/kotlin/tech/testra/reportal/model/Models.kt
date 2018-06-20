@@ -12,7 +12,9 @@ data class TestCaseModel(
 data class TestExecutionModel(
     val host: String? = null,
     val isParallel: Boolean,
-    val endTime: Long? = null
+    val endTime: Long? = null,
+    val branch: String,
+    val tags: List<String>
 )
 
 data class TestResultModel(

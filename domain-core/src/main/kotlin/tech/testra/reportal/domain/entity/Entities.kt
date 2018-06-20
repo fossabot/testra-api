@@ -41,7 +41,9 @@ data class TestExecution(
     val startTime: Long = System.currentTimeMillis(),
     val endTime: Long?,
     val host: String?,
-    val isParallel: Boolean
+    val isParallel: Boolean,
+    val branch: String,
+    val tags: List<String>
 ) : IEntity
 
 @Document(collection = "results")

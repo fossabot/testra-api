@@ -41,7 +41,9 @@ class TestExecutionService(
                     val testExecution = TestExecution(projectId = projectId,
                         isParallel = it.isParallel,
                         host = it.host,
-                        endTime = it.endTime)
+                        endTime = it.endTime,
+                        branch = it.branch,
+                        tags = it.tags)
                     _testExecutionRepository.save(testExecution.toMono())
                 }
             }
@@ -55,13 +57,21 @@ class TestExecutionService(
         return _projectService.getProjectById(projectId)
             .flatMapWithResumeOnError {
                 testExecutionModelMono.flatMap {
-                    val testScenario = TestExecution(
-                        id = executionId,
-                        projectId = projectId,
-                        isParallel = it.isParallel,
-                        host = it.host,
-                        endTime = it.endTime)
-                    _testExecutionRepository.save(testScenario.toMono())
+                    val testExecutionModel = it
+                    _testExecutionRepository.findById(executionId)
+                        .switchIfEmpty(TestExecutionNotFoundException(executionId).toMono())
+                        .flatMap {
+                            val testExecution = TestExecution(
+                                id = executionId,
+                                projectId = projectId,
+                                isParallel = testExecutionModel.isParallel,
+                                host = testExecutionModel.host,
+                                startTime = it.startTime,
+                                endTime = testExecutionModel.endTime,
+                                branch = testExecutionModel.branch,
+                                tags = testExecutionModel.tags)
+                            _testExecutionRepository.save(testExecution.toMono())
+                        }
                 }
             }
     }

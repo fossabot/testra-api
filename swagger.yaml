@@ -1023,6 +1023,17 @@ definitions:
     properties:
       isParallel:
         type: boolean
+      host:
+        type: string
+      endTime:
+        type: integer
+        format: int64
+      branch:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
 
   Result:
     type: string
