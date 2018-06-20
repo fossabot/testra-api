@@ -1058,6 +1058,7 @@ definitions:
         type: string
       durationInMs:
         type: integer
+        format: int64
       startTime:
         type: integer
         format: int64
@@ -1086,6 +1087,7 @@ definitions:
         enum: *RESULT_ENUM
       durationInMs:
         type: integer
+        format: int64
       error:
         type: string
 
