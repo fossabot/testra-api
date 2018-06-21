@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.mongodb.core.query.isEqualTo
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
@@ -28,8 +29,15 @@ class TestExecutionRepository : ITestExecutionRepository {
             TestExecution::class.java)
 
     override fun deleteById(id: String): Mono<Boolean> =
-            template.remove(Query(Criteria.where("id").isEqualTo(id)), TestExecution::class.java)
-                    .map { it.deletedCount > 0 }
+        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestExecution::class.java)
+            .map { it.deletedCount > 0 }
+
+    override fun updateEndTime(id: String, endTime: Long): Mono<Boolean> {
+        val update = Update()
+        update.set("endTime", endTime)
+        return template.updateFirst(Query(Criteria.where("id").isEqualTo(id)), update, TestExecution::class.java)
+            .map { it.modifiedCount > 0 }
+    }
 
     override fun size(): Mono<Long> = findAll().count()
 }

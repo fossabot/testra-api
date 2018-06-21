@@ -90,6 +90,7 @@ class TestResultService(
                         stepResults = it.stepResults.toTestStepResultDomain(),
                         attachments = it.attachments.toAttachmentDomain()
                     )
+                    _testExecutionService.updateEndTime(executionId, it.endTime)
                     _testResultRepository.save(testResult.toMono())
                 }
         }

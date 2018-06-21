@@ -33,6 +33,7 @@ interface ITestCaseRepository : IRepository<TestCase> {
 
 interface ITestExecutionRepository : IRepository<TestExecution> {
     fun findAllByProjectId(projectId: String): Flux<TestExecution>
+    fun updateEndTime(id: String, endTime: Long): Mono<Boolean>
 }
 
 interface ITestResultRepository : IRepository<TestResult> {

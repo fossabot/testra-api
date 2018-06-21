@@ -65,6 +65,7 @@ interface ITestExecutionService {
         testExecutionModelMono: Mono<TestExecutionModel>
     ): Mono<TestExecution>
 
+    fun updateEndTime(id: String, endTime: Long)
     fun deleteExecutionById(id: String): Mono<Boolean>
     fun getSize(): Long
 }
