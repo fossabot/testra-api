@@ -26,18 +26,18 @@ class TestCaseService(
 ) : ITestCaseService {
 
     override fun getTestCasesByProjectId(projectId: String): Flux<TestCase> =
-        _testProjectService.getProjectById(projectId)
+        _testProjectService.getProject(projectId)
             .flatMapManyWithResumeOnError { _testCaseRepository.findAllByProjectId(it.id) }
 
     override fun getTestCaseById(projectId: String, testCaseId: String): Mono<TestCase> =
-        _testProjectService.getProjectById(projectId)
+        _testProjectService.getProject(projectId)
             .flatMapWithResumeOnError {
                 _testCaseRepository.findById(testCaseId)
                     .orElseGetException(TestCaseNotFoundException(testCaseId))
             }
 
     override fun createTestCase(projectId: String, testCaseModelMono: Mono<TestCaseModel>): Mono<TestCase> {
-        return _testProjectService.getProjectById(projectId)
+        return _testProjectService.getProject(projectId)
             .switchIfEmpty(ProjectNotFoundException(projectId).toMono())
             .flatMap {
                 testCaseModelMono.flatMap {
@@ -64,7 +64,7 @@ class TestCaseService(
         testCaseId: String,
         testCaseModelMono: Mono<TestCaseModel>
     ): Mono<TestCase> {
-        return _testProjectService.getProjectById(projectId)
+        return _testProjectService.getProject(projectId)
             .switchIfEmpty(ProjectNotFoundException(projectId).toMono())
             .flatMap {
                 testCaseModelMono.flatMap {

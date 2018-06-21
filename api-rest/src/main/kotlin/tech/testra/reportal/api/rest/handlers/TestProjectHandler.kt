@@ -23,7 +23,7 @@ class TestProjectHandler(val _testProjectService: ITestProjectService) {
             .body(_testProjectService.getProjects(), Project::class.java)
 
     fun getProjectById(req: ServerRequest): Mono<ServerResponse> =
-        _testProjectService.getProjectById(req.getProjIdFromPath())
+        _testProjectService.getProject(req.getProjIdFromPath())
             .onErrorResume { it.toMono() }
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
 

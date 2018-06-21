@@ -17,7 +17,7 @@ import tech.testra.reportal.model.TestScenarioModel
 @Service
 interface ITestProjectService {
     fun getProjects(): Flux<Project>
-    fun getProjectById(id: String): Mono<Project>
+    fun getProject(idOrName: String): Mono<Project>
     fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun deleteProjectById(id: String): Mono<Boolean>

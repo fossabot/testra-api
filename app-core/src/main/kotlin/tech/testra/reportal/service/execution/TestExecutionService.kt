@@ -21,11 +21,11 @@ class TestExecutionService(
 ) : ITestExecutionService {
 
     override fun getExecutionsByProjectId(projectId: String): Flux<TestExecution> =
-        _projectService.getProjectById(projectId)
+        _projectService.getProject(projectId)
             .flatMapManyWithResumeOnError { _testExecutionRepository.findAllByProjectId(it.id) }
 
     override fun getExecutionById(projectId: String, executionId: String): Mono<TestExecution> =
-        _projectService.getProjectById(projectId)
+        _projectService.getProject(projectId)
             .flatMapWithResumeOnError {
                 _testExecutionRepository.findById(executionId)
                     .orElseGetException(TestExecutionNotFoundException(executionId))
@@ -35,7 +35,7 @@ class TestExecutionService(
         projectId: String,
         testExecutionModelMono: Mono<TestExecutionModel>
     ): Mono<TestExecution> {
-        return _projectService.getProjectById(projectId)
+        return _projectService.getProject(projectId)
             .flatMapWithResumeOnError {
                 testExecutionModelMono.flatMap {
                     val testExecution = TestExecution(projectId = projectId,
@@ -55,7 +55,7 @@ class TestExecutionService(
         executionId: String,
         testExecutionModelMono: Mono<TestExecutionModel>
     ): Mono<TestExecution> {
-        return _projectService.getProjectById(projectId)
+        return _projectService.getProject(projectId)
             .flatMapWithResumeOnError {
                 testExecutionModelMono.flatMap {
                     val testExecutionModel = it

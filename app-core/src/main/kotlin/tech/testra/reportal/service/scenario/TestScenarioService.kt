@@ -26,13 +26,13 @@ class TestScenarioService(
 ) : ITestScenarioService {
 
     override fun getScenariosByProjectId(projectId: String): Flux<TestScenario> =
-        tps.getProjectById(projectId)
+        tps.getProject(projectId)
             .flatMapManyWithResumeOnError {
                 tsr.findAllByProjectId(it.id)
             }
 
     override fun getScenarioById(projectId: String, scenarioId: String): Mono<TestScenario> =
-        tps.getProjectById(projectId)
+        tps.getProject(projectId)
             .flatMapWithResumeOnError {
                 tsr.findById(scenarioId).orElseGetException(TestScenarioNotFoundException(scenarioId))
             }
@@ -41,7 +41,7 @@ class TestScenarioService(
         projectId: String,
         testScenarioModelMono: Mono<TestScenarioModel>
     ): Mono<TestScenario> {
-        return tps.getProjectById(projectId)
+        return tps.getProject(projectId)
             .flatMap {
                 testScenarioModelMono.flatMap {
                     // Get feature if exists otherwise create one
@@ -79,7 +79,7 @@ class TestScenarioService(
         scenarioId: String,
         testScenarioModelMono: Mono<TestScenarioModel>
     ): Mono<TestScenario> {
-        return tps.getProjectById(projectId)
+        return tps.getProject(projectId)
             .switchIfEmpty(ProjectNotFoundException(projectId).toMono())
             .flatMap {
                 testScenarioModelMono.flatMap {

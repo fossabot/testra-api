@@ -17,15 +17,16 @@ import tech.testra.reportal.service.interfaces.ITestProjectService
 class TestProjectService(val _testProjectRepository: ITestProjectRepository) : ITestProjectService {
     override fun getProjects() = _testProjectRepository.findAll()
 
-    override fun getProjectById(id: String): Mono<Project> =
-        _testProjectRepository.findById(id)
-            .orElseGetException(ProjectNotFoundException(id))
+    override fun getProject(idOrName: String): Mono<Project> =
+        _testProjectRepository.findById(idOrName)
+            .switchIfEmpty(_testProjectRepository.findByName(idOrName))
+            .orElseGetException(ProjectNotFoundException(idOrName))
 
     override fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project> =
         projectModelMono.flatMapWithResumeOnError { saveProject(Project(name = it.name)) }
 
     override fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project> =
-        getProjectById(id)
+        getProject(id)
             .flatMapWithResumeOnError {
                 projectModelMono.flatMap { saveProject(Project(id = id, name = it.name)) }
             }
