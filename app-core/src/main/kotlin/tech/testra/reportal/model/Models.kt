@@ -10,11 +10,11 @@ data class TestCaseModel(
 )
 
 data class TestExecutionModel(
-    val host: String? = null,
+    val host: String = "",
     val isParallel: Boolean,
     val endTime: Long? = null,
-    val environment: String,
-    val branch: String,
+    val environment: String = "",
+    val branch: String = "",
     val tags: List<String> = emptyList()
 )
 
@@ -62,7 +62,8 @@ data class CounterModel(
 data class Attachment(
     val name: String = "",
     val mimeType: String,
-    val base64EncodedByteArray: String)
+    val base64EncodedByteArray: String
+)
 
 enum class Result {
     PASSED, FAILED, SKIPPED, PENDING, AMBIGUOUS, UNDEFINED, UNKNOWN

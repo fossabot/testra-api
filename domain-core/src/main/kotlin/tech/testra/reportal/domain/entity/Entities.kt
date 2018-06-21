@@ -40,7 +40,7 @@ data class TestExecution(
     @Indexed val projectId: String,
     val startTime: Long = System.currentTimeMillis(),
     val endTime: Long?,
-    val host: String?,
+    val host: String,
     val isParallel: Boolean,
     val environment: String,
     val branch: String,

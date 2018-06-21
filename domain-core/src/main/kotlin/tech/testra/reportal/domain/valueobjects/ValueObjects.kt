@@ -15,4 +15,5 @@ data class TestStepResult(
 data class Attachment(
     val name: String,
     val mimeType: String,
-    val base64EncodedByteArray: String)
+    val base64EncodedByteArray: String
+)
