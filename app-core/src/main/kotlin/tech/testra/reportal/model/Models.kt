@@ -59,7 +59,10 @@ data class CounterModel(
     val testResultsSize: Long
 )
 
-data class Attachment(val name: String, val base64EncodedByteArray: String)
+data class Attachment(
+    val name: String = "",
+    val mimeType: String,
+    val base64EncodedByteArray: String)
 
 enum class Result {
     PASSED, FAILED, SKIPPED, PENDING, AMBIGUOUS, UNDEFINED, UNKNOWN

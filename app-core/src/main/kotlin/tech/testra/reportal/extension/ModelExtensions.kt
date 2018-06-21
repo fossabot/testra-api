@@ -27,4 +27,4 @@ fun List<TestStepResultModel>.toTestStepResultDomain(): List<TestStepResult> =
     this.map { TestStepResult(it.index, it.result, it.durationInMs, it.error) }
 
 fun List<AttachmentModel>.toAttachmentDomain(): List<Attachment> =
-    this.map { Attachment(it.name, it.base64EncodedByteArray) }
+    this.map { Attachment(it.name, it.mimeType, it.base64EncodedByteArray) }
