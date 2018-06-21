@@ -991,6 +991,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/TestStep'
+    required:
+      - name
+      - featureName
+      - featureDescription
+      - steps
 
   TestStep:
     title: TestStep
@@ -1000,6 +1005,9 @@ definitions:
         type: integer
       text:
         type: string
+    required:
+      - index
+      - text
 
   Testcase:
     title: TestCase
@@ -1055,10 +1063,10 @@ definitions:
         items:
           type: string
     required:
-    - isParallel
-    - host
-    - environment
-    - branch
+      - isParallel
+      - host
+      - environment
+      - branch
 
   Result:
     type: string
@@ -1113,6 +1121,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Attachment'
+    required:
+      - targetId
+      - resultType
+      - result
+      - durationInMs
+      - startTime
+      - endTime
+      - retryCount
 
   StepResult:
     title: Step result
@@ -1128,6 +1144,10 @@ definitions:
         format: int64
       error:
         type: string
+    required:
+      - index
+      - result
+      - durationInMs
 
   Attachment:
     title: Attachment
@@ -1135,8 +1155,13 @@ definitions:
     properties:
       name:
         type: string
+      mimeType:
+        type: string
       base64EncodedByteArray:
         type: string
+    required:
+      - mimeType
+      - base64EncodedByteArray
 
   ErrorResponse:
     title: ErrorResponse
