@@ -88,15 +88,15 @@ paths:
     get:
       tags:
       - "project"
-      summary: Get project by id
-      description: Returns single project info for the given id
+      summary: Get project by id or name
+      description: Returns single project info for the given id or name
       operationId: getProject
       parameters:
       - name: id
         in: path
         required: true
         type: string
-        description: Project Id
+        description: Project Id or Name
       responses:
         200:
           description: 'Successful update of given Project'
@@ -1065,8 +1065,6 @@ definitions:
     required:
       - isParallel
       - host
-      - environment
-      - branch
 
   Result:
     type: string
