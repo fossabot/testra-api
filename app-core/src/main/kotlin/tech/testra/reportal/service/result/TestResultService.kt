@@ -92,7 +92,7 @@ class TestResultService(
                         stepResults = it.stepResults.toTestStepResultDomain(),
                         attachments = it.attachments.toAttachmentDomain()
                     )
-                    if(resultId != null) testResult.id = resultId
+                    if (resultId != null) testResult.id = resultId
                     _testExecutionService.updateEndTime(executionId, it.endTime)
                     _testResultRepository.save(testResult.toMono())
                 }
