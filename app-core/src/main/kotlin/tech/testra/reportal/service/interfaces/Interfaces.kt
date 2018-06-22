@@ -72,7 +72,8 @@ interface ITestExecutionService {
 
 @Service
 interface ITestResultService {
-    fun getResultsByProjectIdAndExecutionId(projectId: String, executionId: String): Flux<TestResult>
+    fun getResults(projectId: String, executionId: String): Flux<TestResult>
+    fun getResults(projectId: String, executionId: String, result: String): Flux<TestResult>
     fun getResultById(projectId: String, executionId: String, resultId: String): Mono<TestResult>
     fun createResult(
         projectId: String,

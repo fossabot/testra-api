@@ -27,7 +27,7 @@ class TestCaseService(
 
     override fun getTestCasesByProjectId(projectId: String): Flux<TestCase> =
         _testProjectService.getProject(projectId)
-            .flatMapManyWithResumeOnError { _testCaseRepository.findAllByProjectId(it.id) }
+            .flatMapManyWithResumeOnError { _testCaseRepository.findAll(it.id) }
 
     override fun getTestCaseById(projectId: String, testCaseId: String): Mono<TestCase> =
         _testProjectService.getProject(projectId)

@@ -28,7 +28,7 @@ class TestScenarioService(
     override fun getScenariosByProjectId(projectId: String): Flux<TestScenario> =
         tps.getProject(projectId)
             .flatMapManyWithResumeOnError {
-                tsr.findAllByProjectId(it.id)
+                tsr.findAll(it.id)
             }
 
     override fun getScenarioById(projectId: String, scenarioId: String): Mono<TestScenario> =
@@ -58,7 +58,7 @@ class TestScenarioService(
                                 backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
                                 steps = testScenarioModel.steps.toTestStepDomain())
 
-                            val testScenarioMono = tsr.findByNameAndProjectIdAndGroupId(testScenarioModel.name, projectId, it)
+                            val testScenarioMono = tsr.findBy(testScenarioModel.name, projectId, it)
                                 .filter { ts -> ts.isSame(testScenario) }
                                 .next()
 

@@ -26,10 +26,16 @@ class TestResultService(
     val _testCaseService: ITestCaseService
 ) : ITestResultService {
 
-    override fun getResultsByProjectIdAndExecutionId(projectId: String, executionId: String): Flux<TestResult> =
+    override fun getResults(projectId: String, executionId: String): Flux<TestResult> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
-                _testResultRepository.findAllByProjectIdAndExecutionId(projectId, it.id)
+                _testResultRepository.findAll(projectId, it.id)
+            }
+
+    override fun getResults(projectId: String, executionId: String, result: String): Flux<TestResult> =
+        _testExecutionService.getExecutionById(projectId, executionId)
+            .flatMapManyWithResumeOnError {
+                _testResultRepository.findAll(projectId, it.id, Result.valueOf(result))
             }
 
     override fun getResultById(projectId: String, executionId: String, resultId: String): Mono<TestResult> =

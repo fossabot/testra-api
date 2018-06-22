@@ -23,7 +23,7 @@ class TestScenarioRepository : ITestScenarioRepository {
 
     override fun findAll(): Flux<TestScenario> = template.findAll(TestScenario::class.java)
 
-    override fun findAllByProjectId(projectId: String): Flux<TestScenario> =
+    override fun findAll(projectId: String): Flux<TestScenario> =
         template.find(Query(Criteria.where("projectId").isEqualTo(projectId)),
             TestScenario::class.java)
 
@@ -31,7 +31,7 @@ class TestScenarioRepository : ITestScenarioRepository {
         template.remove(Query(Criteria.where("id").isEqualTo(id)), TestScenario::class.java)
             .map { it.deletedCount > 0 }
 
-    override fun findByNameAndProjectIdAndGroupId(
+    override fun findBy(
         name: String,
         projectId: String,
         groupId: String

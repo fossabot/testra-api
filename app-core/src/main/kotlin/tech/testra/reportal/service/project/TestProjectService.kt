@@ -19,7 +19,7 @@ class TestProjectService(val _testProjectRepository: ITestProjectRepository) : I
 
     override fun getProject(idOrName: String): Mono<Project> =
         _testProjectRepository.findById(idOrName)
-            .switchIfEmpty(_testProjectRepository.findByName(idOrName))
+            .switchIfEmpty(_testProjectRepository.findBy(idOrName))
             .orElseGetException(ProjectNotFoundException(idOrName))
 
     override fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project> =

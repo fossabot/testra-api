@@ -24,7 +24,7 @@ class TestExecutionRepository : ITestExecutionRepository {
 
     override fun findAll(): Flux<TestExecution> = template.findAll(TestExecution::class.java)
 
-    override fun findAllByProjectId(projectId: String): Flux<TestExecution> =
+    override fun findAll(projectId: String): Flux<TestExecution> =
         template.find(Query(Criteria.where("projectId").isEqualTo(projectId)),
             TestExecution::class.java)
 

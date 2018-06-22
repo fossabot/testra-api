@@ -13,7 +13,7 @@ import tech.testra.reportal.service.interfaces.ITestGroupService
 class TestGroupService(val _testGroupRepository: ITestGroupRepository) : ITestGroupService {
 
     override fun getOrAddGroup(groupName: String, groupDescription: String, projectId: String): Mono<String> {
-        return _testGroupRepository.findByNameAndProjectId(groupName, projectId)
+        return _testGroupRepository.findBy(groupName, projectId)
             .map { it.id }
             .switchIfEmpty(
                 _testGroupRepository
@@ -25,7 +25,7 @@ class TestGroupService(val _testGroupRepository: ITestGroupRepository) : ITestGr
                     // Handles race condition
                     .onErrorResume(DuplicateKeyException::class.java) {
                         _testGroupRepository
-                            .findByNameAndProjectId(groupName, projectId)
+                            .findBy(groupName, projectId)
                             .map { it.id }
                     }
             )

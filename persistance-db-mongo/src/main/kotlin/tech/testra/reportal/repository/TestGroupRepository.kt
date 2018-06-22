@@ -20,7 +20,7 @@ class TestGroupRepository : ITestGroupRepository {
 
     override fun findById(id: String) = template.findById<TestGroup>(id)
 
-    override fun findByNameAndProjectId(name: String, projectId: String): Mono<TestGroup> {
+    override fun findBy(name: String, projectId: String): Mono<TestGroup> {
         val criteria: Criteria = Criteria().andOperator(
             Criteria.where("name").isEqualTo(name),
             Criteria.where("projectId").isEqualTo(projectId)

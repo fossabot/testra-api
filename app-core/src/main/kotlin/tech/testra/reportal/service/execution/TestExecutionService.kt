@@ -22,7 +22,7 @@ class TestExecutionService(
 
     override fun getExecutionsByProjectId(projectId: String): Flux<TestExecution> =
         _projectService.getProject(projectId)
-            .flatMapManyWithResumeOnError { _testExecutionRepository.findAllByProjectId(it.id) }
+            .flatMapManyWithResumeOnError { _testExecutionRepository.findAll(it.id) }
 
     override fun getExecutionById(projectId: String, executionId: String): Mono<TestExecution> =
         _projectService.getProject(projectId)

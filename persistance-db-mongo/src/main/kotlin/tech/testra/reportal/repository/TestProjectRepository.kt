@@ -26,7 +26,7 @@ class TestProjectRepository : ITestProjectRepository {
             template.remove(Query(Criteria.where("id").isEqualTo(id)), Project::class.java)
                     .map { it.deletedCount > 0 }
 
-    override fun findByName(name: String): Mono<Project> =
+    override fun findBy(name: String): Mono<Project> =
         template.findOne(Query(Criteria.where("name").isEqualTo(name)), Project::class.java)
 
     override fun size(): Mono<Long> = findAll().count()
