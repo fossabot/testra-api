@@ -726,6 +726,10 @@ paths:
         required: true
         type: string
         description: Execution Id
+      - name: resultStatus
+        in: query
+        type: string
+        description: Result status to filter results
       responses:
         200:
           description: Successful Response
