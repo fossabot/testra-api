@@ -50,7 +50,7 @@ data class TestExecution(
 @Document(collection = "results")
 @CompoundIndex(def = "{'projectId': 1, 'executionId': 1}", name = "compound_index_project_execution")
 data class TestResult(
-    @Id override val id: String = generatedUniqueId(),
+    @Id override var id: String = generatedUniqueId(),
     val projectId: String,
     val executionId: String,
     val targetId: String,

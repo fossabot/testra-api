@@ -43,7 +43,7 @@ class TestResultService(
     ): Mono<TestResult> {
         return _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapWithResumeOnError {
-                createOrUpdate(testResultModelMono, projectId, executionId)
+                createOrUpdate(testResultModelMono, projectId, executionId, null)
             }
     }
 
@@ -56,7 +56,7 @@ class TestResultService(
 
         return this.getResultById(projectId, executionId, resultId)
             .flatMapWithResumeOnError {
-                createOrUpdate(testResultModelMono, projectId, executionId)
+                createOrUpdate(testResultModelMono, projectId, executionId, it.id)
             }
     }
 
@@ -70,7 +70,8 @@ class TestResultService(
     private fun createOrUpdate(
         testResultModelMono: Mono<TestResultModel>,
         projectId: String,
-        executionId: String
+        executionId: String,
+        resultId: String?
     ): Mono<TestResult> {
         return testResultModelMono.flatMap {
 
@@ -87,9 +88,11 @@ class TestResultService(
                         durationInMs = it.durationInMs,
                         startTime = it.startTime,
                         endTime = it.endTime,
+                        retryCount = it.retryCount,
                         stepResults = it.stepResults.toTestStepResultDomain(),
                         attachments = it.attachments.toAttachmentDomain()
                     )
+                    if(resultId != null) testResult.id = resultId
                     _testExecutionService.updateEndTime(executionId, it.endTime)
                     _testResultRepository.save(testResult.toMono())
                 }
