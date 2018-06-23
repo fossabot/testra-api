@@ -905,6 +905,29 @@ paths:
           description: Any other errors
           schema:
             $ref: '#/definitions/ErrorResponse'
+  
+  /counters:
+    get:
+      tags:
+      - "counter"
+      summary: Counters 
+      description: |
+        Returns counters for Projects, Test executions, Test scenarions, Test cases and Test results
+      operationId: getProjects
+      responses:
+        200:
+          description: Successful Response
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Counter'
+          examples:
+            application/json:
+            - projectsSize: 10
+              testScenariosSize: 10
+              testCasesSize: 10
+              testExecutionsSize: 10
+              testResultsSize: 10
 
 definitions:
   Project:
@@ -1164,6 +1187,32 @@ definitions:
     required:
       - mimeType
       - base64EncodedByteArray
+      
+  Counter:
+    title: Counter
+    type: object
+    properties:
+      projectsSize:
+        type: integer
+        format: int64
+      testScenariosSize:
+        type: integer
+        format: int64
+      testCasesSize:
+        type: integer
+        format: int64
+      testExecutionsSize:
+        type: integer
+        format: int64
+      testResultsSize:
+        type: integer
+        format: int64
+    required:
+      - projectsSize
+      - testScenariosSize
+      - testCasesSize
+      - testExecutionsSize
+      - testResultsSize
 
   ErrorResponse:
     title: ErrorResponse
