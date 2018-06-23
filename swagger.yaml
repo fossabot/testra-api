@@ -140,9 +140,7 @@ paths:
         200:
           description: 'Successful update of given Project'
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Project'
+            $ref: '#/definitions/Project'
           examples:
             application/json:
             - id: 5ae7ea5fb969e16b0e4cfb41
@@ -179,15 +177,8 @@ paths:
             $ref: '#/definitions/Project'
           examples:
             application/json:
-            - id: 5ae7ea5fb969e16b0e4cfb42
-              projectId: 5ae7ea5fb969e16b0e4cfb42
-              featureId: 5ae7ea5fb969e16b0e4cfb43
-              featureDescription: >-
-                As a google search user
-                I want to input text in double quoted words
-                So that I can get all the pages which contains all the words
-              tags: '@smoke'
-              name: Test Scenario
+            - id: 5ae7ea5fb969e16b0e4cfb41
+              name: Test Project
         404:
           description: 'Project not found'
           schema:
@@ -491,9 +482,7 @@ paths:
         200:
           description: 'Successful update of given Testcase'
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Testcase'
+            $ref: '#/definitions/Testcase'
         404:
           description: 'Testcase not found'
           schema:
@@ -656,9 +645,7 @@ paths:
         200:
           description: 'Successful update of given Execution'
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Execution'
+            $ref: '#/definitions/Execution'
         404:
           description: 'Execution not found'
           schema:
@@ -849,9 +836,7 @@ paths:
         200:
           description: 'Successful update of given Result'
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/TestResult'
+            $ref: '#/definitions/TestResult'
         404:
           description: 'Test result not found'
           schema:
@@ -918,9 +903,7 @@ paths:
         200:
           description: Successful Response
           schema:
-            type: object
-            items:
-              $ref: '#/definitions/Counter'
+            $ref: '#/definitions/Counter'
           examples:
             application/json:
             - projectsSize: 10
