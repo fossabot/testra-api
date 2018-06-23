@@ -913,7 +913,7 @@ paths:
       summary: Counters 
       description: |
         Returns counters for Projects, Test executions, Test scenarions, Test cases and Test results
-      operationId: getProjects
+      operationId: getCounters
       responses:
         200:
           description: Successful Response
