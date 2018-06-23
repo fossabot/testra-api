@@ -25,7 +25,7 @@ class TestResultHandler(
     fun findAll(req: ServerRequest): Mono<ServerResponse> {
         val projectId = req.getProjIdFromPath()
         val execId = req.getExecIdFromPath()
-        return req.queryParam("resultStatus")
+        return req.queryParam("result")
             .map { getResults { _testResultService.getResults(projectId, execId, it) } }
             .orElseGet { getResults { _testResultService.getResults(projectId, execId) } }
     }
