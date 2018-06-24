@@ -21,6 +21,7 @@ data class TestExecutionModel(
 
 data class TestResultModel(
     val targetId: String,
+    val groupId: String,
     val resultType: ResultType,
     val result: Result,
     val error: String = "",

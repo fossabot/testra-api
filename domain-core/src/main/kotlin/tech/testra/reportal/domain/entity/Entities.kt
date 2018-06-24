@@ -57,6 +57,7 @@ data class TestResult(
     val projectId: String,
     val executionId: String,
     val targetId: String,
+    val groupId: String,
     val resultType: ResultType,
     val result: Result,
     val error: String = "",

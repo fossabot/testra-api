@@ -88,6 +88,7 @@ class TestResultService(
                         projectId = projectId,
                         executionId = executionId,
                         targetId = it.targetId,
+                        groupId = it.groupId,
                         resultType = ResultType.valueOf(it.resultType.name),
                         result = Result.valueOf(it.result.name),
                         error = it.error,
