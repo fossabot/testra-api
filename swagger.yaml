@@ -1052,6 +1052,17 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/TestStep'
+    required:
+      - id
+      - projectId
+      - name
+      - featureId
+      - featureDescription
+      - tags
+      - before
+      - after
+      - backgroundSteps
+      - steps
 
   ScenarioRequest:
     title: Scenario Request
@@ -1113,6 +1124,11 @@ definitions:
         type: string
       namespaceId:
         type: string
+    required:
+      - id
+      - projectId
+      - name
+      - namespaceId
 
   TestcaseRequest:
     title: TestCaseRequest
@@ -1159,6 +1175,17 @@ definitions:
         type: array
         items:
           type: string
+    required:
+      - id
+      - projectId
+      - isParallel
+      - host
+      - startTime
+      - endTime
+      - environment
+      - branch
+      - tags
+      - groupIds
 
   ExecutionRequest:
     title: TestExecutionRequest
@@ -1196,12 +1223,51 @@ definitions:
 
   TestResult:
     title: TestResult
-    allOf:
-    - type: object
-      properties:
-        id:
-          type: string
-    - $ref: '#/definitions/TestResultRequest'
+    type: object
+    properties:
+      id:
+        type: string
+      targetId:
+        type: string
+      groupId:
+        type: string
+      resultType:
+        type: string
+        enum: [SCENARIO, TESTCASE]
+      result:
+        type: string
+        enum: *RESULT_ENUM
+      error:
+        type: string
+      durationInMs:
+        type: integer
+        format: int64
+      startTime:
+        type: integer
+        format: int64
+      endTime:
+        type: integer
+        format: int64
+      retryCount:
+        type: integer
+      stepResults:
+        type: array
+        items:
+          $ref: '#/definitions/StepResult'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+    required:
+      - id
+      - targetId
+      - groupId
+      - resultType
+      - result
+      - durationInMs
+      - startTime
+      - endTime
+      - retryCount
 
   TestResultRequest:
     title: TestResultRequest
@@ -1300,6 +1366,13 @@ definitions:
         type: string
       subGroup:
         type: string
+    required:
+      - id
+      - name
+      - projectId
+      - type
+      - description
+      - subGroup
       
   Counter:
     title: Counter
@@ -1320,6 +1393,12 @@ definitions:
       testResultsCount:
         type: integer
         format: int64
+    required:
+      - projectsCount
+      - testScenariosCount
+      - testCasesCount
+      - testExecutionsCount
+      - testResultsCount
 
   ErrorResponse:
     title: ErrorResponse
