@@ -17,15 +17,15 @@ produces:
 - application/json
 tags:
 - name: "project"
-  description: "Everything about your Projects"
+  description: "Everything about Projects"
 - name: "scenario"
-  description: "Everything about your Test Scenarios"
+  description: "Everything about Test Scenarios"
 - name: "testcase"
-  description: "Everything about your Test Cases"
+  description: "Everything about Test Cases"
 - name: "execution"
-  description: "Everything about your Executions"
+  description: "Everything about Executions"
 - name: "result"
-  description: "Everything about your Test Results"
+  description: "Everything about Test Results"
 paths:
   /projects:
     get:
@@ -207,6 +207,11 @@ paths:
         required: true
         type: string
         description: Project Id
+      - name: featureId
+        in: query
+        required: false
+        type: string
+        description: Feature Id
       responses:
         200:
           description: Successful Response
@@ -214,10 +219,15 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Scenario'
+        404:
+          description: 'Project not found'
+          schema:
+            $ref: '#/definitions/ErrorResponse'
           examples:
             application/json:
-            - id: 5ae7ea5fb969e16b0e4cfb41
-              name: Test Scenario
+            - error: ProjectNotFoundException
+              message: Invalid project id
+              timestamp: 15678902394
         default:
           description: Any other errors
           schema:
@@ -247,6 +257,15 @@ paths:
           description: 'Successful creation of Scenario'
           schema:
             $ref: '#/definitions/Scenario'
+        404:
+          description: 'Project not found'
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+            - error: ProjectNotFoundException
+              message: Invalid project id
+              timestamp: 15678902394
         default:
           description: Any other errors
           schema:
@@ -276,7 +295,7 @@ paths:
           schema:
             $ref: '#/definitions/Scenario'
         404:
-          description: 'Scenario not found'
+          description: 'Scenario/Project not found'
           schema:
             $ref: '#/definitions/ErrorResponse'
           examples:
@@ -378,6 +397,11 @@ paths:
         required: true
         type: string
         description: Project Id
+      - name: namespaceId
+        in: query
+        required: false
+        type: string
+        description: Namespace Id
       responses:
         200:
           description: Successful Response
@@ -891,6 +915,37 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
             
+  /projects/{projectId}/executions/{executionId}/groups:
+    get:
+      tags:
+      - "test-group"
+      summary: List all test groups under execution
+      description: |
+        Returns list of all test groups (features or namespaces) within given project and execution
+      operationId: getTestGroupsInExecution
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        type: string
+        description: Project Id
+      - name: executionId
+        in: path
+        required: true
+        type: string
+        description: Execution Id
+      responses:
+        200:
+          description: Successful Response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TestGroup'
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
   /projects/{projectId}/test-groups:
     get:
       tags:
@@ -942,15 +997,15 @@ paths:
 definitions:
   Project:
     title: Project
-    allOf:
-    - type: object
-      properties:
-        id:
-          type: string
-    - $ref: '#/definitions/ProjectRequest'
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
     required:
-    - id
-    - name
+      - id
+      - name
 
   ProjectRequest:
     title: Project Request
@@ -959,7 +1014,7 @@ definitions:
       name:
         type: string
     required:
-    - name
+      - name
     example:
       name: Test Project
 
@@ -1048,16 +1103,16 @@ definitions:
 
   Testcase:
     title: TestCase
-    allOf:
-    - type: object
-      properties:
-        id:
-          type: string
-        projectId:
-          type: string
-        namespaceId:
-          type: string
-    - $ref: '#/definitions/TestcaseRequest'
+    type: object
+    properties:
+      id:
+        type: string
+      projectId:
+        type: string
+      name:
+        type: string
+      namespaceId:
+        type: string
 
   TestcaseRequest:
     title: TestCaseRequest
@@ -1070,20 +1125,40 @@ definitions:
       className:
         type: string
     required:
-    - name
-    - namespace
-    - className
+      - name
+      - namespace
+      - className
 
   Execution:
     title: TestExecution
-    allOf:
-    - type: object
-      properties:
-        id:
+    type: object
+    properties:
+      id:
+        type: string
+      projectId:
+        type: string
+      isParallel:
+        type: boolean
+      host:
+        type: string
+      startTime:
+        type: integer
+        format: int64
+      endTime:
+        type: integer
+        format: int64
+      environment:
+        type: string
+      branch:
+        type: string
+      tags:
+        type: array
+        items:
           type: string
-        projectId:
+      groupIds:
+        type: array
+        items:
           type: string
-    - $ref: '#/definitions/ExecutionRequest'
 
   ExecutionRequest:
     title: TestExecutionRequest
@@ -1111,13 +1186,13 @@ definitions:
   Result:
     type: string
     enum: &RESULT_ENUM
-    - PASSED
-    - FAILED
-    - PENDING
-    - SKIPPED
-    - AMBIGUOUS
-    - UNDEFINED
-    - UNKNOWN
+      - PASSED
+      - FAILED
+      - PENDING
+      - SKIPPED
+      - AMBIGUOUS
+      - UNDEFINED
+      - UNKNOWN
 
   TestResult:
     title: TestResult
@@ -1133,6 +1208,8 @@ definitions:
     type: object
     properties:
       targetId:
+        type: string
+      groupId:
         type: string
       resultType:
         type: string
@@ -1163,6 +1240,7 @@ definitions:
           $ref: '#/definitions/Attachment'
     required:
       - targetId
+      - groupId
       - resultType
       - result
       - durationInMs
@@ -1227,27 +1305,21 @@ definitions:
     title: Counter
     type: object
     properties:
-      projectsSize:
+      projectsCount:
         type: integer
         format: int64
-      testScenariosSize:
+      testScenariosCount:
         type: integer
         format: int64
-      testCasesSize:
+      testCasesCount:
         type: integer
         format: int64
-      testExecutionsSize:
+      testExecutionsCount:
         type: integer
         format: int64
-      testResultsSize:
+      testResultsCount:
         type: integer
         format: int64
-    required:
-      - projectsSize
-      - testScenariosSize
-      - testCasesSize
-      - testExecutionsSize
-      - testResultsSize
 
   ErrorResponse:
     title: ErrorResponse
