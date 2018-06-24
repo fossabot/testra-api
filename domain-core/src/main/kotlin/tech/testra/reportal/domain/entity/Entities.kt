@@ -3,6 +3,7 @@ package tech.testra.reportal.domain.entity
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.CompoundIndex
+import org.springframework.data.mongodb.core.index.IndexDirection
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import tech.testra.reportal.domain.valueobjects.Attachment
@@ -20,7 +21,7 @@ interface IEntity {
 @CompoundIndex(def = "{'name': 1}",
     useGeneratedName = true, unique = true)
 data class Project(
-    @Id @Indexed override val id: String = generatedUniqueId(),
+    @Id @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
     val name: String
 ) : IEntity
 
@@ -37,7 +38,7 @@ data class TestCase(
 @Document(collection = "executions")
 data class TestExecution(
     @Id override val id: String = ObjectId().toString(),
-    @Indexed val projectId: String,
+    @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val startTime: Long = System.currentTimeMillis(),
     val endTime: Long?,
     val host: String,
@@ -48,7 +49,9 @@ data class TestExecution(
 ) : IEntity
 
 @Document(collection = "results")
-@CompoundIndex(def = "{'projectId': 1, 'executionId': 1}", name = "compound_index_project_execution")
+@CompoundIndex(def = "{'projectId': 1, 'executionId': 1}",
+    name = "compound_index_project_execution",
+    direction = IndexDirection.DESCENDING)
 data class TestResult(
     @Id override var id: String = generatedUniqueId(),
     val projectId: String,
@@ -66,9 +69,12 @@ data class TestResult(
 ) : IEntity
 
 @Document(collection = "scenarios")
+@CompoundIndex(def = "{'projectId': 1, 'featureId': 1, 'name': 1}",
+    name = "compound_index_project_featureId_name",
+    direction = IndexDirection.DESCENDING)
 data class TestScenario(
     @Id override val id: String = generatedUniqueId(),
-    val projectId: String,
+    @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val featureId: String,
     val featureDescription: String,
     val name: String,
@@ -81,7 +87,9 @@ data class TestScenario(
 
 @Document(collection = "groups")
 @CompoundIndex(def = "{'projectId': 1, 'name': 1}",
-    name = "compound_index_project_feature", unique = true)
+    name = "compound_index_project_name",
+    direction = IndexDirection.DESCENDING,
+    unique = true)
 data class TestGroup(
     @Id override val id: String = generatedUniqueId(),
     val projectId: String,
