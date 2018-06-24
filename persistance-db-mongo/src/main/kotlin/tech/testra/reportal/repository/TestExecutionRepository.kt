@@ -1,5 +1,6 @@
 package tech.testra.reportal.repository
 
+import com.mongodb.client.result.UpdateResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.findById
@@ -40,4 +41,8 @@ class TestExecutionRepository : ITestExecutionRepository {
     }
 
     override fun size(): Mono<Long> = findAll().count()
+
+    override fun pushGroupId(executionId: String, groupId: String): Mono<UpdateResult> =
+        template.updateFirst(Query.query(Criteria.where("id").isEqualTo(executionId)),
+            Update().push("groupIds", groupId), TestExecution::class.java)
 }

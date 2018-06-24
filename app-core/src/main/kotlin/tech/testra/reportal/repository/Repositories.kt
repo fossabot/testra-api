@@ -1,5 +1,6 @@
 package tech.testra.reportal.repository
 
+import com.mongodb.client.result.UpdateResult
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
@@ -36,6 +37,7 @@ interface ITestCaseRepository : IRepository<TestCase> {
 interface ITestExecutionRepository : IRepository<TestExecution> {
     fun findAll(projectId: String): Flux<TestExecution>
     fun updateEndTime(id: String, endTime: Long): Mono<Boolean>
+    fun pushGroupId(executionId: String, groupId: String): Mono<UpdateResult>
 }
 
 interface ITestResultRepository : IRepository<TestResult> {

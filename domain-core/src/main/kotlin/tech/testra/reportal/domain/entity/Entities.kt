@@ -45,7 +45,8 @@ data class TestExecution(
     val isParallel: Boolean,
     val environment: String,
     val branch: String,
-    val tags: List<String>
+    val tags: List<String>,
+    val groupIds: List<String> = emptyList()
 ) : IEntity
 
 @Document(collection = "results")

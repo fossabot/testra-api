@@ -69,6 +69,7 @@ interface ITestExecutionService {
 
     fun updateEndTime(id: String, endTime: Long)
     fun deleteExecutionById(id: String): Mono<Boolean>
+    fun pushGroupId(executionId: String, groupId: String)
     fun getSize(): Long
 }
 

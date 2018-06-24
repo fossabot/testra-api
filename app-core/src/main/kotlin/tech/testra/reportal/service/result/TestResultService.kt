@@ -101,6 +101,7 @@ class TestResultService(
                     )
                     if (resultId != null) testResult.id = resultId
                     _testExecutionService.updateEndTime(executionId, it.endTime)
+                    _testExecutionService.pushGroupId(executionId, it.groupId)
                     _testResultRepository.save(testResult.toMono())
                 }
         }

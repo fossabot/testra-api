@@ -85,6 +85,10 @@ class TestExecutionService(
     override fun deleteExecutionById(id: String): Mono<Boolean> =
         _testExecutionRepository.deleteById(id)
 
+    override fun pushGroupId(executionId: String, groupId: String) {
+        _testExecutionRepository.pushGroupId(executionId, groupId).subscribe()
+    }
+
     override fun getSize(): Long =
         _testExecutionRepository.size().blockOptional()
             .map { it }
