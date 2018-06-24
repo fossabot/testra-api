@@ -8,6 +8,7 @@ import tech.testra.reportal.domain.entity.TestExecution
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
+import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.Result
 
 interface IRepository<T> {
@@ -44,4 +45,6 @@ interface ITestResultRepository : IRepository<TestResult> {
 
 interface ITestGroupRepository : IRepository<TestGroup> {
     fun findBy(name: String, projectId: String): Mono<TestGroup>
+    fun findAll(projectId: String): Flux<TestGroup>
+    fun findAll(projectId: String, type: GroupType): Flux<TestGroup>
 }

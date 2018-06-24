@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestCase
+import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.exception.TestCaseAlreadyExistsException
 import tech.testra.reportal.exception.TestCaseNotFoundException
@@ -43,7 +44,11 @@ class TestCaseService(
                 testCaseModelMono.flatMap {
                     val testCaseModel = it
                     // Get feature if exists otherwise create one
-                    _testGroupService.getOrAddGroup(groupName = it.namespace, projectId = projectId)
+                    _testGroupService.getOrAddGroup(
+                        groupName = testCaseModel.namespace,
+                        subGroup = testCaseModel.className,
+                        type = GroupType.NAMESPACE,
+                        projectId = projectId)
                         .flatMap {
 
                             // If test case name already exists throw an exception
@@ -72,7 +77,11 @@ class TestCaseService(
                     _testCaseRepository.findById(testCaseId)
                         .flatMap {
                             // Get feature if exists otherwise create one
-                            _testGroupService.getOrAddGroup(groupName = testCaseModel.namespace, projectId = projectId)
+                            _testGroupService.getOrAddGroup(
+                                groupName = testCaseModel.namespace,
+                                subGroup = testCaseModel.className,
+                                type = GroupType.NAMESPACE,
+                                projectId = projectId)
                                 .flatMap {
 
                                     // If test case name already exists throw an exception

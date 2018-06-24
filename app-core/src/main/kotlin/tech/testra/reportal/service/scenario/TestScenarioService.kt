@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestScenario
+import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.exception.TestScenarioNotFoundException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
@@ -46,7 +47,11 @@ class TestScenarioService(
                 testScenarioModelMono.flatMap {
                     // Get feature if exists otherwise create one
                     val testScenarioModel = it
-                    tgs.getOrAddGroup(it.featureName, it.featureDescription, projectId)
+                    tgs.getOrAddGroup(
+                        groupName = it.featureName,
+                        groupDescription = it.featureDescription,
+                        type = GroupType.FEATURE,
+                        projectId = projectId)
                         .flatMap {
 
                             // If scenario name already exists throw an exception
@@ -88,7 +93,11 @@ class TestScenarioService(
                         .switchIfEmpty(TestScenarioNotFoundException(scenarioId).toMono())
                         .flatMap {
                             // Get feature if exists otherwise create one
-                            tgs.getOrAddGroup(testScenarioModel.featureName, it.featureDescription, projectId)
+                            tgs.getOrAddGroup(
+                                groupName = testScenarioModel.featureName,
+                                groupDescription = it.featureDescription,
+                                type = GroupType.FEATURE,
+                                projectId = projectId)
                                 .flatMap {
 
                                     // If scenario name already exists throw an exception

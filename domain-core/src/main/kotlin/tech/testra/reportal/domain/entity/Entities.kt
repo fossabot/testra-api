@@ -87,7 +87,8 @@ data class TestGroup(
     val projectId: String,
     val name: String,
     val type: GroupType,
-    val description: String = ""
+    val description: String = "",
+    val subGroup: String = ""
 ) : IEntity
 
 private fun generatedUniqueId() = ObjectId().toString()

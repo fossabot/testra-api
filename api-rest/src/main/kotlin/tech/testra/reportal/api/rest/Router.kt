@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.server.router
 import tech.testra.reportal.api.rest.handlers.CounterHandler
 import tech.testra.reportal.api.rest.handlers.TestCaseHandler
 import tech.testra.reportal.api.rest.handlers.TestExecutionHandler
+import tech.testra.reportal.api.rest.handlers.TestGroupHandler
 import tech.testra.reportal.api.rest.handlers.TestProjectHandler
 import tech.testra.reportal.api.rest.handlers.TestResultHandler
 import tech.testra.reportal.api.rest.handlers.TestScenarioHandler
@@ -18,6 +19,7 @@ class Router(
     private val _testScenarioHandler: TestScenarioHandler,
     private val _testCaseHandler: TestCaseHandler,
     private val _testResultHandler: TestResultHandler,
+    private val _testGroupHandler: TestGroupHandler,
     private val _counterHandler: CounterHandler
 ) {
 
@@ -71,6 +73,10 @@ class Router(
                             PUT("/$RESULT_ID_IN_RESOURCE", _testResultHandler::update)
                             DELETE("/$RESULT_ID_IN_RESOURCE", _testResultHandler::delete)
                         }
+                    }
+
+                    "/{projectId}/test-groups".nest {
+                            GET("/", _testGroupHandler::findAll)
                     }
                 }
                 "/counters".nest {

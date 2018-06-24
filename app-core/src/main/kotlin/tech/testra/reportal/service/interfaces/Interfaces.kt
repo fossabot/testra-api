@@ -6,8 +6,10 @@ import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
+import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
+import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.model.ProjectModel
 import tech.testra.reportal.model.TestCaseModel
 import tech.testra.reportal.model.TestExecutionModel
@@ -93,5 +95,13 @@ interface ITestResultService {
 }
 
 interface ITestGroupService {
-    fun getOrAddGroup(groupName: String, groupDescription: String = "", projectId: String): Mono<String>
+    fun getOrAddGroup(
+        groupName: String,
+        groupDescription: String = "",
+        subGroup: String = "",
+        type: GroupType,
+        projectId: String
+    ): Mono<String>
+    fun getGroups(projectId: String, type: String): Flux<TestGroup>
+    fun getGroups(projectId: String): Flux<TestGroup>
 }

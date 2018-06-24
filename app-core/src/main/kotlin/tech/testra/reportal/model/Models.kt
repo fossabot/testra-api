@@ -6,7 +6,8 @@ data class ProjectModel(
 
 data class TestCaseModel(
     val name: String,
-    val namespace: String
+    val namespace: String,
+    val className: String
 )
 
 data class TestExecutionModel(
