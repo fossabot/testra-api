@@ -89,7 +89,7 @@ class TestExecutionService(
         _testExecutionRepository.pushGroupId(executionId, groupId).subscribe()
     }
 
-    override fun getSize(): Long =
+    override fun getCount(): Long =
         _testExecutionRepository.size().blockOptional()
             .map { it }
             .orElse(-1L)

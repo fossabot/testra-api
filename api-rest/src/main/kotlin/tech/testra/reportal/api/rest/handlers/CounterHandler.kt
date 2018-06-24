@@ -23,11 +23,11 @@ class CounterHandler(
 ) {
 
     fun get(req: ServerRequest): Mono<ServerResponse> {
-        val counterModel = CounterModel(testProjectService.getSize(),
-            testScenarioService.getSize(),
-            testCaseService.getSize(),
-            testExecutionService.getSize(),
-            testResultService.getSize())
+        val counterModel = CounterModel(testProjectService.getCount(),
+            testScenarioService.getCount(),
+            testCaseService.getCount(),
+            testExecutionService.getCount(),
+            testResultService.getCount())
 
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8)
             .body(fromObject(counterModel))

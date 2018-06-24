@@ -54,11 +54,11 @@ data class TestStepResult(
 )
 
 data class CounterModel(
-    val projectsSize: Long,
-    val testScenariosSize: Long,
-    val testCasesSize: Long,
-    val testExecutionsSize: Long,
-    val testResultsSize: Long
+    val projectsCount: Long,
+    val testScenariosCount: Long,
+    val testCasesCount: Long,
+    val testExecutionsCount: Long,
+    val testResultsCount: Long
 )
 
 data class Attachment(

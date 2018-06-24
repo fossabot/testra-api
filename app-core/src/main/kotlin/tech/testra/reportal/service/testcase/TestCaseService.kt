@@ -109,7 +109,7 @@ class TestCaseService(
 
     override fun deleteTestCaseById(id: String): Mono<Boolean> = _testCaseRepository.deleteById(id)
 
-    override fun getSize(): Long =
+    override fun getCount(): Long =
         _testCaseRepository.size().blockOptional()
             .map { it }
             .orElse(-1L)

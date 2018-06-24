@@ -38,7 +38,7 @@ class TestProjectService(val _testProjectRepository: ITestProjectRepository) : I
 
     override fun deleteProjectById(id: String) = _testProjectRepository.deleteById(id)
 
-    override fun getSize(): Long =
+    override fun getCount(): Long =
         _testProjectRepository.size().blockOptional()
             .map { it }
             .orElse(-1L)

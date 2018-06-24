@@ -68,7 +68,7 @@ class TestResultService(
 
     override fun deleteResultById(id: String): Mono<Boolean> = _testResultRepository.deleteById(id)
 
-    override fun getSize(): Long =
+    override fun getCount(): Long =
         _testResultRepository.size().blockOptional()
             .map { it }
             .orElse(-1L)

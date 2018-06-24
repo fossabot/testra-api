@@ -124,7 +124,7 @@ class TestScenarioService(
 
     override fun deleteScenarioById(id: String): Mono<Boolean> = tsr.deleteById(id)
 
-    override fun getSize(): Long =
+    override fun getCount(): Long =
         tsr.size().blockOptional()
             .map { it }
             .orElse(-1L)

@@ -23,7 +23,7 @@ interface ITestProjectService {
     fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun deleteProjectById(id: String): Mono<Boolean>
-    fun getSize(): Long
+    fun getCount(): Long
 }
 
 @Service
@@ -39,7 +39,7 @@ interface ITestScenarioService {
     ): Mono<TestScenario>
 
     fun deleteScenarioById(id: String): Mono<Boolean>
-    fun getSize(): Long
+    fun getCount(): Long
 }
 
 @Service
@@ -54,7 +54,7 @@ interface ITestCaseService {
     ): Mono<TestCase>
 
     fun deleteTestCaseById(id: String): Mono<Boolean>
-    fun getSize(): Long
+    fun getCount(): Long
     fun getTestCasesByGroupId(projectId: String, groupId: String): Flux<TestCase>
 }
 
@@ -72,7 +72,7 @@ interface ITestExecutionService {
     fun updateEndTime(id: String, endTime: Long)
     fun deleteExecutionById(id: String): Mono<Boolean>
     fun pushGroupId(executionId: String, groupId: String)
-    fun getSize(): Long
+    fun getCount(): Long
 }
 
 @Service
@@ -94,7 +94,7 @@ interface ITestResultService {
     ): Mono<TestResult>
 
     fun deleteResultById(id: String): Mono<Boolean>
-    fun getSize(): Long
+    fun getCount(): Long
 }
 
 interface ITestGroupService {
