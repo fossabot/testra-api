@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
 import tech.testra.reportal.api.rest.extensions.getProjIdFromPath
 import tech.testra.reportal.api.rest.extensions.getScenarioIdFromPath
+import tech.testra.reportal.api.rest.extensions.toListServerResponse
 import tech.testra.reportal.exception.TestScenarioNotFoundException
 import tech.testra.reportal.model.TestScenarioModel
 import tech.testra.reportal.service.interfaces.ITestScenarioService
@@ -17,11 +18,10 @@ import tech.testra.reportal.service.interfaces.ITestScenarioService
 @Component
 class TestScenarioHandler(val _testScenarioService: ITestScenarioService) {
 
-    fun findAllByProjectId(req: ServerRequest): Mono<ServerResponse> =
-        _testScenarioService.getScenariosByProjectId(req.getProjIdFromPath())
-            .onErrorResume { throw it }
-            .collectList()
-            .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
+    fun findAll(req: ServerRequest): Mono<ServerResponse> =
+        req.queryParam("featureId")
+            .map { _testScenarioService.getScenariosByGroupId(req.getProjIdFromPath(), it).toListServerResponse() }
+            .orElseGet { _testScenarioService.getScenariosByProjectId(req.getProjIdFromPath()).toListServerResponse() }
 
     fun findById(req: ServerRequest): Mono<ServerResponse> =
         _testScenarioService.getScenarioById(req.getProjIdFromPath(), req.getScenarioIdFromPath())

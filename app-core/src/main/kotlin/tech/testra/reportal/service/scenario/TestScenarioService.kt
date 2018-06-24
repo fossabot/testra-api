@@ -27,9 +27,12 @@ class TestScenarioService(
 ) : ITestScenarioService {
 
     override fun getScenariosByProjectId(projectId: String): Flux<TestScenario> =
+        tps.getProject(projectId).flatMapManyWithResumeOnError { tsr.findAllByProjectId(it.id) }
+
+    override fun getScenariosByGroupId(projectId: String, groupId: String): Flux<TestScenario> =
         tps.getProject(projectId)
             .flatMapManyWithResumeOnError {
-                tsr.findAll(it.id)
+                tgs.getById(groupId).flatMapManyWithResumeOnError { tsr.findAllByGroupId(it.id) }
             }
 
     override fun getScenarioById(projectId: String, scenarioId: String): Mono<TestScenario> =

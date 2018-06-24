@@ -25,7 +25,8 @@ interface ITestProjectRepository : IRepository<Project> {
 }
 
 interface ITestScenarioRepository : IRepository<TestScenario> {
-    fun findAll(projectId: String): Flux<TestScenario>
+    fun findAllByProjectId(projectId: String): Flux<TestScenario>
+    fun findAllByGroupId(groupId: String): Flux<TestScenario>
     fun findBy(name: String, projectId: String, groupId: String): Flux<TestScenario>
 }
 

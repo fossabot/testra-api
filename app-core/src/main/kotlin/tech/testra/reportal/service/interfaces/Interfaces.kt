@@ -29,6 +29,7 @@ interface ITestProjectService {
 @Service
 interface ITestScenarioService {
     fun getScenariosByProjectId(projectId: String): Flux<TestScenario>
+    fun getScenariosByGroupId(projectId: String, groupId: String): Flux<TestScenario>
     fun getScenarioById(projectId: String, scenarioId: String): Mono<TestScenario>
     fun createScenario(projectId: String, testScenarioModelMono: Mono<TestScenarioModel>): Mono<TestScenario>
     fun updateScenario(
@@ -54,6 +55,7 @@ interface ITestCaseService {
 
     fun deleteTestCaseById(id: String): Mono<Boolean>
     fun getSize(): Long
+    fun getTestCasesByGroupId(projectId: String, groupId: String): Flux<TestCase>
 }
 
 @Service
@@ -103,6 +105,8 @@ interface ITestGroupService {
         type: GroupType,
         projectId: String
     ): Mono<String>
+    fun getById(id: String): Mono<TestGroup>
     fun getGroups(projectId: String, type: String): Flux<TestGroup>
     fun getGroups(projectId: String): Flux<TestGroup>
+    fun getGroupsByExecutionId(projectId: String, executionId: String): Flux<TestGroup>
 }

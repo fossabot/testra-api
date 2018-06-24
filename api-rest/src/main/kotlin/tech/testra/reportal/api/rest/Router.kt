@@ -44,7 +44,7 @@ class Router(
                     DELETE("/$PROJECT_ID_IN_RESOURCE", _testProjectHandler::deleteProject)
 
                     "/{projectId}/scenarios".nest {
-                        GET("/", _testScenarioHandler::findAllByProjectId)
+                        GET("/", _testScenarioHandler::findAll)
                         POST("/", _testScenarioHandler::create)
                         GET("/$SCENARIO_ID_IN_RESOURCE", _testScenarioHandler::findById)
                         PUT("/$SCENARIO_ID_IN_RESOURCE", _testScenarioHandler::update)
@@ -52,7 +52,7 @@ class Router(
                     }
 
                     "/{projectId}/testcases".nest {
-                        GET("/", _testCaseHandler::findAllByProjectId)
+                        GET("/", _testCaseHandler::findAll)
                         POST("/", _testCaseHandler::create)
                         GET("/$TESTCASE_ID_IN_RESOURCE", _testCaseHandler::findById)
                         PUT("/$TESTCASE_ID_IN_RESOURCE", _testCaseHandler::update)
@@ -73,10 +73,14 @@ class Router(
                             PUT("/$RESULT_ID_IN_RESOURCE", _testResultHandler::update)
                             DELETE("/$RESULT_ID_IN_RESOURCE", _testResultHandler::delete)
                         }
+
+                        "/{executionId}/groups".nest {
+                            GET("/", _testGroupHandler::findAllByExecId)
+                        }
                     }
 
                     "/{projectId}/test-groups".nest {
-                            GET("/", _testGroupHandler::findAll)
+                        GET("/", _testGroupHandler::findAll)
                     }
                 }
                 "/counters".nest {

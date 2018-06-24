@@ -30,6 +30,13 @@ class TestCaseService(
         _testProjectService.getProject(projectId)
             .flatMapManyWithResumeOnError { _testCaseRepository.findAll(it.id) }
 
+    override fun getTestCasesByGroupId(projectId: String, groupId: String): Flux<TestCase> =
+        _testProjectService.getProject(projectId)
+            .flatMapManyWithResumeOnError {
+                _testGroupService.getById(groupId)
+                    .flatMapManyWithResumeOnError { _testCaseRepository.findAll(it.id) }
+            }
+
     override fun getTestCaseById(projectId: String, testCaseId: String): Mono<TestCase> =
         _testProjectService.getProject(projectId)
             .flatMapWithResumeOnError {
