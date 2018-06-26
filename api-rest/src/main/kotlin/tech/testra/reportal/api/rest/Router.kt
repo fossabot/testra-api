@@ -77,6 +77,10 @@ class Router(
                         "/{executionId}/groups".nest {
                             GET("/", _testGroupHandler::findAllByExecId)
                         }
+
+                        "/{executionId}/result-stats".nest {
+                            GET("/", _testExecutionHandler::resultStats)
+                        }
                     }
 
                     "/{projectId}/test-groups".nest {

@@ -1,7 +1,10 @@
 package tech.testra.reportal.model
 
+const val EMPTY_STRING = ""
+
 data class ProjectModel(
-    val name: String
+    val name: String,
+    val description: String
 )
 
 data class TestCaseModel(
@@ -11,11 +14,13 @@ data class TestCaseModel(
 )
 
 data class TestExecutionModel(
-    val host: String = "",
+    val description: String = EMPTY_STRING,
+    val host: String = EMPTY_STRING,
     val isParallel: Boolean,
     val endTime: Long? = null,
-    val environment: String = "",
-    val branch: String = "",
+    val environment: String = EMPTY_STRING,
+    val branch: String = EMPTY_STRING,
+    val buildRef: String = EMPTY_STRING,
     val tags: List<String> = emptyList()
 )
 
@@ -24,7 +29,7 @@ data class TestResultModel(
     val groupId: String,
     val resultType: ResultType,
     val result: Result,
-    val error: String = "",
+    val error: String = EMPTY_STRING,
     val durationInMs: Long,
     val startTime: Long,
     val endTime: Long,
@@ -36,7 +41,7 @@ data class TestResultModel(
 data class TestScenarioModel(
     val name: String,
     val featureName: String,
-    val featureDescription: String = "",
+    val featureDescription: String = EMPTY_STRING,
     val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
     val after: List<TestStep> = emptyList(),
@@ -48,9 +53,9 @@ data class TestStep(val index: Int, val text: String)
 
 data class TestStepResult(
     val index: Int,
-    val result: tech.testra.reportal.domain.valueobjects.Result,
+    val result: Result,
     val durationInMs: Long = 0,
-    val error: String = ""
+    val error: String = EMPTY_STRING
 )
 
 data class CounterModel(
@@ -62,7 +67,7 @@ data class CounterModel(
 )
 
 data class Attachment(
-    val name: String = "",
+    val name: String = EMPTY_STRING,
     val mimeType: String,
     val base64EncodedByteArray: String
 )

@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
+import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
@@ -72,6 +73,7 @@ interface ITestExecutionService {
     fun updateEndTime(id: String, endTime: Long)
     fun deleteExecutionById(id: String): Mono<Boolean>
     fun pushGroupId(executionId: String, groupId: String)
+    fun getStats(projectId: String, executionId: String): Mono<TestExecutionStats>
     fun getCount(): Long
 }
 

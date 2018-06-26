@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
+import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
@@ -39,6 +40,16 @@ interface ITestExecutionRepository : IRepository<TestExecution> {
     fun findAll(projectId: String): Flux<TestExecution>
     fun updateEndTime(id: String, endTime: Long): Mono<Boolean>
     fun pushGroupId(executionId: String, groupId: String): Mono<UpdateResult>
+}
+
+interface ITestExecutionStatsRepository : IRepository<TestExecutionStats> {
+    fun findByExecId(executionId: String): Mono<TestExecutionStats>
+    fun incPassedResults(executionId: String): Mono<Boolean>
+    fun incFailedResults(executionId: String): Mono<Boolean>
+    fun incOtherResults(executionId: String): Mono<Boolean>
+    fun decPassedResults(executionId: String): Mono<Boolean>
+    fun decFailedResults(executionId: String): Mono<Boolean>
+    fun decOtherResults(executionId: String): Mono<Boolean>
 }
 
 interface ITestResultRepository : IRepository<TestResult> {

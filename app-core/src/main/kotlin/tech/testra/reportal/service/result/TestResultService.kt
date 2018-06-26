@@ -12,18 +12,21 @@ import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.toAttachmentDomain
 import tech.testra.reportal.extension.toTestStepResultDomain
 import tech.testra.reportal.model.TestResultModel
+import tech.testra.reportal.repository.ITestExecutionStatsRepository
 import tech.testra.reportal.repository.ITestResultRepository
 import tech.testra.reportal.service.interfaces.ITestCaseService
 import tech.testra.reportal.service.interfaces.ITestExecutionService
 import tech.testra.reportal.service.interfaces.ITestResultService
 import tech.testra.reportal.service.interfaces.ITestScenarioService
+import tech.testra.reportal.model.Result as ResultInModel
 
 @Service
 class TestResultService(
     val _testResultRepository: ITestResultRepository,
     val _testExecutionService: ITestExecutionService,
     val _testScenarioService: ITestScenarioService,
-    val _testCaseService: ITestCaseService
+    val _testCaseService: ITestCaseService,
+    val _testExecutionStatsRepository: ITestExecutionStatsRepository
 ) : ITestResultService {
 
     override fun getResults(projectId: String, executionId: String): Flux<TestResult> =
@@ -62,7 +65,7 @@ class TestResultService(
 
         return this.getResultById(projectId, executionId, resultId)
             .flatMapWithResumeOnError {
-                createOrUpdate(testResultModelMono, projectId, executionId, it.id)
+                createOrUpdate(testResultModelMono, projectId, executionId, it)
             }
     }
 
@@ -77,7 +80,7 @@ class TestResultService(
         testResultModelMono: Mono<TestResultModel>,
         projectId: String,
         executionId: String,
-        resultId: String?
+        previousTestResult: TestResult?
     ): Mono<TestResult> {
         return testResultModelMono.flatMap {
 
@@ -99,11 +102,45 @@ class TestResultService(
                         stepResults = it.stepResults.toTestStepResultDomain(),
                         attachments = it.attachments.toAttachmentDomain()
                     )
-                    if (resultId != null) testResult.id = resultId
-                    _testExecutionService.updateEndTime(executionId, it.endTime)
-                    _testExecutionService.pushGroupId(executionId, it.groupId)
+                    if (previousTestResult != null) testResult.id = previousTestResult.id
+                    updateTestExecution(executionId, it)
+                    updateTestExecutionStats(executionId, previousTestResult, it)
                     _testResultRepository.save(testResult.toMono())
                 }
+        }
+    }
+
+    private fun updateTestExecution(executionId: String, it: TestResultModel) {
+        _testExecutionService.updateEndTime(executionId, it.endTime)
+        _testExecutionService.pushGroupId(executionId, it.groupId)
+    }
+
+    private fun updateTestExecutionStats(
+        executionId: String,
+        previousTestResult: TestResult?,
+        testResultModel: TestResultModel
+    ) {
+        if (previousTestResult == null) {
+            incTestExecutionStats(testResultModel, executionId)
+        } else {
+            if (previousTestResult.result == testResultModel.result)
+                return
+
+            incTestExecutionStats(testResultModel, executionId)
+
+            when (previousTestResult.result) {
+                Result.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId).subscribe()
+                Result.FAILED -> _testExecutionStatsRepository.decFailedResults(executionId).subscribe()
+                else -> _testExecutionStatsRepository.decOtherResults(executionId).subscribe()
+            }
+        }
+    }
+
+    private fun incTestExecutionStats(testResultModel: TestResultModel, executionId: String) {
+        when (testResultModel.result) {
+            ResultInModel.PASSED -> _testExecutionStatsRepository.incPassedResults(executionId).subscribe()
+            ResultInModel.FAILED -> _testExecutionStatsRepository.incFailedResults(executionId).subscribe()
+            else -> _testExecutionStatsRepository.incOtherResults(executionId).subscribe()
         }
     }
 

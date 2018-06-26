@@ -5,18 +5,21 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestExecution
+import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.exception.TestExecutionNotFoundException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.orElseGetException
 import tech.testra.reportal.model.TestExecutionModel
 import tech.testra.reportal.repository.ITestExecutionRepository
+import tech.testra.reportal.repository.ITestExecutionStatsRepository
 import tech.testra.reportal.service.interfaces.ITestExecutionService
 import tech.testra.reportal.service.interfaces.ITestProjectService
 
 @Service
 class TestExecutionService(
     val _testExecutionRepository: ITestExecutionRepository,
+    val _testExecutionStatsRepository: ITestExecutionStatsRepository,
     val _projectService: ITestProjectService
 ) : ITestExecutionService {
 
@@ -39,12 +42,16 @@ class TestExecutionService(
             .flatMapWithResumeOnError {
                 testExecutionModelMono.flatMap {
                     val testExecution = TestExecution(projectId = projectId,
+                        description = it.description,
                         isParallel = it.isParallel,
                         host = it.host,
                         endTime = it.endTime,
                         environment = it.environment,
                         branch = it.branch,
+                        buildRef = it.buildRef,
                         tags = it.tags)
+                    val executionStatsMono = TestExecutionStats(executionId = testExecution.id).toMono()
+                    _testExecutionStatsRepository.save(executionStatsMono).subscribe()
                     _testExecutionRepository.save(testExecution.toMono())
                 }
             }
@@ -65,12 +72,14 @@ class TestExecutionService(
                             val testExecution = TestExecution(
                                 id = executionId,
                                 projectId = projectId,
+                                description = testExecutionModel.description,
                                 isParallel = testExecutionModel.isParallel,
                                 host = testExecutionModel.host,
                                 startTime = it.startTime,
                                 endTime = testExecutionModel.endTime,
                                 environment = testExecutionModel.environment,
                                 branch = testExecutionModel.branch,
+                                buildRef = testExecutionModel.buildRef,
                                 tags = testExecutionModel.tags)
                             _testExecutionRepository.save(testExecution.toMono())
                         }
@@ -88,6 +97,11 @@ class TestExecutionService(
     override fun pushGroupId(executionId: String, groupId: String) {
         _testExecutionRepository.pushGroupId(executionId, groupId).subscribe()
     }
+
+    override fun getStats(projectId: String, executionId: String): Mono<TestExecutionStats> =
+        this.getExecutionById(projectId, executionId)
+            .onErrorResume { throw it }
+            .flatMap { _testExecutionStatsRepository.findByExecId(executionId) }
 
     override fun getCount(): Long =
         _testExecutionRepository.size().blockOptional()

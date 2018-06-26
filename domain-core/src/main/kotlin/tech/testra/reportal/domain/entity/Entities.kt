@@ -22,7 +22,8 @@ interface IEntity {
     useGeneratedName = true, unique = true)
 data class Project(
     @Id @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
-    val name: String
+    val name: String,
+    val description: String
 ) : IEntity
 
 @Document(collection = "testcases")
@@ -39,14 +40,25 @@ data class TestCase(
 data class TestExecution(
     @Id override val id: String = ObjectId().toString(),
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
+    val description: String,
     val startTime: Long = System.currentTimeMillis(),
     val endTime: Long?,
     val host: String,
     val isParallel: Boolean,
     val environment: String,
     val branch: String,
+    val buildRef: String,
     val tags: List<String>,
     val groupIds: List<String> = emptyList()
+) : IEntity
+
+@Document(collection = "execution_stats")
+data class TestExecutionStats(
+    override val id: String = ObjectId().toString(),
+    @Indexed(direction = IndexDirection.DESCENDING, unique = true) val executionId: String,
+    val passedResults: Long = 0,
+    val failedResults: Long = 0,
+    val otherResults: Long = 0
 ) : IEntity
 
 @Document(collection = "results")

@@ -23,7 +23,10 @@ class TestProjectService(val _testProjectRepository: ITestProjectRepository) : I
             .orElseGetException(ProjectNotFoundException(idOrName))
 
     override fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project> =
-        projectModelMono.flatMapWithResumeOnError { saveProject(Project(name = it.name)) }
+        projectModelMono
+            .flatMapWithResumeOnError {
+                saveProject(Project(name = it.name, description = it.description))
+            }
 
     override fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project> =
         getProject(id)

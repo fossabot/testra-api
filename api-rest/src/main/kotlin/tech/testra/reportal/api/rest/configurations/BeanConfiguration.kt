@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import tech.testra.reportal.repository.TestCaseRepository
 import tech.testra.reportal.repository.TestExecutionRepository
+import tech.testra.reportal.repository.TestExecutionStatsRepository
 import tech.testra.reportal.repository.TestGroupRepository
 import tech.testra.reportal.repository.TestProjectRepository
 import tech.testra.reportal.repository.TestResultRepository
@@ -36,6 +37,9 @@ class BeanConfiguration {
     fun testGroupRepository() = TestGroupRepository()
 
     @Bean
+    fun testExecutionStatsRepository() = TestExecutionStatsRepository()
+
+    @Bean
     fun testProjectService() = TestProjectService(testProjectRepository())
 
     @Bean
@@ -52,12 +56,13 @@ class BeanConfiguration {
 
     @Bean
     fun testExecutionService() =
-        TestExecutionService(testExecutionRepository(), testProjectService())
+        TestExecutionService(testExecutionRepository(), testExecutionStatsRepository(), testProjectService())
 
     @Bean
     fun testResultService() =
         TestResultService(testResultRepository(),
             testExecutionService(),
             testScenarioService(),
-            testCaseService())
+            testCaseService(),
+            testExecutionStatsRepository())
 }

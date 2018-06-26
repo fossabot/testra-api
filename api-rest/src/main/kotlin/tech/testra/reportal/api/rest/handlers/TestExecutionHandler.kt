@@ -29,6 +29,11 @@ class TestExecutionHandler(
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
             .onErrorResume { throw it }
 
+    fun resultStats(req: ServerRequest): Mono<ServerResponse> =
+        _testExecutionService.getStats(req.getProjIdFromPath(), req.getExecIdFromPath())
+            .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
+            .onErrorResume { throw it }
+
     fun createExecution(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.createExecution(req.getProjIdFromPath(), req.bodyToMono(TestExecutionModel::class.java))
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
