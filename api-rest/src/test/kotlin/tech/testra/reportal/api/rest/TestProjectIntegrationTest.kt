@@ -12,6 +12,8 @@ class TestProjectIntegrationTest : BaseIntegrationTest() {
 
     lateinit var projectName: String
 
+    val projectDescription = "Project Description"
+
     @Before
     fun setup() {
         projectName = randomAlphanumeric(10)
@@ -21,7 +23,7 @@ class TestProjectIntegrationTest : BaseIntegrationTest() {
     fun testCreateProjectReturnCreated() {
         webTestClient.post().uri(PROJECT_ENDPOINT)
             .contentType(APPLICATION_JSON_UTF8)
-            .body(BodyInserters.fromObject("""{ "name": "$projectName" } """))
+            .body(BodyInserters.fromObject("""{ "name": "$projectName", "description": "$projectDescription" } """))
             .exchange()
             .expectStatus().isCreated
             .expectHeader().contentType(APPLICATION_JSON_UTF8)
@@ -35,7 +37,7 @@ class TestProjectIntegrationTest : BaseIntegrationTest() {
 
         webTestClient.post().uri(PROJECT_ENDPOINT)
             .contentType(APPLICATION_JSON_UTF8)
-            .body(BodyInserters.fromObject("""{ "name": "$projectName" } """))
+            .body(BodyInserters.fromObject("""{ "name": "$projectName", "description": "$projectDescription" } """))
             .exchange()
             .expectStatus().is4xxClientError
             .expectHeader().contentType(APPLICATION_JSON_UTF8)
@@ -55,7 +57,7 @@ class TestProjectIntegrationTest : BaseIntegrationTest() {
     fun testUpdateProjectReturnsOk() {
         val addedProject = webTestClient.post().uri(PROJECT_ENDPOINT)
             .contentType(APPLICATION_JSON_UTF8)
-            .body(BodyInserters.fromObject("""{ "name": "$projectName" } """))
+            .body(BodyInserters.fromObject("""{ "name": "$projectName", "description": "$projectDescription" } """))
             .exchange()
             .expectStatus().isCreated
             .expectHeader().contentType(APPLICATION_JSON_UTF8)
@@ -67,7 +69,7 @@ class TestProjectIntegrationTest : BaseIntegrationTest() {
 
         webTestClient.put().uri("$PROJECT_ENDPOINT${addedProject.id}")
             .contentType(APPLICATION_JSON_UTF8)
-            .body(BodyInserters.fromObject("""{ "name": "$newProjectName" } """))
+            .body(BodyInserters.fromObject("""{ "name": "$newProjectName", "description": "$projectDescription" } """))
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(APPLICATION_JSON_UTF8)
@@ -80,7 +82,7 @@ class TestProjectIntegrationTest : BaseIntegrationTest() {
     fun testUpdateProjectWithInvalidProjectIdReturnsProjectNotFound() {
         webTestClient.put().uri("${PROJECT_ENDPOINT}1234567890")
             .contentType(APPLICATION_JSON_UTF8)
-            .body(BodyInserters.fromObject("""{ "name": "Test Project" } """))
+            .body(BodyInserters.fromObject("""{ "name": "Test Project", "description": "$projectDescription" } """))
             .exchange()
             .expectStatus().isNotFound
             .expectHeader().contentType(APPLICATION_JSON_UTF8)
@@ -91,7 +93,7 @@ class TestProjectIntegrationTest : BaseIntegrationTest() {
     fun testGetProjectById() {
         val addedProject = webTestClient.post().uri(PROJECT_ENDPOINT)
             .contentType(APPLICATION_JSON_UTF8)
-            .body(BodyInserters.fromObject("""{ "name": "$projectName" } """))
+            .body(BodyInserters.fromObject("""{ "name": "$projectName", "description": "$projectDescription" } """))
             .exchange()
             .expectStatus().isCreated
             .expectHeader().contentType(APPLICATION_JSON_UTF8)

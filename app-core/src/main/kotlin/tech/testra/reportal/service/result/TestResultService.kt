@@ -123,7 +123,7 @@ class TestResultService(
         if (previousTestResult == null) {
             incTestExecutionStats(testResultModel, executionId)
         } else {
-            if (previousTestResult.result == testResultModel.result)
+            if (previousTestResult.result.toString() == testResultModel.result.toString())
                 return
 
             incTestExecutionStats(testResultModel, executionId)

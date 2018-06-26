@@ -31,7 +31,7 @@ class TestProjectService(val _testProjectRepository: ITestProjectRepository) : I
     override fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project> =
         getProject(id)
             .flatMapWithResumeOnError {
-                projectModelMono.flatMap { saveProject(Project(id = id, name = it.name)) }
+                projectModelMono.flatMap { saveProject(Project(id = id, name = it.name, description = it.description)) }
             }
 
     private fun saveProject(project: Project): Mono<Project> =
