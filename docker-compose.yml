@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   testra:
-    image: tech.testra/api-rest:1.0-SNAPSHOT
+    image: testra/testra-api:1.0-SNAPSHOT
     container_name: testra-api
     restart: always
     ports:

@@ -22,10 +22,10 @@ dependencies {
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
-    push = false
+    push = project.hasProperty('publishDocker')
     applicationName = 'testra-api'
-    tagVersion = 'latest'
-    tag = "testra/${applicationName}"
+    tagVersion = "$project.version"
+    tag = "testra/$applicationName"
     dockerfile = file('build/resources/main/Dockerfile')
     maintainer = 'Testra <testra2018@gmail.com>'
     doFirst {
