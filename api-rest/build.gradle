@@ -10,21 +10,24 @@ dependencies {
     // Non module dependencies
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     compile 'org.springframework.boot:spring-boot-starter-webflux'
-    compile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-devtools'
     compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
 
     compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 
+    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'io.projectreactor:reactor-test'
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
     push = false
-    applicationName = jar.baseName
-    dockerfile = file('build/resources/test/Dockerfile')
+    applicationName = 'testra-api'
+    tagVersion = 'latest'
+    tag = "testra/${applicationName}"
+    dockerfile = file('build/resources/main/Dockerfile')
+    maintainer = 'Testra <testra2018@gmail.com>'
     doFirst {
         copy {
             from jar
