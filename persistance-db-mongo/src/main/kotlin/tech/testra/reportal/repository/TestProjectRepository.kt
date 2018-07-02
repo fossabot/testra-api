@@ -29,5 +29,5 @@ class TestProjectRepository : ITestProjectRepository {
     override fun findBy(name: String): Mono<Project> =
         template.findOne(Query(Criteria.where("name").isEqualTo(name)), Project::class.java)
 
-    override fun size(): Mono<Long> = findAll().count()
+    override fun count(): Mono<Long> = findAll().count()
 }

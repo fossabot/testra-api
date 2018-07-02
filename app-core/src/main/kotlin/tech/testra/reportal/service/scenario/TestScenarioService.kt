@@ -21,9 +21,9 @@ import tech.testra.reportal.service.interfaces.ITestScenarioService
 
 @Service
 class TestScenarioService(
-    val tsr: ITestScenarioRepository,
-    val tps: ITestProjectService,
-    val tgs: ITestGroupService
+    private val tsr: ITestScenarioRepository,
+    private val tps: ITestProjectService,
+    private val tgs: ITestGroupService
 ) : ITestScenarioService {
 
     override fun getScenariosByProjectId(projectId: String): Flux<TestScenario> =
@@ -124,8 +124,5 @@ class TestScenarioService(
 
     override fun deleteScenarioById(id: String): Mono<Boolean> = tsr.deleteById(id)
 
-    override fun getCount(): Long =
-        tsr.size().blockOptional()
-            .map { it }
-            .orElse(-1L)
+    override fun count(): Mono<Long> = tsr.count()
 }

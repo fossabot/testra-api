@@ -7,11 +7,11 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-fun ServerRequest.getProjIdFromPath() = this.pathVariable("projectId")
-fun ServerRequest.getExecIdFromPath() = this.pathVariable("executionId")
-fun ServerRequest.getScenarioIdFromPath() = this.pathVariable("scenarioId")
-fun ServerRequest.getResultIdFromPath() = this.pathVariable("resultId")
-fun ServerRequest.getTestCaseIdFromPath() = this.pathVariable("testCaseId")
+fun ServerRequest.projectId(): String = this.pathVariable("projectId")
+fun ServerRequest.executionId(): String = this.pathVariable("executionId")
+fun ServerRequest.scenarioId(): String = this.pathVariable("scenarioId")
+fun ServerRequest.resultId(): String = this.pathVariable("resultId")
+fun ServerRequest.testCaseId(): String = this.pathVariable("testCaseId")
 
 fun <T> Flux<T>.toListServerResponse(): Mono<ServerResponse> =
     this.onErrorResume { throw it }

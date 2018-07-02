@@ -72,6 +72,12 @@ data class Attachment(
     val base64EncodedByteArray: String
 )
 
+data class TestExecutionFilters(
+    val environments: List<String> = emptyList(),
+    val branches: List<String> = emptyList(),
+    val tags: List<String> = emptyList()
+)
+
 enum class Result {
     PASSED, FAILED, SKIPPED, PENDING, AMBIGUOUS, UNDEFINED, UNKNOWN
 }

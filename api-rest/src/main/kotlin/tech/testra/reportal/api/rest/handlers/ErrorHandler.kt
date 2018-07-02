@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Mono
@@ -26,7 +27,7 @@ import tech.testra.reportal.exception.TestScenarioNotFoundException
 
 @Component
 @Order(-2)
-class ErrorHandler(val objectMapper: ObjectMapper) : WebExceptionHandler {
+class ErrorHandler(private val objectMapper: ObjectMapper) : WebExceptionHandler {
 
     companion object {
         private val log = LoggerFactory.getLogger(ErrorHandler::class.java)
@@ -36,7 +37,6 @@ class ErrorHandler(val objectMapper: ObjectMapper) : WebExceptionHandler {
         log.error("Error " + ex.toString())
         val serverHttpResponse = exchange!!.response
 
-        /* Handle different exceptions here */
         when (ex!!) {
             is ProjectNotFoundException -> serverHttpResponse.statusCode = NOT_FOUND
             is ProjectAlreadyExistsException -> serverHttpResponse.statusCode = CONFLICT
@@ -47,7 +47,12 @@ class ErrorHandler(val objectMapper: ObjectMapper) : WebExceptionHandler {
             is TestExecutionNotFoundException -> serverHttpResponse.statusCode = NOT_FOUND
             is TestResultNotFoundException -> serverHttpResponse.statusCode = NOT_FOUND
             is DecodingException -> serverHttpResponse.statusCode = BAD_REQUEST
-            else -> serverHttpResponse.statusCode = INTERNAL_SERVER_ERROR
+            else -> {
+                if (ex is ResponseStatusException)
+                    serverHttpResponse.statusCode = ex.status
+                else
+                    serverHttpResponse.statusCode = INTERNAL_SERVER_ERROR
+            }
         }
 
         val buffer = serverHttpResponse.bufferFactory()

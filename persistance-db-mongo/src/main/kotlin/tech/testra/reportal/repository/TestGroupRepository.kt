@@ -46,5 +46,5 @@ class TestGroupRepository : ITestGroupRepository {
         template.remove(Query(Criteria.where("id").isEqualTo(id)), TestGroup::class.java)
             .map { it.deletedCount > 0 }
 
-    override fun size(): Mono<Long> = findAll().count()
+    override fun count(): Mono<Long> = findAll().count()
 }

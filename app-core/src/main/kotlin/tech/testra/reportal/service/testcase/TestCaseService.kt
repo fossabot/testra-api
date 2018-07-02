@@ -21,9 +21,9 @@ import tech.testra.reportal.service.interfaces.ITestProjectService
 
 @Service
 class TestCaseService(
-    val _testCaseRepository: ITestCaseRepository,
-    val _testProjectService: ITestProjectService,
-    val _testGroupService: ITestGroupService
+    private val _testCaseRepository: ITestCaseRepository,
+    private val _testProjectService: ITestProjectService,
+    private val _testGroupService: ITestGroupService
 ) : ITestCaseService {
 
     override fun getTestCasesByProjectId(projectId: String): Flux<TestCase> =
@@ -109,8 +109,5 @@ class TestCaseService(
 
     override fun deleteTestCaseById(id: String): Mono<Boolean> = _testCaseRepository.deleteById(id)
 
-    override fun getCount(): Long =
-        _testCaseRepository.size().blockOptional()
-            .map { it }
-            .orElse(-1L)
+    override fun count(): Mono<Long> = _testCaseRepository.count()
 }

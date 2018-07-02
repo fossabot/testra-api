@@ -3,13 +3,16 @@ package tech.testra.reportal.service.execution
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toFlux
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestExecution
 import tech.testra.reportal.domain.entity.TestExecutionStats
+import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.exception.TestExecutionNotFoundException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.orElseGetException
+import tech.testra.reportal.model.TestExecutionFilters
 import tech.testra.reportal.model.TestExecutionModel
 import tech.testra.reportal.repository.ITestExecutionRepository
 import tech.testra.reportal.repository.ITestExecutionStatsRepository
@@ -18,9 +21,9 @@ import tech.testra.reportal.service.interfaces.ITestProjectService
 
 @Service
 class TestExecutionService(
-    val _testExecutionRepository: ITestExecutionRepository,
-    val _testExecutionStatsRepository: ITestExecutionStatsRepository,
-    val _projectService: ITestProjectService
+    private val _testExecutionRepository: ITestExecutionRepository,
+    private val _testExecutionStatsRepository: ITestExecutionStatsRepository,
+    private val _projectService: ITestProjectService
 ) : ITestExecutionService {
 
     override fun getExecutionsByProjectId(projectId: String): Flux<TestExecution> =
@@ -103,8 +106,19 @@ class TestExecutionService(
             .onErrorResume { throw it }
             .flatMap { _testExecutionStatsRepository.findByExecId(executionId) }
 
-    override fun getCount(): Long =
-        _testExecutionRepository.size().blockOptional()
-            .map { it }
-            .orElse(-1L)
+    override fun getFilters(projectId: String): Mono<TestExecutionFilters> =
+        _projectService.getProject(projectId)
+            .flatMap { buildFilters(projectId) }
+            .switchIfEmpty(ProjectNotFoundException(projectId).toMono())
+
+    override fun count(): Mono<Long> = _testExecutionRepository.count()
+
+    private fun buildFilters(projectId: String): Mono<TestExecutionFilters> {
+        val testExecutions = _testExecutionRepository.findAll(projectId)
+        return Mono.zip(
+            testExecutions.map { it.environment }.filter { it.isNotEmpty() }.distinct().collectList(),
+            testExecutions.map { it.branch }.filter { it.isNotEmpty() }.distinct().collectList(),
+            testExecutions.flatMap { it.tags.toFlux() }.filter { it.isNotEmpty() }.distinct().collectList()
+        ).map { TestExecutionFilters(it.t1, it.t2, it.t3) }
+    }
 }

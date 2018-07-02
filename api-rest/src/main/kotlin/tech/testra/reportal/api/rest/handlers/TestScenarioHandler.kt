@@ -8,42 +8,42 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.created
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
-import tech.testra.reportal.api.rest.extensions.getProjIdFromPath
-import tech.testra.reportal.api.rest.extensions.getScenarioIdFromPath
+import tech.testra.reportal.api.rest.extensions.projectId
+import tech.testra.reportal.api.rest.extensions.scenarioId
 import tech.testra.reportal.api.rest.extensions.toListServerResponse
 import tech.testra.reportal.exception.TestScenarioNotFoundException
 import tech.testra.reportal.model.TestScenarioModel
 import tech.testra.reportal.service.interfaces.ITestScenarioService
 
 @Component
-class TestScenarioHandler(val _testScenarioService: ITestScenarioService) {
+class TestScenarioHandler(private val _testScenarioService: ITestScenarioService) {
 
     fun findAll(req: ServerRequest): Mono<ServerResponse> =
         req.queryParam("featureId")
-            .map { _testScenarioService.getScenariosByGroupId(req.getProjIdFromPath(), it).toListServerResponse() }
-            .orElseGet { _testScenarioService.getScenariosByProjectId(req.getProjIdFromPath()).toListServerResponse() }
+            .map { _testScenarioService.getScenariosByGroupId(req.projectId(), it).toListServerResponse() }
+            .orElseGet { _testScenarioService.getScenariosByProjectId(req.projectId()).toListServerResponse() }
 
     fun findById(req: ServerRequest): Mono<ServerResponse> =
-        _testScenarioService.getScenarioById(req.getProjIdFromPath(), req.getScenarioIdFromPath())
+        _testScenarioService.getScenarioById(req.projectId(), req.scenarioId())
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
             .onErrorResume { throw it }
 
     fun create(req: ServerRequest): Mono<ServerResponse> =
-        _testScenarioService.createScenario(req.getProjIdFromPath(), req.bodyToMono(TestScenarioModel::class.java))
+        _testScenarioService.createScenario(req.projectId(), req.bodyToMono(TestScenarioModel::class.java))
             .flatMap { created(req.uri()).contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
             .onErrorResume { throw it }
 
     fun update(req: ServerRequest): Mono<ServerResponse> =
-        _testScenarioService.updateScenario(req.getProjIdFromPath(), req.getScenarioIdFromPath(),
+        _testScenarioService.updateScenario(req.projectId(), req.scenarioId(),
             req.bodyToMono(TestScenarioModel::class.java))
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
             .onErrorResume { throw it }
 
     fun delete(req: ServerRequest): Mono<ServerResponse> {
-        return _testScenarioService.deleteScenarioById(req.getScenarioIdFromPath())
+        return _testScenarioService.deleteScenarioById(req.scenarioId())
             .flatMap {
                 if (it) ok().build()
-                else throw TestScenarioNotFoundException(req.getScenarioIdFromPath())
+                else throw TestScenarioNotFoundException(req.scenarioId())
             }
     }
 }

@@ -14,7 +14,7 @@ import tech.testra.reportal.repository.ITestProjectRepository
 import tech.testra.reportal.service.interfaces.ITestProjectService
 
 @Service
-class TestProjectService(val _testProjectRepository: ITestProjectRepository) : ITestProjectService {
+class TestProjectService(private val _testProjectRepository: ITestProjectRepository) : ITestProjectService {
     override fun getProjects() = _testProjectRepository.findAll()
 
     override fun getProject(idOrName: String): Mono<Project> =
@@ -41,8 +41,5 @@ class TestProjectService(val _testProjectRepository: ITestProjectRepository) : I
 
     override fun deleteProjectById(id: String) = _testProjectRepository.deleteById(id)
 
-    override fun getCount(): Long =
-        _testProjectRepository.size().blockOptional()
-            .map { it }
-            .orElse(-1L)
+    override fun count(): Mono<Long> = _testProjectRepository.count()
 }

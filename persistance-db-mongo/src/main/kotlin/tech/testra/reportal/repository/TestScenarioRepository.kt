@@ -49,5 +49,5 @@ class TestScenarioRepository : ITestScenarioRepository {
         return template.find(Query.query(criteria), TestScenario::class.java)
     }
 
-    override fun size(): Mono<Long> = findAll().count()
+    override fun count(): Mono<Long> = template.count(Query(), TestScenario::class.java)
 }

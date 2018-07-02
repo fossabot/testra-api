@@ -22,23 +22,28 @@ import tech.testra.reportal.model.Result as ResultInModel
 
 @Service
 class TestResultService(
-    val _testResultRepository: ITestResultRepository,
-    val _testExecutionService: ITestExecutionService,
-    val _testScenarioService: ITestScenarioService,
-    val _testCaseService: ITestCaseService,
-    val _testExecutionStatsRepository: ITestExecutionStatsRepository
+    private val _testResultRepository: ITestResultRepository,
+    private val _testExecutionService: ITestExecutionService,
+    private val _testScenarioService: ITestScenarioService,
+    private val _testCaseService: ITestCaseService,
+    private val _testExecutionStatsRepository: ITestExecutionStatsRepository
 ) : ITestResultService {
-
     override fun getResults(projectId: String, executionId: String): Flux<TestResult> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
                 _testResultRepository.findAll(projectId, it.id)
             }
 
-    override fun getResults(projectId: String, executionId: String, result: String): Flux<TestResult> =
+    override fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<TestResult> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
-                _testResultRepository.findAll(projectId, it.id, Result.valueOf(result))
+                _testResultRepository.findAll(projectId, it.id, Result.valueOf(result.name))
+            }
+
+    override fun getResults(projectId: String, executionId: String, groupId: String): Flux<TestResult> =
+        _testExecutionService.getExecutionById(projectId, executionId)
+            .flatMapManyWithResumeOnError {
+                _testResultRepository.findAll(projectId, it.id, groupId)
             }
 
     override fun getResultById(projectId: String, executionId: String, resultId: String): Mono<TestResult> =
@@ -71,10 +76,7 @@ class TestResultService(
 
     override fun deleteResultById(id: String): Mono<Boolean> = _testResultRepository.deleteById(id)
 
-    override fun getCount(): Long =
-        _testResultRepository.size().blockOptional()
-            .map { it }
-            .orElse(-1L)
+    override fun count(): Mono<Long> = _testResultRepository.count()
 
     private fun createOrUpdate(
         testResultModelMono: Mono<TestResultModel>,
@@ -102,10 +104,12 @@ class TestResultService(
                         stepResults = it.stepResults.toTestStepResultDomain(),
                         attachments = it.attachments.toAttachmentDomain()
                     )
-                    if (previousTestResult != null) testResult.id = previousTestResult.id
                     updateTestExecution(executionId, it)
                     updateTestExecutionStats(executionId, previousTestResult, it)
-                    _testResultRepository.save(testResult.toMono())
+                    if (previousTestResult == null)
+                        _testResultRepository.save(testResult.toMono())
+                    else
+                        _testResultRepository.save(testResult.copy(id = previousTestResult.id).toMono())
                 }
         }
     }

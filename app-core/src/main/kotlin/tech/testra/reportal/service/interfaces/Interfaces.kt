@@ -13,9 +13,11 @@ import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.model.ProjectModel
 import tech.testra.reportal.model.TestCaseModel
+import tech.testra.reportal.model.TestExecutionFilters
 import tech.testra.reportal.model.TestExecutionModel
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.model.TestScenarioModel
+import tech.testra.reportal.model.Result as ResultInModel
 
 @Service
 interface ITestProjectService {
@@ -24,7 +26,7 @@ interface ITestProjectService {
     fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun deleteProjectById(id: String): Mono<Boolean>
-    fun getCount(): Long
+    fun count(): Mono<Long>
 }
 
 @Service
@@ -40,7 +42,7 @@ interface ITestScenarioService {
     ): Mono<TestScenario>
 
     fun deleteScenarioById(id: String): Mono<Boolean>
-    fun getCount(): Long
+    fun count(): Mono<Long>
 }
 
 @Service
@@ -55,7 +57,7 @@ interface ITestCaseService {
     ): Mono<TestCase>
 
     fun deleteTestCaseById(id: String): Mono<Boolean>
-    fun getCount(): Long
+    fun count(): Mono<Long>
     fun getTestCasesByGroupId(projectId: String, groupId: String): Flux<TestCase>
 }
 
@@ -74,13 +76,15 @@ interface ITestExecutionService {
     fun deleteExecutionById(id: String): Mono<Boolean>
     fun pushGroupId(executionId: String, groupId: String)
     fun getStats(projectId: String, executionId: String): Mono<TestExecutionStats>
-    fun getCount(): Long
+    fun getFilters(projectId: String): Mono<TestExecutionFilters>
+    fun count(): Mono<Long>
 }
 
 @Service
 interface ITestResultService {
     fun getResults(projectId: String, executionId: String): Flux<TestResult>
-    fun getResults(projectId: String, executionId: String, result: String): Flux<TestResult>
+    fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<TestResult>
+    fun getResults(projectId: String, executionId: String, groupId: String): Flux<TestResult>
     fun getResultById(projectId: String, executionId: String, resultId: String): Mono<TestResult>
     fun createResult(
         projectId: String,
@@ -96,7 +100,7 @@ interface ITestResultService {
     ): Mono<TestResult>
 
     fun deleteResultById(id: String): Mono<Boolean>
-    fun getCount(): Long
+    fun count(): Mono<Long>
 }
 
 interface ITestGroupService {

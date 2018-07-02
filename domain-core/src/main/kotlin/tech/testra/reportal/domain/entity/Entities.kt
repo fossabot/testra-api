@@ -66,7 +66,7 @@ data class TestExecutionStats(
     name = "compound_index_project_execution",
     direction = IndexDirection.DESCENDING)
 data class TestResult(
-    @Id override var id: String = generatedUniqueId(),
+    @Id override val id: String = generatedUniqueId(),
     val projectId: String,
     val executionId: String,
     val targetId: String,

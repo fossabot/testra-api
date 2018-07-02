@@ -18,7 +18,7 @@ interface IRepository<T> {
     fun findById(id: String): Mono<T>
     fun findAll(): Flux<T>
     fun deleteById(id: String): Mono<Boolean>
-    fun size(): Mono<Long>
+    fun count(): Mono<Long>
 }
 
 interface ITestProjectRepository : IRepository<Project> {
@@ -55,6 +55,7 @@ interface ITestExecutionStatsRepository : IRepository<TestExecutionStats> {
 interface ITestResultRepository : IRepository<TestResult> {
     fun findAll(projectId: String, executionId: String): Flux<TestResult>
     fun findAll(projectId: String, executionId: String, result: Result): Flux<TestResult>
+    fun findAll(projectId: String, executionId: String, groupId: String): Flux<TestResult>
 }
 
 interface ITestGroupRepository : IRepository<TestGroup> {

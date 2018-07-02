@@ -15,9 +15,9 @@ import tech.testra.reportal.service.interfaces.ITestProjectService
 
 @Service
 class TestGroupService(
-    val _testGroupRepository: ITestGroupRepository,
-    val _testExecutionService: ITestExecutionService,
-    val _testProjectService: ITestProjectService
+    private val _testGroupRepository: ITestGroupRepository,
+    private val _testExecutionService: ITestExecutionService,
+    private val _testProjectService: ITestProjectService
 ) : ITestGroupService {
 
     override fun getGroups(projectId: String, type: String): Flux<TestGroup> =
