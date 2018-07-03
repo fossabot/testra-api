@@ -133,19 +133,19 @@ class TestResultService(
             incTestExecutionStats(testResultModel, executionId)
 
             when (previousTestResult.result) {
-                Result.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId).subscribe()
-                Result.FAILED -> _testExecutionStatsRepository.decFailedResults(executionId).subscribe()
-                else -> _testExecutionStatsRepository.decOtherResults(executionId).subscribe()
-            }
+                Result.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId)
+                Result.FAILED -> _testExecutionStatsRepository.decFailedResults(executionId)
+                else -> _testExecutionStatsRepository.decOtherResults(executionId)
+            }.subscribe()
         }
     }
 
     private fun incTestExecutionStats(testResultModel: TestResultModel, executionId: String) {
         when (testResultModel.result) {
-            ResultInModel.PASSED -> _testExecutionStatsRepository.incPassedResults(executionId).subscribe()
-            ResultInModel.FAILED -> _testExecutionStatsRepository.incFailedResults(executionId).subscribe()
-            else -> _testExecutionStatsRepository.incOtherResults(executionId).subscribe()
-        }
+            ResultInModel.PASSED -> _testExecutionStatsRepository.incPassedResults(executionId)
+            ResultInModel.FAILED -> _testExecutionStatsRepository.incFailedResults(executionId)
+            else -> _testExecutionStatsRepository.incOtherResults(executionId)
+        }.subscribe()
     }
 
     private fun validatedTestResultModel(trm: TestResultModel, projectId: String): Mono<TestResultModel> =
