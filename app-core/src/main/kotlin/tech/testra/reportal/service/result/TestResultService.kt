@@ -10,12 +10,15 @@ import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.toAttachmentDomain
+import tech.testra.reportal.extension.toEnrichedTestResult
 import tech.testra.reportal.extension.toTestStepResultDomain
+import tech.testra.reportal.model.EnrichedTestResultModel
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.repository.ITestExecutionStatsRepository
 import tech.testra.reportal.repository.ITestResultRepository
 import tech.testra.reportal.service.interfaces.ITestCaseService
 import tech.testra.reportal.service.interfaces.ITestExecutionService
+import tech.testra.reportal.service.interfaces.ITestGroupService
 import tech.testra.reportal.service.interfaces.ITestResultService
 import tech.testra.reportal.service.interfaces.ITestScenarioService
 import tech.testra.reportal.model.Result as ResultInModel
@@ -26,24 +29,28 @@ class TestResultService(
     private val _testExecutionService: ITestExecutionService,
     private val _testScenarioService: ITestScenarioService,
     private val _testCaseService: ITestCaseService,
+    private val _testGroupService: ITestGroupService,
     private val _testExecutionStatsRepository: ITestExecutionStatsRepository
 ) : ITestResultService {
-    override fun getResults(projectId: String, executionId: String): Flux<TestResult> =
+    override fun getResults(projectId: String, executionId: String): Flux<EnrichedTestResultModel> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
                 _testResultRepository.findAll(projectId, it.id)
+                    .flatMap { toEnrichedTestResultModel(projectId, it) }
             }
 
-    override fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<TestResult> =
+    override fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<EnrichedTestResultModel> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
                 _testResultRepository.findAll(projectId, it.id, Result.valueOf(result.name))
+                    .flatMap { toEnrichedTestResultModel(projectId, it) }
             }
 
-    override fun getResults(projectId: String, executionId: String, groupId: String): Flux<TestResult> =
+    override fun getResults(projectId: String, executionId: String, groupId: String): Flux<EnrichedTestResultModel> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
                 _testResultRepository.findAll(projectId, it.id, groupId)
+                    .flatMap { toEnrichedTestResultModel(projectId, it) }
             }
 
     override fun getResultById(projectId: String, executionId: String, resultId: String): Mono<TestResult> =
@@ -155,5 +162,16 @@ class TestResultService(
             ResultType.SCENARIO -> _testScenarioService.getScenarioById(projectId, trm.targetId)
                 .flatMapWithResumeOnError { trm.toMono() }
             else -> trm.toMono()
+        }
+
+    private fun toEnrichedTestResultModel(projectId: String, testResult: TestResult): Mono<EnrichedTestResultModel> =
+        _testGroupService.getById(testResult.groupId).flatMap {
+            val testGroup = it
+            if (testResult.resultType == ResultType.SCENARIO)
+                _testScenarioService.getScenarioById(projectId, testResult.targetId)
+                    .map { testResult.toEnrichedTestResult(it, testGroup) }
+            else
+                _testCaseService.getTestCaseById(projectId, testResult.targetId)
+                    .map { testResult.toEnrichedTestResult(it, testGroup) }
         }
 }

@@ -64,5 +64,6 @@ class BeanConfiguration {
             testExecutionService(),
             testScenarioService(),
             testCaseService(),
+            testGroupService(),
             testExecutionStatsRepository())
 }

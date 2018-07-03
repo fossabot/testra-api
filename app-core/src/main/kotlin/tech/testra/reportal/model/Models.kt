@@ -38,6 +38,22 @@ data class TestResultModel(
     val stepResults: List<TestStepResult> = emptyList()
 )
 
+data class EnrichedTestResultModel(
+    val targetId: String,
+    val groupId: String,
+    val resultType: ResultType,
+    val result: Result,
+    val error: String = EMPTY_STRING,
+    val durationInMs: Long,
+    val startTime: Long,
+    val endTime: Long,
+    val retryCount: Long = 0,
+    val attachments: List<Attachment> = emptyList(),
+    val stepResults: List<TestStepResult> = emptyList(),
+    val scenario: TestScenarioModel? = null,
+    val testcase: TestCaseModel? = null
+)
+
 data class TestScenarioModel(
     val name: String,
     val featureName: String,

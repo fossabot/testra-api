@@ -12,8 +12,8 @@ import reactor.core.publisher.Mono
 import tech.testra.reportal.api.rest.extensions.executionId
 import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.api.rest.extensions.resultId
-import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.exception.TestResultNotFoundException
+import tech.testra.reportal.model.EnrichedTestResultModel
 import tech.testra.reportal.model.Result
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.service.interfaces.ITestResultService
@@ -61,7 +61,7 @@ class TestResultHandler(val _testResultService: ITestResultService) {
             }
     }
 
-    private fun getResults(f: () -> Flux<TestResult>): Mono<ServerResponse> =
+    private fun getResults(f: () -> Flux<EnrichedTestResultModel>): Mono<ServerResponse> =
         f.invoke()
             .onErrorResume { throw it }
             .collectList()

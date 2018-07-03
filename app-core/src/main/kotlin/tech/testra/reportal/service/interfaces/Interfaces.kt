@@ -11,6 +11,7 @@ import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.domain.valueobjects.GroupType
+import tech.testra.reportal.model.EnrichedTestResultModel
 import tech.testra.reportal.model.ProjectModel
 import tech.testra.reportal.model.TestCaseModel
 import tech.testra.reportal.model.TestExecutionFilters
@@ -82,9 +83,9 @@ interface ITestExecutionService {
 
 @Service
 interface ITestResultService {
-    fun getResults(projectId: String, executionId: String): Flux<TestResult>
-    fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<TestResult>
-    fun getResults(projectId: String, executionId: String, groupId: String): Flux<TestResult>
+    fun getResults(projectId: String, executionId: String): Flux<EnrichedTestResultModel>
+    fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<EnrichedTestResultModel>
+    fun getResults(projectId: String, executionId: String, groupId: String): Flux<EnrichedTestResultModel>
     fun getResultById(projectId: String, executionId: String, resultId: String): Mono<TestResult>
     fun createResult(
         projectId: String,
