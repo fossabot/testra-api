@@ -38,7 +38,6 @@ class Router(
             ENDPOINT_PREFIX.nest {
                 "/projects".nest {
                     GET("/", _testProjectHandler::getAllProjects)
-                    GET("/execution-filters", _testProjectHandler::executionFilters)
                     POST("/", _testProjectHandler::createProject)
                     GET("/$PROJECT_ID_IN_RESOURCE", _testProjectHandler::getProjectById)
                     PUT("/$PROJECT_ID_IN_RESOURCE", _testProjectHandler::updateProject)
@@ -82,6 +81,10 @@ class Router(
                         "/{executionId}/result-stats".nest {
                             GET("/", _testExecutionHandler::resultStats)
                         }
+                    }
+
+                    "/{projectId}/execution-filters".nest {
+                        GET("/", _testProjectHandler::executionFilters)
                     }
 
                     "/{projectId}/test-groups".nest {
