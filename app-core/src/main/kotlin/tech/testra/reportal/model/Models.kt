@@ -39,6 +39,7 @@ data class TestResultModel(
 )
 
 data class EnrichedTestResultModel(
+    val id: String,
     val targetId: String,
     val groupId: String,
     val resultType: ResultType,

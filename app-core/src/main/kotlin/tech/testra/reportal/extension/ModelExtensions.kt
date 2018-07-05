@@ -73,6 +73,7 @@ fun TestResult.toEnrichedTestResult(testCase: TestCase, testGroup: TestGroup): E
 
 fun TestResult.baseEnrichedTestResultModel(): EnrichedTestResultModel =
     EnrichedTestResultModel(
+        id = this.id,
         targetId = this.targetId,
         groupId = this.groupId,
         resultType = ResultType.valueOf(this.resultType.toString()),
