@@ -1176,6 +1176,10 @@ definitions:
         type: array
         items:
           type: string
+      description:
+        type: string
+      buildRef:
+        type: string
       groupIds:
         type: array
         items:
