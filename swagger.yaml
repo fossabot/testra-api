@@ -717,6 +717,43 @@ paths:
           description: Any other errors
           schema:
             $ref: '#/definitions/ErrorResponse'
+            
+  /projects/{projectId}/executions/{id}/result-stats:
+    get:
+      tags:
+      - "execution"
+      summary: Get test execution's result stats
+      description: Returns passed, failed and other results count
+      operationId: getExecutionResultStats
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        type: string
+        description: Project Id
+      - name: id
+        in: path
+        required: true
+        type: string
+        description: Execution Id
+      responses:
+        200:
+          description: 'Successful response of given Execution'
+          schema:
+            $ref: '#/definitions/TestExecutionStats'
+        404:
+          description: 'Execution not found'
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+            - error: ExecutionNotFoundException
+              message: Invalid execution id
+              timestamp: 15678902394
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
 
   /projects/{projectId}/executions/{executionId}/results:
     get:
@@ -1222,6 +1259,26 @@ definitions:
     required:
       - isParallel
       - host
+      
+  TestExecutionStats:
+    title: TestExecutionStats
+    type: object
+    properties:
+      id:
+        type: string
+      executionId:
+        type: string
+      projectId:
+        type: string
+      passedResults:
+        type: integer
+        format: int64
+      failedResults:
+        type: integer
+        format: int64
+      otherResults:
+        type: integer
+        format: int64
 
   Result:
     type: string
