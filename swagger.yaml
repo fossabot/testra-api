@@ -1477,7 +1477,7 @@ definitions:
         type: string
     required:
       - index
-      - result
+      - status
       - durationInMs
 
   Attachment:
