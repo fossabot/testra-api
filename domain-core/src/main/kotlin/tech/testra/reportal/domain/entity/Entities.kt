@@ -22,7 +22,8 @@ interface IEntity {
 data class Project(
     @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
     val name: String,
-    val description: String
+    val description: String,
+    val creationDate: Long = System.currentTimeMillis()
 ) : IEntity
 
 @Document(collection = "testcases")
