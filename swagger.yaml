@@ -1321,7 +1321,7 @@ definitions:
         type: string
       resultType:
         type: string
-        enum: [SCENARIO, TESTCASE]
+        enum: [SCENARIO, TEST_CASE]
       status:
         type: string
         enum: *RESULT_ENUM
@@ -1371,7 +1371,7 @@ definitions:
         type: string
       resultType:
         type: string
-        enum: [SCENARIO, TESTCASE]
+        enum: [SCENARIO, TEST_CASE]
       status:
         type: string
         enum: *RESULT_ENUM
@@ -1423,7 +1423,7 @@ definitions:
         type: string
       resultType:
         type: string
-        enum: [SCENARIO, TESTCASE]
+        enum: [SCENARIO, TEST_CASE]
       status:
         type: string
         enum: *RESULT_ENUM
