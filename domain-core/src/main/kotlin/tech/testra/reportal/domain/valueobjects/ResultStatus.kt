@@ -1,5 +1,5 @@
 package tech.testra.reportal.domain.valueobjects
 
-enum class Result {
+enum class ResultStatus {
     PASSED, FAILED, SKIPPED, PENDING, AMBIGUOUS, UNDEFINED, UNKNOWN
 }

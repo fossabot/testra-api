@@ -3,10 +3,13 @@ package tech.testra.reportal.service.result
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toFlux
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestResult
-import tech.testra.reportal.domain.valueobjects.Result
+import tech.testra.reportal.domain.valueobjects.ResultStatus
 import tech.testra.reportal.domain.valueobjects.ResultType
+import tech.testra.reportal.exception.InvalidGroupException
+import tech.testra.reportal.exception.TestResultNotFoundException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.toAttachmentDomain
@@ -21,7 +24,7 @@ import tech.testra.reportal.service.interfaces.ITestExecutionService
 import tech.testra.reportal.service.interfaces.ITestGroupService
 import tech.testra.reportal.service.interfaces.ITestResultService
 import tech.testra.reportal.service.interfaces.ITestScenarioService
-import tech.testra.reportal.model.Result as ResultInModel
+import tech.testra.reportal.model.ResultStatus as ResultInModel
 
 @Service
 class TestResultService(
@@ -36,13 +39,14 @@ class TestResultService(
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
                 _testResultRepository.findAll(projectId, it.id)
+                    .switchIfEmpty(TestResultNotFoundException("").toFlux())
                     .flatMap { toEnrichedTestResultModel(projectId, it) }
             }
 
-    override fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<EnrichedTestResultModel> =
+    override fun getResults(projectId: String, executionId: String, status: ResultInModel): Flux<EnrichedTestResultModel> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
-                _testResultRepository.findAll(projectId, it.id, Result.valueOf(result.name))
+                _testResultRepository.findAll(projectId, it.id, ResultStatus.valueOf(status.name))
                     .flatMap { toEnrichedTestResultModel(projectId, it) }
             }
 
@@ -102,12 +106,13 @@ class TestResultService(
                         targetId = it.targetId,
                         groupId = it.groupId,
                         resultType = ResultType.valueOf(it.resultType.name),
-                        result = Result.valueOf(it.result.name),
+                        status = ResultStatus.valueOf(it.status.name),
                         error = it.error,
                         durationInMs = it.durationInMs,
                         startTime = it.startTime,
                         endTime = it.endTime,
                         retryCount = it.retryCount,
+                        expectedToFail = it.expectedToFail,
                         stepResults = it.stepResults.toTestStepResultDomain(),
                         attachments = it.attachments.toAttachmentDomain()
                     )
@@ -134,21 +139,21 @@ class TestResultService(
         if (previousTestResult == null) {
             incTestExecutionStats(testResultModel, executionId)
         } else {
-            if (previousTestResult.result.toString() == testResultModel.result.toString())
+            if (previousTestResult.status.toString() == testResultModel.status.toString())
                 return
 
             incTestExecutionStats(testResultModel, executionId)
 
-            when (previousTestResult.result) {
-                Result.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId)
-                Result.FAILED -> _testExecutionStatsRepository.decFailedResults(executionId)
+            when (previousTestResult.status) {
+                ResultStatus.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId)
+                ResultStatus.FAILED -> _testExecutionStatsRepository.decFailedResults(executionId)
                 else -> _testExecutionStatsRepository.decOtherResults(executionId)
             }.subscribe()
         }
     }
 
     private fun incTestExecutionStats(testResultModel: TestResultModel, executionId: String) {
-        when (testResultModel.result) {
+        when (testResultModel.status) {
             ResultInModel.PASSED -> _testExecutionStatsRepository.incPassedResults(executionId)
             ResultInModel.FAILED -> _testExecutionStatsRepository.incFailedResults(executionId)
             else -> _testExecutionStatsRepository.incOtherResults(executionId)
@@ -156,13 +161,17 @@ class TestResultService(
     }
 
     private fun validatedTestResultModel(trm: TestResultModel, projectId: String): Mono<TestResultModel> =
-        when (ResultType.valueOf(trm.resultType.toString())) {
-            ResultType.TEST_CASE -> _testCaseService.getTestCaseById(projectId, trm.targetId)
-                .flatMapWithResumeOnError { trm.toMono() }
-            ResultType.SCENARIO -> _testScenarioService.getScenarioById(projectId, trm.targetId)
-                .flatMapWithResumeOnError { trm.toMono() }
-            else -> trm.toMono()
-        }
+        _testGroupService.getById(trm.groupId)
+            .switchIfEmpty(InvalidGroupException(trm.groupId).toMono())
+            .flatMap {
+                when (ResultType.valueOf(trm.resultType.toString())) {
+                    ResultType.TEST_CASE -> _testCaseService.getTestCaseById(projectId, trm.targetId)
+                        .flatMapWithResumeOnError { trm.toMono() }
+                    ResultType.SCENARIO -> _testScenarioService.getScenarioById(projectId, trm.targetId)
+                        .flatMapWithResumeOnError { trm.toMono() }
+                    else -> trm.toMono()
+                }
+            }
 
     private fun toEnrichedTestResultModel(projectId: String, testResult: TestResult): Mono<EnrichedTestResultModel> =
         _testGroupService.getById(testResult.groupId).flatMap {

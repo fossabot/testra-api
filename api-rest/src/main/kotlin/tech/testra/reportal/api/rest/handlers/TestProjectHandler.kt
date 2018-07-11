@@ -6,8 +6,10 @@ import org.springframework.web.reactive.function.BodyInserters.fromPublisher
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.created
+import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
 import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.exception.ProjectNotFoundException
@@ -43,13 +45,10 @@ class TestProjectHandler(
                     req.projectId(), req.bodyToMono(ProjectModel::class.java)), Project::class.java)
             )
 
-    fun deleteProject(req: ServerRequest): Mono<ServerResponse> {
-        return _testProjectService.deleteProjectById(req.projectId())
-            .flatMap {
-                if (it) ok().build()
-                else throw ProjectNotFoundException(req.projectId())
-            }
-    }
+    fun deleteProject(req: ServerRequest): Mono<ServerResponse> =
+        _testProjectService.getProject(req.projectId())
+            .switchIfEmpty(ProjectNotFoundException(req.projectId()).toMono())
+            .flatMap { noContent().build(_testProjectService.deleteProjectById(req.projectId())) }
 
     fun executionFilters(req: ServerRequest): Mono<ServerResponse> =
         ok().contentType(APPLICATION_JSON_UTF8)

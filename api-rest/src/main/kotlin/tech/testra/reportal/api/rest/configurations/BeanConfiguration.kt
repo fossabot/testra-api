@@ -40,7 +40,13 @@ class BeanConfiguration {
     fun testExecutionStatsRepository() = TestExecutionStatsRepository()
 
     @Bean
-    fun testProjectService() = TestProjectService(testProjectRepository())
+    fun testProjectService() = TestProjectService(testProjectRepository(),
+        testExecutionRepository(),
+        testResultRepository(),
+        testScenarioRepository(),
+        testCaseRepository(),
+        testGroupRepository(),
+        testExecutionStatsRepository())
 
     @Bean
     fun testGroupService() =
@@ -48,7 +54,7 @@ class BeanConfiguration {
 
     @Bean
     fun testScenarioService() =
-        TestScenarioService(testScenarioRepository(), testProjectService(), testGroupService())
+        TestScenarioService(testScenarioRepository(), this.testProjectService(), testGroupService())
 
     @Bean
     fun testCaseService() =
@@ -56,13 +62,13 @@ class BeanConfiguration {
 
     @Bean
     fun testExecutionService() =
-        TestExecutionService(testExecutionRepository(), testExecutionStatsRepository(), testProjectService())
+        TestExecutionService(testExecutionRepository(), testExecutionStatsRepository(), this.testProjectService())
 
     @Bean
     fun testResultService() =
         TestResultService(testResultRepository(),
             testExecutionService(),
-            testScenarioService(),
+            this.testScenarioService(),
             testCaseService(),
             testGroupService(),
             testExecutionStatsRepository())

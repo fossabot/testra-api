@@ -1,14 +1,13 @@
 package tech.testra.reportal.domain.entity
 
 import org.bson.types.ObjectId
-import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.IndexDirection
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import tech.testra.reportal.domain.valueobjects.Attachment
 import tech.testra.reportal.domain.valueobjects.GroupType
-import tech.testra.reportal.domain.valueobjects.Result
+import tech.testra.reportal.domain.valueobjects.ResultStatus
 import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.domain.valueobjects.TestStep
 import tech.testra.reportal.domain.valueobjects.TestStepResult
@@ -21,30 +20,32 @@ interface IEntity {
 @CompoundIndex(def = "{'name': 1}",
     useGeneratedName = true, unique = true)
 data class Project(
-    @Id @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
+    @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
     val name: String,
     val description: String
 ) : IEntity
 
 @Document(collection = "testcases")
 @CompoundIndex(def = "{'projectId': 1, 'namespaceId': 1, 'name': 1}",
-    name = "compound_index_project_namespace_testcase", unique = true)
+    name = "compound_index_project_namespace_testcase")
 data class TestCase(
-    @Id override val id: String = generatedUniqueId(),
+    override val id: String = generatedUniqueId(),
     val projectId: String,
     val name: String,
-    val namespaceId: String
+    val namespaceId: String,
+    val manual: Boolean,
+    val tags: List<String>
 ) : IEntity
 
 @Document(collection = "executions")
 data class TestExecution(
-    @Id override val id: String = ObjectId().toString(),
+    override val id: String = ObjectId().toString(),
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val description: String,
     val startTime: Long = System.currentTimeMillis(),
     val endTime: Long?,
     val host: String,
-    val isParallel: Boolean,
+    val parallel: Boolean,
     val environment: String,
     val branch: String,
     val buildRef: String,
@@ -56,6 +57,7 @@ data class TestExecution(
 data class TestExecutionStats(
     override val id: String = ObjectId().toString(),
     @Indexed(direction = IndexDirection.DESCENDING, unique = true) val executionId: String,
+    @Indexed(direction = IndexDirection.DESCENDING, unique = true) val projectId: String,
     val passedResults: Long = 0,
     val failedResults: Long = 0,
     val otherResults: Long = 0
@@ -66,18 +68,19 @@ data class TestExecutionStats(
     name = "compound_index_project_execution",
     direction = IndexDirection.DESCENDING)
 data class TestResult(
-    @Id override val id: String = generatedUniqueId(),
+    override val id: String = generatedUniqueId(),
     val projectId: String,
     val executionId: String,
     val targetId: String,
     val groupId: String,
     val resultType: ResultType,
-    val result: Result,
+    val status: ResultStatus,
     val error: String = "",
     val durationInMs: Long,
     val startTime: Long,
     val endTime: Long,
     val retryCount: Long = 0,
+    val expectedToFail: Boolean,
     val attachments: List<Attachment>,
     val stepResults: List<TestStepResult>
 ) : IEntity
@@ -87,11 +90,12 @@ data class TestResult(
     name = "compound_index_project_featureId_name",
     direction = IndexDirection.DESCENDING)
 data class TestScenario(
-    @Id override val id: String = generatedUniqueId(),
+    override val id: String = generatedUniqueId(),
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val featureId: String,
     val featureDescription: String,
     val name: String,
+    val manual: Boolean,
     val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
     val after: List<TestStep> = emptyList(),
@@ -105,7 +109,7 @@ data class TestScenario(
     direction = IndexDirection.DESCENDING,
     unique = true)
 data class TestGroup(
-    @Id override val id: String = generatedUniqueId(),
+    override val id: String = generatedUniqueId(),
     val projectId: String,
     val name: String,
     val type: GroupType,

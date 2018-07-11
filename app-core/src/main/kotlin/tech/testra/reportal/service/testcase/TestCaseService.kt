@@ -11,6 +11,7 @@ import tech.testra.reportal.exception.TestCaseAlreadyExistsException
 import tech.testra.reportal.exception.TestCaseNotFoundException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
+import tech.testra.reportal.extension.isSame
 import tech.testra.reportal.extension.onDuplicateKeyException
 import tech.testra.reportal.extension.orElseGetException
 import tech.testra.reportal.model.TestCaseModel
@@ -50,7 +51,7 @@ class TestCaseService(
             .flatMap {
                 testCaseModelMono.flatMap {
                     val testCaseModel = it
-                    // Get feature if exists otherwise create one
+                    // Get namespace if exists otherwise create one
                     _testGroupService.getOrAddGroup(
                         groupName = testCaseModel.namespace,
                         subGroup = testCaseModel.className,
@@ -62,10 +63,15 @@ class TestCaseService(
                             val testCaseName = testCaseModel.name
                             val testCase = TestCase(projectId = projectId,
                                 name = testCaseName,
-                                namespaceId = it)
-                            _testCaseRepository.save(testCase.toMono())
+                                namespaceId = it,
+                                manual = testCaseModel.manual,
+                                tags = testCaseModel.tags)
+
+                            _testCaseRepository.findBy(testCaseName, projectId, it)
+                                .filter { tc -> tc.isSame(testCase) }
+                                .next()
                                 .flatMap { it.toMono() }
-                                .onDuplicateKeyException { TestCaseAlreadyExistsException(testCaseName) }
+                                .switchIfEmpty(_testCaseRepository.save(testCase.toMono()))
                         }
                 }
             }
@@ -95,7 +101,9 @@ class TestCaseService(
                                     val testCase = TestCase(id = testCaseId,
                                         projectId = projectId,
                                         name = testCaseModel.name,
-                                        namespaceId = it)
+                                        namespaceId = it,
+                                        manual = testCaseModel.manual,
+                                        tags = testCaseModel.tags)
 
                                     _testCaseRepository.save(testCase.toMono())
                                         .flatMap { it.toMono() }

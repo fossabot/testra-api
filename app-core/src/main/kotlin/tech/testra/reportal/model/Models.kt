@@ -10,13 +10,15 @@ data class ProjectModel(
 data class TestCaseModel(
     val name: String,
     val namespace: String,
-    val className: String
+    val className: String,
+    val manual: Boolean,
+    val tags: List<String> = emptyList()
 )
 
 data class TestExecutionModel(
     val description: String = EMPTY_STRING,
     val host: String = EMPTY_STRING,
-    val isParallel: Boolean,
+    val parallel: Boolean,
     val endTime: Long? = null,
     val environment: String = EMPTY_STRING,
     val branch: String = EMPTY_STRING,
@@ -28,12 +30,13 @@ data class TestResultModel(
     val targetId: String,
     val groupId: String,
     val resultType: ResultType,
-    val result: Result,
+    val status: ResultStatus,
     val error: String = EMPTY_STRING,
     val durationInMs: Long,
     val startTime: Long,
     val endTime: Long,
     val retryCount: Long = 0,
+    val expectedToFail: Boolean = false,
     val attachments: List<Attachment> = emptyList(),
     val stepResults: List<TestStepResult> = emptyList()
 )
@@ -43,14 +46,15 @@ data class EnrichedTestResultModel(
     val targetId: String,
     val groupId: String,
     val resultType: ResultType,
-    val result: Result,
-    val error: String = EMPTY_STRING,
+    val status: ResultStatus,
+    val error: String,
     val durationInMs: Long,
     val startTime: Long,
     val endTime: Long,
-    val retryCount: Long = 0,
-    val attachments: List<Attachment> = emptyList(),
-    val stepResults: List<TestStepResult> = emptyList(),
+    val retryCount: Long,
+    val isExpectedToFail: Boolean,
+    val attachments: List<Attachment>,
+    val stepResults: List<TestStepResult>,
     val scenario: TestScenarioModel? = null,
     val testcase: TestCaseModel? = null
 )
@@ -59,6 +63,7 @@ data class TestScenarioModel(
     val name: String,
     val featureName: String,
     val featureDescription: String = EMPTY_STRING,
+    val manual: Boolean,
     val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
     val after: List<TestStep> = emptyList(),
@@ -70,7 +75,7 @@ data class TestStep(val index: Int, val text: String)
 
 data class TestStepResult(
     val index: Int,
-    val result: Result,
+    val status: ResultStatus,
     val durationInMs: Long = 0,
     val error: String = EMPTY_STRING
 )
@@ -95,7 +100,7 @@ data class TestExecutionFilters(
     val tags: List<String> = emptyList()
 )
 
-enum class Result {
+enum class ResultStatus {
     PASSED, FAILED, SKIPPED, PENDING, AMBIGUOUS, UNDEFINED, UNKNOWN
 }
 

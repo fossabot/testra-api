@@ -15,7 +15,6 @@ import tech.testra.reportal.domain.entity.TestExecution
 
 @Repository
 class TestExecutionRepository : ITestExecutionRepository {
-
     @Autowired
     lateinit var template: ReactiveMongoTemplate
 
@@ -31,6 +30,10 @@ class TestExecutionRepository : ITestExecutionRepository {
 
     override fun deleteById(id: String): Mono<Boolean> =
         template.remove(Query(Criteria.where("id").isEqualTo(id)), TestExecution::class.java)
+            .map { it.deletedCount > 0 }
+
+    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestExecution::class.java)
             .map { it.deletedCount > 0 }
 
     override fun updateEndTime(id: String, endTime: Long): Mono<Boolean> {

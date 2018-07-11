@@ -7,7 +7,7 @@ data class TestStep(
 
 data class TestStepResult(
     val index: Int,
-    val result: Result,
+    val status: ResultStatus,
     val durationInMs: Long,
     val error: String
 )

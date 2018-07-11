@@ -16,6 +16,7 @@ import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.api.rest.extensions.toErrorResponse
+import tech.testra.reportal.exception.InvalidGroupException
 import tech.testra.reportal.exception.ProjectAlreadyExistsException
 import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.exception.TestCaseAlreadyExistsException
@@ -47,6 +48,7 @@ class ErrorHandler(private val objectMapper: ObjectMapper) : WebExceptionHandler
             is TestExecutionNotFoundException -> serverHttpResponse.statusCode = NOT_FOUND
             is TestResultNotFoundException -> serverHttpResponse.statusCode = NOT_FOUND
             is DecodingException -> serverHttpResponse.statusCode = BAD_REQUEST
+            is InvalidGroupException -> serverHttpResponse.statusCode = BAD_REQUEST
             else -> {
                 if (ex is ResponseStatusException)
                     serverHttpResponse.statusCode = ex.status

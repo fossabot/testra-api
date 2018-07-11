@@ -46,14 +46,15 @@ class TestExecutionService(
                 testExecutionModelMono.flatMap {
                     val testExecution = TestExecution(projectId = projectId,
                         description = it.description,
-                        isParallel = it.isParallel,
+                        parallel = it.parallel,
                         host = it.host,
                         endTime = it.endTime,
                         environment = it.environment,
                         branch = it.branch,
                         buildRef = it.buildRef,
                         tags = it.tags)
-                    val executionStatsMono = TestExecutionStats(executionId = testExecution.id).toMono()
+                    val executionStatsMono =
+                        TestExecutionStats(executionId = testExecution.id, projectId = projectId).toMono()
                     _testExecutionStatsRepository.save(executionStatsMono).subscribe()
                     _testExecutionRepository.save(testExecution.toMono())
                 }
@@ -76,7 +77,7 @@ class TestExecutionService(
                                 id = executionId,
                                 projectId = projectId,
                                 description = testExecutionModel.description,
-                                isParallel = testExecutionModel.isParallel,
+                                parallel = testExecutionModel.parallel,
                                 host = testExecutionModel.host,
                                 startTime = it.startTime,
                                 endTime = testExecutionModel.endTime,

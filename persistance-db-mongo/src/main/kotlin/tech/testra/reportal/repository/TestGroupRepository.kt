@@ -46,5 +46,9 @@ class TestGroupRepository : ITestGroupRepository {
         template.remove(Query(Criteria.where("id").isEqualTo(id)), TestGroup::class.java)
             .map { it.deletedCount > 0 }
 
+    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestGroup::class.java)
+            .map { it.deletedCount > 0 }
+
     override fun count(): Mono<Long> = findAll().count()
 }

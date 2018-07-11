@@ -18,7 +18,7 @@ import tech.testra.reportal.model.TestExecutionFilters
 import tech.testra.reportal.model.TestExecutionModel
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.model.TestScenarioModel
-import tech.testra.reportal.model.Result as ResultInModel
+import tech.testra.reportal.model.ResultStatus as ResultInModel
 
 @Service
 interface ITestProjectService {
@@ -26,7 +26,7 @@ interface ITestProjectService {
     fun getProject(idOrName: String): Mono<Project>
     fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project>
-    fun deleteProjectById(id: String): Mono<Boolean>
+    fun deleteProjectById(id: String): Mono<Void>
     fun count(): Mono<Long>
 }
 
@@ -84,7 +84,7 @@ interface ITestExecutionService {
 @Service
 interface ITestResultService {
     fun getResults(projectId: String, executionId: String): Flux<EnrichedTestResultModel>
-    fun getResults(projectId: String, executionId: String, result: ResultInModel): Flux<EnrichedTestResultModel>
+    fun getResults(projectId: String, executionId: String, status: ResultInModel): Flux<EnrichedTestResultModel>
     fun getResults(projectId: String, executionId: String, groupId: String): Flux<EnrichedTestResultModel>
     fun getResultById(projectId: String, executionId: String, resultId: String): Mono<TestResult>
     fun createResult(

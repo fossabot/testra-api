@@ -35,6 +35,10 @@ class TestScenarioRepository : ITestScenarioRepository {
         template.remove(Query(Criteria.where("id").isEqualTo(id)), TestScenario::class.java)
             .map { it.deletedCount > 0 }
 
+    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestScenario::class.java)
+            .map { it.deletedCount > 0 }
+
     override fun findBy(
         name: String,
         projectId: String,

@@ -31,17 +31,21 @@ class TestCaseRepository : ITestCaseRepository {
         template.remove(Query(Criteria.where("id").isEqualTo(id)), TestCase::class.java)
             .map { it.deletedCount > 0 }
 
+    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestCase::class.java)
+            .map { it.deletedCount > 0 }
+
     override fun findBy(
         name: String,
         projectId: String,
         groupId: String
-    ): Mono<TestCase> {
+    ): Flux<TestCase> {
         val criteria: Criteria = Criteria().andOperator(
             Criteria.where("projectId").isEqualTo(projectId),
-            Criteria.where("groupId").isEqualTo(groupId),
+            Criteria.where("namespaceId").isEqualTo(groupId),
             Criteria.where("name").isEqualTo(name)
         )
-        return template.findOne(Query(criteria), TestCase::class.java)
+        return template.find(Query(criteria), TestCase::class.java)
     }
 
     override fun count(): Mono<Long> = findAll().count()

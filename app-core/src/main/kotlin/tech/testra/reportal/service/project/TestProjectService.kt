@@ -1,6 +1,7 @@
 package tech.testra.reportal.service.project
 
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.Project
@@ -10,11 +11,26 @@ import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.onDuplicateKeyException
 import tech.testra.reportal.extension.orElseGetException
 import tech.testra.reportal.model.ProjectModel
+import tech.testra.reportal.repository.ITestCaseRepository
+import tech.testra.reportal.repository.ITestExecutionRepository
+import tech.testra.reportal.repository.ITestExecutionStatsRepository
+import tech.testra.reportal.repository.ITestGroupRepository
 import tech.testra.reportal.repository.ITestProjectRepository
+import tech.testra.reportal.repository.ITestResultRepository
+import tech.testra.reportal.repository.ITestScenarioRepository
 import tech.testra.reportal.service.interfaces.ITestProjectService
 
 @Service
-class TestProjectService(private val _testProjectRepository: ITestProjectRepository) : ITestProjectService {
+class TestProjectService(
+    private val _testProjectRepository: ITestProjectRepository,
+    private val _testExecutionRepository: ITestExecutionRepository,
+    private val _testResultRepository: ITestResultRepository,
+    private val _testScenarioRepository: ITestScenarioRepository,
+    private val _testCaseRepository: ITestCaseRepository,
+    private val _testGroupRepository: ITestGroupRepository,
+    private val _testExecutionStatsRepository: ITestExecutionStatsRepository
+) : ITestProjectService {
+
     override fun getProjects() = _testProjectRepository.findAll()
 
     override fun getProject(idOrName: String): Mono<Project> =
@@ -39,7 +55,16 @@ class TestProjectService(private val _testProjectRepository: ITestProjectReposit
             .flatMap { it.toMono() }
             .onDuplicateKeyException { ProjectAlreadyExistsException(project.name) }
 
-    override fun deleteProjectById(id: String) = _testProjectRepository.deleteById(id)
+    override fun deleteProjectById(id: String): Mono<Void> =
+        Flux.merge(
+            _testProjectRepository.deleteById(id),
+            _testExecutionRepository.deleteByProjectId(id),
+            _testExecutionStatsRepository.deleteByProjectId(id),
+            _testResultRepository.deleteByProjectId(id),
+            _testGroupRepository.deleteByProjectId(id),
+            _testScenarioRepository.deleteByProjectId(id),
+            _testCaseRepository.deleteByProjectId(id)
+        ).then()
 
     override fun count(): Mono<Long> = _testProjectRepository.count()
 }

@@ -62,19 +62,15 @@ class TestScenarioService(
                                 name = testScenarioModel.name,
                                 featureId = it,
                                 featureDescription = testScenarioModel.featureDescription,
+                                manual = testScenarioModel.manual,
                                 tags = testScenarioModel.tags,
                                 backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
                                 steps = testScenarioModel.steps.toTestStepDomain())
 
-                            val testScenarioMono = tsr.findBy(testScenarioModel.name, projectId, it)
+                            tsr.findBy(testScenarioModel.name, projectId, it)
                                 .filter { ts -> ts.isSame(testScenario) }
                                 .next()
-
-                            testScenarioMono
-                                .flatMap {
-                                    if (it.isSame(testScenario)) it.toMono()
-                                    else saveScenario(testScenario)
-                                }
+                                .flatMap { it.toMono() }
                                 .switchIfEmpty(saveScenario(testScenario))
                         }
                 }
@@ -109,6 +105,7 @@ class TestScenarioService(
                                         name = testScenarioModel.name,
                                         featureId = it,
                                         featureDescription = testScenarioModel.featureDescription,
+                                        manual = testScenarioModel.manual,
                                         tags = testScenarioModel.tags,
                                         backgroundSteps = testScenarioModel.backgroundSteps.toTestStepDomain(),
                                         steps = testScenarioModel.steps.toTestStepDomain())

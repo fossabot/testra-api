@@ -5,7 +5,7 @@ import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.domain.valueobjects.Attachment
-import tech.testra.reportal.domain.valueobjects.Result
+import tech.testra.reportal.domain.valueobjects.ResultStatus
 import tech.testra.reportal.domain.valueobjects.TestStep
 import tech.testra.reportal.domain.valueobjects.TestStepResult
 import tech.testra.reportal.model.EnrichedTestResultModel
@@ -13,7 +13,7 @@ import tech.testra.reportal.model.ResultType
 import tech.testra.reportal.model.TestCaseModel
 import tech.testra.reportal.model.TestScenarioModel
 import tech.testra.reportal.model.Attachment as AttachmentModel
-import tech.testra.reportal.model.Result as ResultInModel
+import tech.testra.reportal.model.ResultStatus as ResultInModel
 import tech.testra.reportal.model.TestStep as TestStepModel
 import tech.testra.reportal.model.TestStepResult as TestStepResultModel
 
@@ -26,6 +26,11 @@ fun TestScenario.isSame(testScenario: TestScenario): Boolean {
         this.steps.isSame(testScenario.steps) && this.tags.sorted() == testScenario.tags.sorted()
 }
 
+fun TestCase.isSame(testCase: TestCase): Boolean {
+    return this.name == testCase.name && this.namespaceId == testCase.namespaceId &&
+        this.tags.containsAll(testCase.tags)
+}
+
 fun List<TestStep>.isSame(testScenarioList: List<TestStep>): Boolean {
     return when {
         this.isEmpty() -> true
@@ -35,13 +40,13 @@ fun List<TestStep>.isSame(testScenarioList: List<TestStep>): Boolean {
 }
 
 fun List<TestStepResultModel>.toTestStepResultDomain(): List<TestStepResult> =
-    this.map { TestStepResult(it.index, Result.valueOf(it.result.toString()), it.durationInMs, it.error) }
+    this.map { TestStepResult(it.index, ResultStatus.valueOf(it.status.toString()), it.durationInMs, it.error) }
 
 fun List<AttachmentModel>.toAttachmentDomain(): List<Attachment> =
     this.map { Attachment(it.name, it.mimeType, it.base64EncodedByteArray) }
 
 fun List<TestStepResult>.toTestStepResultModel(): List<TestStepResultModel> =
-    this.map { TestStepResultModel(it.index, ResultInModel.valueOf(it.result.toString()), it.durationInMs, it.error) }
+    this.map { TestStepResultModel(it.index, ResultInModel.valueOf(it.status.toString()), it.durationInMs, it.error) }
 
 fun List<Attachment>.toAttachmentModel(): List<AttachmentModel> =
     this.map { AttachmentModel(it.name, it.mimeType, it.base64EncodedByteArray) }
@@ -51,6 +56,7 @@ fun TestScenario.toTestScenarioModel(testGroup: TestGroup): TestScenarioModel =
         name = this.name,
         featureName = testGroup.name,
         featureDescription = testGroup.description,
+        manual = this.manual,
         before = this.before.toTestStepModel(),
         after = this.after.toTestStepModel(),
         backgroundSteps = this.backgroundSteps.toTestStepModel(),
@@ -62,7 +68,9 @@ fun TestCase.toTestCaseModel(testGroup: TestGroup): TestCaseModel =
     TestCaseModel(
         name = this.name,
         className = testGroup.subGroup,
-        namespace = testGroup.name
+        namespace = testGroup.name,
+        manual = this.manual,
+        tags = this.tags
     )
 
 fun TestResult.toEnrichedTestResult(testScenario: TestScenario, testGroup: TestGroup): EnrichedTestResultModel =
@@ -77,12 +85,13 @@ fun TestResult.baseEnrichedTestResultModel(): EnrichedTestResultModel =
         targetId = this.targetId,
         groupId = this.groupId,
         resultType = ResultType.valueOf(this.resultType.toString()),
-        result = ResultInModel.valueOf(this.result.toString()),
+        status = ResultInModel.valueOf(this.status.toString()),
         error = this.error,
         durationInMs = this.durationInMs,
         startTime = this.startTime,
         endTime = this.endTime,
         retryCount = this.retryCount,
+        isExpectedToFail = this.expectedToFail,
         attachments = this.attachments.toAttachmentModel(),
         stepResults = this.stepResults.toTestStepResultModel()
     )

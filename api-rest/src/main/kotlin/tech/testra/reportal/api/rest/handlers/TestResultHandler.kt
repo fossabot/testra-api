@@ -14,7 +14,7 @@ import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.api.rest.extensions.resultId
 import tech.testra.reportal.exception.TestResultNotFoundException
 import tech.testra.reportal.model.EnrichedTestResultModel
-import tech.testra.reportal.model.Result
+import tech.testra.reportal.model.ResultStatus
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.service.interfaces.ITestResultService
 
@@ -24,8 +24,8 @@ class TestResultHandler(val _testResultService: ITestResultService) {
     fun findAll(req: ServerRequest): Mono<ServerResponse> {
         val projectId = req.projectId()
         val execId = req.executionId()
-        return req.queryParam("result")
-            .map { getResults { _testResultService.getResults(projectId, execId, Result.valueOf(it)) } }
+        return req.queryParam("status")
+            .map { getResults { _testResultService.getResults(projectId, execId, ResultStatus.valueOf(it)) } }
             .orElseGet {
                 req.queryParam("groupId")
                     .map { getResults { _testResultService.getResults(projectId, execId, it) } }

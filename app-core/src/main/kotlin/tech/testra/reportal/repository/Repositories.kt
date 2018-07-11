@@ -11,13 +11,14 @@ import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.domain.valueobjects.GroupType
-import tech.testra.reportal.domain.valueobjects.Result
+import tech.testra.reportal.domain.valueobjects.ResultStatus
 
 interface IRepository<T> {
     fun save(executionMono: Mono<T>): Mono<T>
     fun findById(id: String): Mono<T>
     fun findAll(): Flux<T>
     fun deleteById(id: String): Mono<Boolean>
+    fun deleteByProjectId(projectId: String): Mono<Boolean>
     fun count(): Mono<Long>
 }
 
@@ -33,7 +34,7 @@ interface ITestScenarioRepository : IRepository<TestScenario> {
 
 interface ITestCaseRepository : IRepository<TestCase> {
     fun findAll(projectId: String): Flux<TestCase>
-    fun findBy(name: String, projectId: String, groupId: String): Mono<TestCase>
+    fun findBy(name: String, projectId: String, groupId: String): Flux<TestCase>
 }
 
 interface ITestExecutionRepository : IRepository<TestExecution> {
@@ -54,7 +55,7 @@ interface ITestExecutionStatsRepository : IRepository<TestExecutionStats> {
 
 interface ITestResultRepository : IRepository<TestResult> {
     fun findAll(projectId: String, executionId: String): Flux<TestResult>
-    fun findAll(projectId: String, executionId: String, result: Result): Flux<TestResult>
+    fun findAll(projectId: String, executionId: String, resultStatus: ResultStatus): Flux<TestResult>
     fun findAll(projectId: String, executionId: String, groupId: String): Flux<TestResult>
 }
 
