@@ -1354,7 +1354,7 @@ definitions:
       - targetId
       - groupId
       - resultType
-      - result
+      - status
       - durationInMs
       - startTime
       - endTime
@@ -1455,7 +1455,7 @@ definitions:
       - targetId
       - groupId
       - resultType
-      - result
+      - status
       - durationInMs
       - startTime
       - endTime
