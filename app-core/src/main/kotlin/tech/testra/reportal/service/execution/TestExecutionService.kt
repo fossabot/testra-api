@@ -55,8 +55,10 @@ class TestExecutionService(
                         tags = it.tags)
                     val executionStatsMono =
                         TestExecutionStats(executionId = testExecution.id, projectId = projectId).toMono()
-                    _testExecutionStatsRepository.save(executionStatsMono).subscribe()
-                    _testExecutionRepository.save(testExecution.toMono())
+                    _testExecutionStatsRepository.save(executionStatsMono)
+                        .flatMap {
+                            _testExecutionRepository.save(testExecution.toMono())
+                        }
                 }
             }
     }
