@@ -774,7 +774,7 @@ paths:
         required: true
         type: string
         description: Execution Id
-      - name: result
+      - name: status
         in: query
         required: false
         type: string
