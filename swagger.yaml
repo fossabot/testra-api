@@ -1044,7 +1044,8 @@ definitions:
       description:
         type: string
       creationDate:
-        type: string
+        type: integer
+        format: int64
     required:
       - id
       - name
