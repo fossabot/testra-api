@@ -1243,7 +1243,7 @@ definitions:
     required:
       - id
       - projectId
-      - isParallel
+      - parallel
       - host
       - startTime
       - endTime
@@ -1276,7 +1276,7 @@ definitions:
         items:
           type: string
     required:
-      - isParallel
+      - parallel
       - host
       
   TestExecutionStats:
