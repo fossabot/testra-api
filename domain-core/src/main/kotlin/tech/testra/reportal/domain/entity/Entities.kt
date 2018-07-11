@@ -58,7 +58,7 @@ data class TestExecution(
 data class TestExecutionStats(
     override val id: String = ObjectId().toString(),
     @Indexed(direction = IndexDirection.DESCENDING, unique = true) val executionId: String,
-    @Indexed(direction = IndexDirection.DESCENDING, unique = true) val projectId: String,
+    @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val passedResults: Long = 0,
     val failedResults: Long = 0,
     val otherResults: Long = 0
