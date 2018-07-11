@@ -3,13 +3,11 @@ package tech.testra.reportal.service.result
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.toFlux
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.valueobjects.ResultStatus
 import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.exception.InvalidGroupException
-import tech.testra.reportal.exception.TestResultNotFoundException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.toAttachmentDomain
@@ -39,7 +37,6 @@ class TestResultService(
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapManyWithResumeOnError {
                 _testResultRepository.findAll(projectId, it.id)
-                    .switchIfEmpty(TestResultNotFoundException("").toFlux())
                     .flatMap { toEnrichedTestResultModel(projectId, it) }
             }
 
