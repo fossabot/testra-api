@@ -1466,7 +1466,7 @@ definitions:
     properties:
       index:
         type: integer
-      result:
+      status:
         type: string
         enum: *RESULT_ENUM
       durationInMs:
