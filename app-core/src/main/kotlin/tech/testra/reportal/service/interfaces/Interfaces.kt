@@ -64,6 +64,7 @@ interface ITestCaseService {
 
 @Service
 interface ITestExecutionService {
+    fun getExecutions(projectId: String, env: String, branch: String, tags: List<String>): Flux<TestExecution>
     fun getExecutionsByProjectId(projectId: String): Flux<TestExecution>
     fun getExecutionById(projectId: String, executionId: String): Mono<TestExecution>
     fun createExecution(projectId: String, testExecutionModelMono: Mono<TestExecutionModel>): Mono<TestExecution>

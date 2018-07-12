@@ -39,6 +39,7 @@ interface ITestCaseRepository : IRepository<TestCase> {
 
 interface ITestExecutionRepository : IRepository<TestExecution> {
     fun findAll(projectId: String): Flux<TestExecution>
+    fun findAll(projectId: String, env: String, branch: String, tags: List<String>): Flux<TestExecution>
     fun updateEndTime(id: String, endTime: Long): Mono<Boolean>
     fun pushGroupId(executionId: String, groupId: String): Mono<UpdateResult>
 }

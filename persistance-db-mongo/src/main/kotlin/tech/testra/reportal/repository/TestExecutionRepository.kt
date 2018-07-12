@@ -28,6 +28,16 @@ class TestExecutionRepository : ITestExecutionRepository {
         template.find(Query(Criteria.where("projectId").isEqualTo(projectId)),
             TestExecution::class.java)
 
+    override fun findAll(projectId: String, env: String, branch: String, tags: List<String>): Flux<TestExecution> {
+        val criteria: Criteria = Criteria().andOperator(
+            Criteria.where("projectId").isEqualTo(projectId),
+            Criteria.where("environment").isEqualTo(env),
+            Criteria.where("branch").isEqualTo(branch),
+            Criteria.where("tags").`in`(tags)
+        )
+        return template.find(Query(criteria), TestExecution::class.java)
+    }
+
     override fun deleteById(id: String): Mono<Boolean> =
         template.remove(Query(Criteria.where("id").isEqualTo(id)), TestExecution::class.java)
             .map { it.deletedCount > 0 }
