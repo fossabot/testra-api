@@ -82,7 +82,7 @@ class TestResultService(
             }
     }
 
-    override fun deleteResultById(id: String): Mono<Boolean> = _testResultRepository.deleteById(id)
+    override fun deleteResultById(id: String): Mono<Void> = _testResultRepository.deleteById(id)
 
     override fun count(): Mono<Long> = _testResultRepository.count()
 
@@ -143,7 +143,12 @@ class TestResultService(
 
             when (previousTestResult.status) {
                 ResultStatus.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId)
-                ResultStatus.FAILED -> _testExecutionStatsRepository.decFailedResults(executionId)
+                ResultStatus.FAILED -> {
+                    if (testResultModel.expectedToFail) {
+                        _testExecutionStatsRepository.decExpectedFailedResults(executionId)
+                    }
+                    _testExecutionStatsRepository.decFailedResults(executionId)
+                }
                 else -> _testExecutionStatsRepository.decOtherResults(executionId)
             }.subscribe()
         }
@@ -152,7 +157,12 @@ class TestResultService(
     private fun incTestExecutionStats(testResultModel: TestResultModel, executionId: String) {
         when (testResultModel.status) {
             ResultInModel.PASSED -> _testExecutionStatsRepository.incPassedResults(executionId)
-            ResultInModel.FAILED -> _testExecutionStatsRepository.incFailedResults(executionId)
+            ResultInModel.FAILED -> {
+                if (testResultModel.expectedToFail) {
+                    _testExecutionStatsRepository.incExpectedFailedResults(executionId)
+                }
+                _testExecutionStatsRepository.incFailedResults(executionId)
+            }
             else -> _testExecutionStatsRepository.incOtherResults(executionId)
         }.subscribe()
     }

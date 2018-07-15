@@ -48,7 +48,7 @@ class TestProjectHandler(
     fun deleteProject(req: ServerRequest): Mono<ServerResponse> =
         _testProjectService.getProject(req.projectId())
             .switchIfEmpty(ProjectNotFoundException(req.projectId()).toMono())
-            .flatMap { noContent().build(_testProjectService.deleteProjectById(req.projectId())) }
+            .flatMap { noContent().build(_testProjectService.deleteById(req.projectId())) }
 
     fun executionFilters(req: ServerRequest): Mono<ServerResponse> =
         ok().contentType(APPLICATION_JSON_UTF8)

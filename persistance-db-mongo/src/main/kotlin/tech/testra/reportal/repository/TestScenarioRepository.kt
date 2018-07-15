@@ -31,13 +31,11 @@ class TestScenarioRepository : ITestScenarioRepository {
         template.find(Query(Criteria.where("groupId").isEqualTo(groupId)),
             TestScenario::class.java)
 
-    override fun deleteById(id: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestScenario::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteById(id: String): Mono<Void> =
+        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestScenario::class.java).then()
 
-    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestScenario::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteByProjectId(projectId: String): Mono<Void> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestScenario::class.java).then()
 
     override fun findBy(
         name: String,

@@ -97,7 +97,7 @@ class TestExecutionService(
         _testExecutionRepository.updateEndTime(id, endTime).subscribe()
     }
 
-    override fun deleteExecutionById(id: String): Mono<Boolean> =
+    override fun deleteExecutionById(id: String): Mono<Void> =
         _testExecutionRepository.deleteById(id)
 
     override fun pushGroupId(executionId: String, groupId: String) {

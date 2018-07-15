@@ -1,7 +1,6 @@
 package tech.testra.reportal.service.project
 
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.Project
@@ -55,16 +54,14 @@ class TestProjectService(
             .flatMap { it.toMono() }
             .onDuplicateKeyException { ProjectAlreadyExistsException(project.name) }
 
-    override fun deleteProjectById(id: String): Mono<Void> =
-        Flux.merge(
-            _testProjectRepository.deleteById(id),
-            _testExecutionRepository.deleteByProjectId(id),
-            _testExecutionStatsRepository.deleteByProjectId(id),
-            _testResultRepository.deleteByProjectId(id),
-            _testGroupRepository.deleteByProjectId(id),
-            _testScenarioRepository.deleteByProjectId(id),
-            _testCaseRepository.deleteByProjectId(id)
-        ).then()
+    override fun deleteById(id: String): Mono<Void> =
+        _testCaseRepository.deleteByProjectId(id).then()
+            .then(_testScenarioRepository.deleteByProjectId(id))
+            .then(_testGroupRepository.deleteByProjectId(id))
+            .then(_testResultRepository.deleteByProjectId(id))
+            .then(_testExecutionStatsRepository.deleteByProjectId(id))
+            .then(_testExecutionRepository.deleteByProjectId(id))
+            .then(_testProjectRepository.deleteById(id))
 
     override fun count(): Mono<Long> = _testProjectRepository.count()
 }

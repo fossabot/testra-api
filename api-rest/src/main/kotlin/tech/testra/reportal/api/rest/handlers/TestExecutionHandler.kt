@@ -5,8 +5,10 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters.fromObject
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
 import tech.testra.reportal.api.rest.extensions.executionId
 import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.exception.TestExecutionNotFoundException
@@ -42,11 +44,8 @@ class TestExecutionHandler(private val _testExecutionService: ITestExecutionServ
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
             .onErrorResume { throw it }
 
-    fun delete(req: ServerRequest): Mono<ServerResponse> {
-        return _testExecutionService.deleteExecutionById(req.executionId())
-            .flatMap {
-                if (it) ok().build()
-                else throw TestExecutionNotFoundException(req.executionId())
-            }
-    }
+    fun delete(req: ServerRequest): Mono<ServerResponse> =
+        _testExecutionService.getExecutionById(req.projectId(), req.executionId())
+            .switchIfEmpty(TestExecutionNotFoundException(req.executionId()).toMono())
+            .flatMap { noContent().build(_testExecutionService.deleteExecutionById(req.executionId())) }
 }

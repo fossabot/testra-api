@@ -115,7 +115,7 @@ class TestCaseService(
             }
     }
 
-    override fun deleteTestCaseById(id: String): Mono<Boolean> = _testCaseRepository.deleteById(id)
+    override fun deleteTestCaseById(id: String): Mono<Void> = _testCaseRepository.deleteById(id)
 
     override fun count(): Mono<Long> = _testCaseRepository.count()
 }

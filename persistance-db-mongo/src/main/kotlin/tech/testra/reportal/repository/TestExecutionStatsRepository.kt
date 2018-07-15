@@ -23,13 +23,13 @@ class TestExecutionStatsRepository : ITestExecutionStatsRepository {
 
     override fun findAll(): Flux<TestExecutionStats> = template.findAll(TestExecutionStats::class.java)
 
-    override fun deleteById(executionId: String): Mono<Boolean> =
+    override fun deleteById(executionId: String): Mono<Void> =
         template.remove(Query(Criteria.where("executionId").isEqualTo(executionId)), TestExecutionStats::class.java)
-            .map { it.deletedCount > 0 }
+            .then()
 
-    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
+    override fun deleteByProjectId(projectId: String): Mono<Void> =
         template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestExecutionStats::class.java)
-            .map { it.deletedCount > 0 }
+            .then()
 
     override fun findByExecId(executionId: String): Mono<TestExecutionStats> =
         template.findOne(Query(Criteria.where("executionId").isEqualTo(executionId)),
@@ -41,6 +41,9 @@ class TestExecutionStatsRepository : ITestExecutionStatsRepository {
     override fun incFailedResults(executionId: String): Mono<Boolean> =
         incOrDecResults("failedResults", 1, executionId)
 
+    override fun incExpectedFailedResults(executionId: String): Mono<Boolean> =
+        incOrDecResults("expectedFailedResults", 1, executionId)
+
     override fun incOtherResults(executionId: String): Mono<Boolean> =
         incOrDecResults("otherResults", 1, executionId)
 
@@ -49,6 +52,9 @@ class TestExecutionStatsRepository : ITestExecutionStatsRepository {
 
     override fun decFailedResults(executionId: String): Mono<Boolean> =
         incOrDecResults("failedResults", -1, executionId)
+
+    override fun decExpectedFailedResults(executionId: String): Mono<Boolean> =
+        incOrDecResults("expectedFailedResults", -1, executionId)
 
     override fun decOtherResults(executionId: String): Mono<Boolean> =
         incOrDecResults("otherResults", -1, executionId)

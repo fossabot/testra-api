@@ -6,8 +6,10 @@ import org.springframework.web.reactive.function.BodyInserters.fromObject
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.created
+import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
 import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.api.rest.extensions.scenarioId
 import tech.testra.reportal.api.rest.extensions.toListServerResponse
@@ -39,11 +41,8 @@ class TestScenarioHandler(private val _testScenarioService: ITestScenarioService
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
             .onErrorResume { throw it }
 
-    fun delete(req: ServerRequest): Mono<ServerResponse> {
-        return _testScenarioService.deleteScenarioById(req.scenarioId())
-            .flatMap {
-                if (it) ok().build()
-                else throw TestScenarioNotFoundException(req.scenarioId())
-            }
-    }
+    fun delete(req: ServerRequest): Mono<ServerResponse> =
+        _testScenarioService.getScenarioById(req.projectId(), req.scenarioId())
+            .switchIfEmpty(TestScenarioNotFoundException(req.scenarioId()).toMono())
+            .flatMap { noContent().build(_testScenarioService.deleteScenarioById(req.scenarioId())) }
 }

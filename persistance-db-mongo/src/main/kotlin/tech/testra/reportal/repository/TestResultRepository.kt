@@ -49,13 +49,11 @@ class TestResultRepository : ITestResultRepository {
         return findByQuery(Query(criteria))
     }
 
-    override fun deleteById(id: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestResult::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteById(id: String): Mono<Void> =
+        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestResult::class.java).then()
 
-    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestResult::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteByProjectId(projectId: String): Mono<Void> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestResult::class.java).then()
 
     override fun count(): Mono<Long> = findAll().count()
 

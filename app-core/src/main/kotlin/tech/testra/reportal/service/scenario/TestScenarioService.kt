@@ -119,7 +119,7 @@ class TestScenarioService(
 
     private fun saveScenario(testScenario: TestScenario): Mono<TestScenario> = tsr.save(testScenario.toMono())
 
-    override fun deleteScenarioById(id: String): Mono<Boolean> = tsr.deleteById(id)
+    override fun deleteScenarioById(id: String): Mono<Void> = tsr.deleteById(id)
 
     override fun count(): Mono<Long> = tsr.count()
 }

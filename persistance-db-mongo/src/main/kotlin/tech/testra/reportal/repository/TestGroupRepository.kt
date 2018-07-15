@@ -42,13 +42,11 @@ class TestGroupRepository : ITestGroupRepository {
         return template.find(Query(criteria), TestGroup::class.java)
     }
 
-    override fun deleteById(id: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestGroup::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteById(id: String): Mono<Void> =
+        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestGroup::class.java).then()
 
-    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestGroup::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteByProjectId(projectId: String): Mono<Void> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestGroup::class.java).then()
 
     override fun count(): Mono<Long> = findAll().count()
 }

@@ -61,6 +61,7 @@ data class TestExecutionStats(
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val passedResults: Long = 0,
     val failedResults: Long = 0,
+    val expectedFailedResults: Long = 0,
     val otherResults: Long = 0
 ) : IEntity
 

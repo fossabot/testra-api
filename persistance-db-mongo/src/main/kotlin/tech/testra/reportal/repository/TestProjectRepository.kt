@@ -22,11 +22,8 @@ class TestProjectRepository : ITestProjectRepository {
 
     override fun findAll(): Flux<Project> = template.findAll(Project::class.java)
 
-    override fun deleteById(id: String): Mono<Boolean> =
-            template.remove(Query(Criteria.where("id").isEqualTo(id)), Project::class.java)
-                    .map { it.deletedCount > 0 }
-
-    override fun deleteByProjectId(projectId: String): Mono<Boolean> = deleteById(projectId)
+    override fun deleteById(id: String): Mono<Void> =
+        template.remove(Query(Criteria.where("id").isEqualTo(id)), Project::class.java).then()
 
     override fun findBy(name: String): Mono<Project> =
         template.findOne(Query(Criteria.where("name").isEqualTo(name)), Project::class.java)

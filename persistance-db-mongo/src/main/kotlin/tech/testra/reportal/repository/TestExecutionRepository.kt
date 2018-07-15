@@ -28,13 +28,11 @@ class TestExecutionRepository : ITestExecutionRepository {
         template.find(Query(Criteria.where("projectId").isEqualTo(projectId)),
             TestExecution::class.java)
 
-    override fun deleteById(id: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestExecution::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteById(id: String): Mono<Void> =
+        template.remove(Query(Criteria.where("id").isEqualTo(id)), TestExecution::class.java).then()
 
-    override fun deleteByProjectId(projectId: String): Mono<Boolean> =
-        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestExecution::class.java)
-            .map { it.deletedCount > 0 }
+    override fun deleteByProjectId(projectId: String): Mono<Void> =
+        template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestExecution::class.java).then()
 
     override fun updateEndTime(id: String, endTime: Long): Mono<Boolean> {
         val update = Update()

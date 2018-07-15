@@ -6,9 +6,11 @@ import org.springframework.web.reactive.function.BodyInserters.fromObject
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.created
+import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
 import tech.testra.reportal.api.rest.extensions.executionId
 import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.api.rest.extensions.resultId
@@ -53,13 +55,10 @@ class TestResultHandler(val _testResultService: ITestResultService) {
             .onErrorResume { throw it }
             .flatMap { ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
-    fun delete(req: ServerRequest): Mono<ServerResponse> {
-        return _testResultService.deleteResultById(req.resultId())
-            .flatMap {
-                if (it) ok().build()
-                else throw TestResultNotFoundException(req.resultId())
-            }
-    }
+    fun delete(req: ServerRequest): Mono<ServerResponse> =
+        _testResultService.getResultById(req.projectId(), req.executionId(), req.resultId())
+            .switchIfEmpty(TestResultNotFoundException(req.resultId()).toMono())
+            .flatMap { noContent().build(_testResultService.deleteResultById(req.resultId())) }
 
     private fun getResults(f: () -> Flux<EnrichedTestResultModel>): Mono<ServerResponse> =
         f.invoke()
