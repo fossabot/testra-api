@@ -1289,13 +1289,16 @@ definitions:
         type: string
       projectId:
         type: string
-      passedResults:
+      passed:
         type: integer
         format: int64
-      failedResults:
+      failed:
         type: integer
         format: int64
-      otherResults:
+      expectedFailures:
+        type: integer
+        format: int64  
+      others:
         type: integer
         format: int64
 
