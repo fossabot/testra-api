@@ -59,10 +59,10 @@ data class TestExecutionStats(
     override val id: String = ObjectId().toString(),
     @Indexed(direction = IndexDirection.DESCENDING, unique = true) val executionId: String,
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
-    val passedResults: Long = 0,
-    val failedResults: Long = 0,
-    val expectedFailedResults: Long = 0,
-    val otherResults: Long = 0
+    val passed: Long = 0,
+    val failed: Long = 0,
+    val expectedFailures: Long = 0,
+    val others: Long = 0
 ) : IEntity
 
 @Document(collection = "results")

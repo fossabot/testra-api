@@ -36,28 +36,28 @@ class TestExecutionStatsRepository : ITestExecutionStatsRepository {
             TestExecutionStats::class.java)
 
     override fun incPassedResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("passedResults", 1, executionId)
+        incOrDecResults("passed", 1, executionId)
 
     override fun incFailedResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("failedResults", 1, executionId)
+        incOrDecResults("failed", 1, executionId)
 
     override fun incExpectedFailedResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("expectedFailedResults", 1, executionId)
+        incOrDecResults("expectedFailures", 1, executionId)
 
     override fun incOtherResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("otherResults", 1, executionId)
+        incOrDecResults("others", 1, executionId)
 
     override fun decPassedResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("passedResults", -1, executionId)
+        incOrDecResults("passed", -1, executionId)
 
     override fun decFailedResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("failedResults", -1, executionId)
+        incOrDecResults("failed", -1, executionId)
 
     override fun decExpectedFailedResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("expectedFailedResults", -1, executionId)
+        incOrDecResults("expectedFailures", -1, executionId)
 
     override fun decOtherResults(executionId: String): Mono<Boolean> =
-        incOrDecResults("otherResults", -1, executionId)
+        incOrDecResults("others", -1, executionId)
 
     override fun count(): Mono<Long> = findAll().count()
 
