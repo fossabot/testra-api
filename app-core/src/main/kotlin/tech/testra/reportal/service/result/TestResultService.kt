@@ -145,7 +145,7 @@ class TestResultService(
                 ResultStatus.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId)
                 ResultStatus.FAILED -> {
                     if (testResultModel.expectedToFail) {
-                        _testExecutionStatsRepository.decExpectedFailedResults(executionId)
+                        _testExecutionStatsRepository.decExpectedFailedResults(executionId).subscribe()
                     }
                     _testExecutionStatsRepository.decFailedResults(executionId)
                 }
@@ -159,7 +159,7 @@ class TestResultService(
             ResultInModel.PASSED -> _testExecutionStatsRepository.incPassedResults(executionId)
             ResultInModel.FAILED -> {
                 if (testResultModel.expectedToFail) {
-                    _testExecutionStatsRepository.incExpectedFailedResults(executionId)
+                    _testExecutionStatsRepository.incExpectedFailedResults(executionId).subscribe()
                 }
                 _testExecutionStatsRepository.incFailedResults(executionId)
             }
