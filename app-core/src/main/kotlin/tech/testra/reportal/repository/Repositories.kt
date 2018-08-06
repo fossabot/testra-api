@@ -14,7 +14,7 @@ import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.ResultStatus
 
 interface IRepository<T> {
-    fun save(executionMono: Mono<T>): Mono<T>
+    fun save(entity: Mono<T>): Mono<T>
     fun findById(id: String): Mono<T>
     fun findAll(): Flux<T>
     fun deleteById(id: String): Mono<Void>

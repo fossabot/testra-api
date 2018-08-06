@@ -29,18 +29,15 @@ class TestCaseHandler(private val _testCaseService: ITestCaseService) {
     fun findById(req: ServerRequest): Mono<ServerResponse> =
         _testCaseService.getTestCaseById(req.projectId(), req.testCaseId())
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(BodyInserters.fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun create(req: ServerRequest): Mono<ServerResponse> =
         _testCaseService.createTestCase(req.projectId(), req.bodyToMono(TestCaseModel::class.java))
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun update(req: ServerRequest): Mono<ServerResponse> {
         return _testCaseService.updateTestCase(req.projectId(), req.testCaseId(),
             req.bodyToMono(TestCaseModel::class.java))
             .flatMap { created(req.uri()).contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
     }
 
     fun delete(req: ServerRequest): Mono<ServerResponse> =

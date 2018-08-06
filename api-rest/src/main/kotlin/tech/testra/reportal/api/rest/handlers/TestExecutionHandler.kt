@@ -20,29 +20,24 @@ class TestExecutionHandler(private val _testExecutionService: ITestExecutionServ
 
     fun findAll(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.getExecutionsByProjectId(req.projectId())
-            .onErrorResume { throw it }
             .collectList()
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun findById(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.getExecutionById(req.projectId(), req.executionId())
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun resultStats(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.getStats(req.projectId(), req.executionId())
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun createExecution(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.createExecution(req.projectId(), req.bodyToMono(TestExecutionModel::class.java))
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun updateExecution(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.createExecution(req.projectId(), req.bodyToMono(TestExecutionModel::class.java))
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun delete(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.getExecutionById(req.projectId(), req.executionId())

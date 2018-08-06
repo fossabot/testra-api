@@ -10,9 +10,9 @@ import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.exception.InvalidGroupException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
-import tech.testra.reportal.extension.toAttachmentDomain
+import tech.testra.reportal.extension.toAttachmentEntity
 import tech.testra.reportal.extension.toEnrichedTestResult
-import tech.testra.reportal.extension.toTestStepResultDomain
+import tech.testra.reportal.extension.toTestStepResultEntity
 import tech.testra.reportal.model.EnrichedTestResultModel
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.repository.ITestExecutionStatsRepository
@@ -110,8 +110,8 @@ class TestResultService(
                         endTime = it.endTime,
                         retryCount = it.retryCount,
                         expectedToFail = it.expectedToFail,
-                        stepResults = it.stepResults.toTestStepResultDomain(),
-                        attachments = it.attachments.toAttachmentDomain()
+                        stepResults = it.stepResults.toTestStepResultEntity(),
+                        attachments = it.attachments.toAttachmentEntity()
                     )
                     updateTestExecution(executionId, it)
                     updateTestExecutionStats(executionId, previousTestResult, it)

@@ -5,6 +5,8 @@ import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.domain.valueobjects.Attachment
+import tech.testra.reportal.domain.valueobjects.DataTableCell
+import tech.testra.reportal.domain.valueobjects.DataTableRow
 import tech.testra.reportal.domain.valueobjects.ResultStatus
 import tech.testra.reportal.domain.valueobjects.TestStep
 import tech.testra.reportal.domain.valueobjects.TestStepResult
@@ -13,17 +15,20 @@ import tech.testra.reportal.model.ResultType
 import tech.testra.reportal.model.TestCaseModel
 import tech.testra.reportal.model.TestScenarioModel
 import tech.testra.reportal.model.Attachment as AttachmentModel
+import tech.testra.reportal.model.DataTableCell as DataTableCellModel
+import tech.testra.reportal.model.DataTableRow as DataTableRowModel
 import tech.testra.reportal.model.ResultStatus as ResultInModel
 import tech.testra.reportal.model.TestStep as TestStepModel
 import tech.testra.reportal.model.TestStepResult as TestStepResultModel
 
-fun List<TestStepModel>.toTestStepDomain(): List<TestStep> = this.map { TestStep(it.index, it.text) }
+fun List<TestStepModel>.toTestStepEntity(): List<TestStep> =
+    this.map { TestStep(it.index, it.text, it.dataTableRows.toDataTableRowVO()) }
 
 fun List<TestStep>.toTestStepModel(): List<TestStepModel> = this.map { TestStepModel(it.index, it.text) }
 
 fun TestScenario.isSame(testScenario: TestScenario): Boolean {
-    return this.backgroundSteps.isSame(testScenario.backgroundSteps) &&
-        this.steps.isSame(testScenario.steps) && this.tags.sorted() == testScenario.tags.sorted()
+    return this.backgroundSteps.areTestStepsSame(testScenario.backgroundSteps) &&
+        this.steps.areTestStepsSame(testScenario.steps) && this.tags.sorted() == testScenario.tags.sorted()
 }
 
 fun TestCase.isSame(testCase: TestCase): Boolean {
@@ -31,18 +36,42 @@ fun TestCase.isSame(testCase: TestCase): Boolean {
         this.tags.containsAll(testCase.tags)
 }
 
-fun List<TestStep>.isSame(testScenarioList: List<TestStep>): Boolean {
+fun List<TestStep>.areTestStepsSame(testSteps: List<TestStep>): Boolean {
     return when {
-        this.isEmpty() -> true
-        this.size != testScenarioList.size -> false
-        else -> this.filterIndexed { index, testStep -> testStep.text != testScenarioList[index].text }.isEmpty()
+        this.size != testSteps.size -> false
+        else -> this.none { testStep ->
+            testStep.text != testSteps[testStep.index].text ||
+                !testStep.dataTableRows.areDataTableRowsSame(testSteps[testStep.index].dataTableRows)
+        }
     }
 }
 
-fun List<TestStepResultModel>.toTestStepResultDomain(): List<TestStepResult> =
+fun List<DataTableRow>.areDataTableRowsSame(dataTableRowsFromRepository: List<DataTableRow>): Boolean {
+    return when {
+        this.size != dataTableRowsFromRepository.size -> false
+        else -> this.none { dataTableRow -> !dataTableRow.isSame(getRowByIndex(dataTableRowsFromRepository, dataTableRow.index)) }
+    }
+}
+
+private fun DataTableRow.isSame(dataTableRow: DataTableRow): Boolean =
+    this.cells.none { cell -> cell.value != getCellByIndex(dataTableRow.cells, cell.index).value }
+
+private fun getRowByIndex(dataTableRows: List<DataTableRow>, index: Int) =
+    dataTableRows.first { row -> row.index == index }
+
+private fun getCellByIndex(dataTableCells: List<DataTableCell>, index: Int) =
+    dataTableCells.first { cell -> cell.index == index }
+
+fun List<DataTableRowModel>.toDataTableRowVO(): List<DataTableRow> =
+    this.map { DataTableRow(it.index, it.cells.toDataTableCellVO()) }
+
+fun List<DataTableCellModel>.toDataTableCellVO(): List<DataTableCell> =
+    this.map { DataTableCell(it.index, it.value) }
+
+fun List<TestStepResultModel>.toTestStepResultEntity(): List<TestStepResult> =
     this.map { TestStepResult(it.index, ResultStatus.valueOf(it.status.toString()), it.durationInMs, it.error) }
 
-fun List<AttachmentModel>.toAttachmentDomain(): List<Attachment> =
+fun List<AttachmentModel>.toAttachmentEntity(): List<Attachment> =
     this.map { Attachment(it.name, it.mimeType, it.base64EncodedByteArray) }
 
 fun List<TestStepResult>.toTestStepResultModel(): List<TestStepResultModel> =

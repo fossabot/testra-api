@@ -37,12 +37,10 @@ class TestResultHandler(val _testResultService: ITestResultService) {
 
     fun findById(req: ServerRequest): Mono<ServerResponse> =
         _testResultService.getResultById(req.projectId(), req.executionId(), req.resultId())
-            .onErrorResume { throw it }
             .flatMap { ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun create(req: ServerRequest): Mono<ServerResponse> =
         _testResultService.createResult(req.projectId(), req.executionId(), req.bodyToMono(TestResultModel::class.java))
-            .onErrorResume { throw it }
             .flatMap { created(req.uri()).contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun update(req: ServerRequest): Mono<ServerResponse> =
@@ -52,7 +50,6 @@ class TestResultHandler(val _testResultService: ITestResultService) {
             req.resultId(),
             req.bodyToMono(TestResultModel::class.java)
         )
-            .onErrorResume { throw it }
             .flatMap { ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun delete(req: ServerRequest): Mono<ServerResponse> =
@@ -62,7 +59,6 @@ class TestResultHandler(val _testResultService: ITestResultService) {
 
     private fun getResults(f: () -> Flux<EnrichedTestResultModel>): Mono<ServerResponse> =
         f.invoke()
-            .onErrorResume { throw it }
             .collectList()
             .flatMap { ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 }

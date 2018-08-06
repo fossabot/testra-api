@@ -71,7 +71,11 @@ data class TestScenarioModel(
     val steps: List<TestStep>
 )
 
-data class TestStep(val index: Int, val text: String)
+data class TestStep(
+    val index: Int,
+    val text: String,
+    val dataTableRows: List<DataTableRow> = emptyList()
+)
 
 data class TestStepResult(
     val index: Int,
@@ -107,3 +111,13 @@ enum class ResultStatus {
 enum class ResultType {
     SCENARIO, TEST_CASE
 }
+
+data class DataTableCell(
+    val index: Int,
+    val value: String
+)
+
+data class DataTableRow(
+    val index: Int,
+    val cells: List<DataTableCell>
+)

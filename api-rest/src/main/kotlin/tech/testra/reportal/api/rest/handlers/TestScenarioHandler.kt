@@ -28,18 +28,15 @@ class TestScenarioHandler(private val _testScenarioService: ITestScenarioService
     fun findById(req: ServerRequest): Mono<ServerResponse> =
         _testScenarioService.getScenarioById(req.projectId(), req.scenarioId())
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun create(req: ServerRequest): Mono<ServerResponse> =
         _testScenarioService.createScenario(req.projectId(), req.bodyToMono(TestScenarioModel::class.java))
             .flatMap { created(req.uri()).contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun update(req: ServerRequest): Mono<ServerResponse> =
         _testScenarioService.updateScenario(req.projectId(), req.scenarioId(),
             req.bodyToMono(TestScenarioModel::class.java))
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
-            .onErrorResume { throw it }
 
     fun delete(req: ServerRequest): Mono<ServerResponse> =
         _testScenarioService.getScenarioById(req.projectId(), req.scenarioId())
