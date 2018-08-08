@@ -24,7 +24,8 @@ import tech.testra.reportal.model.TestStepResult as TestStepResultModel
 fun List<TestStepModel>.toTestStepEntity(): List<TestStep> =
     this.map { TestStep(it.index, it.text, it.dataTableRows.toDataTableRowVO()) }
 
-fun List<TestStep>.toTestStepModel(): List<TestStepModel> = this.map { TestStepModel(it.index, it.text) }
+fun List<TestStep>.toTestStepModel(): List<TestStepModel> =
+    this.map { TestStepModel(it.index, it.text, it.dataTableRows.toDataTableRowModel()) }
 
 fun TestScenario.isSame(testScenario: TestScenario): Boolean {
     return this.backgroundSteps.areTestStepsSame(testScenario.backgroundSteps) &&
@@ -65,8 +66,14 @@ private fun getCellByIndex(dataTableCells: List<DataTableCell>, index: Int) =
 fun List<DataTableRowModel>.toDataTableRowVO(): List<DataTableRow> =
     this.map { DataTableRow(it.index, it.cells.toDataTableCellVO()) }
 
+fun List<DataTableRow>.toDataTableRowModel(): List<DataTableRowModel> =
+    this.map { DataTableRowModel(it.index, it.cells.toDataTableCellModel()) }
+
 fun List<DataTableCellModel>.toDataTableCellVO(): List<DataTableCell> =
     this.map { DataTableCell(it.index, it.value) }
+
+fun List<DataTableCell>.toDataTableCellModel(): List<DataTableCellModel> =
+    this.map { DataTableCellModel(it.index, it.value) }
 
 fun List<TestStepResultModel>.toTestStepResultEntity(): List<TestStepResult> =
     this.map { TestStepResult(it.index, ResultStatus.valueOf(it.status.toString()), it.durationInMs, it.error) }
