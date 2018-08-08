@@ -50,10 +50,12 @@ class ErrorHandler(private val objectMapper: ObjectMapper) : WebExceptionHandler
             is DecodingException -> serverHttpResponse.statusCode = BAD_REQUEST
             is InvalidGroupException -> serverHttpResponse.statusCode = BAD_REQUEST
             else -> {
-                if (ex is ResponseStatusException)
+                if (ex is ResponseStatusException) {
                     serverHttpResponse.statusCode = ex.status
-                else
+                } else {
+                    ex.printStackTrace()
                     serverHttpResponse.statusCode = INTERNAL_SERVER_ERROR
+                }
             }
         }
 
