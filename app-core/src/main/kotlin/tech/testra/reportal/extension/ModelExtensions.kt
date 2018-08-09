@@ -40,22 +40,43 @@ fun TestCase.isSame(testCase: TestCase): Boolean {
 fun List<TestStep>.areTestStepsSame(testSteps: List<TestStep>): Boolean {
     return when {
         this.size != testSteps.size -> false
+        !this.areTestStepIndexesSame(testSteps) -> false
         else -> this.none { testStep ->
-            testStep.text != testSteps[testStep.index].text ||
-                !testStep.dataTableRows.areDataTableRowsSame(testSteps[testStep.index].dataTableRows)
+            val testStepFromTarget = getTestStepByIndex(testSteps, testStep.index)
+            testStep.text != testStepFromTarget.text ||
+                !testStep.dataTableRows.areDataTableRowsSame(testStepFromTarget.dataTableRows)
         }
     }
 }
 
-fun List<DataTableRow>.areDataTableRowsSame(dataTableRowsFromRepository: List<DataTableRow>): Boolean {
+private fun getTestStepByIndex(testSteps: List<TestStep>, index: Int): TestStep =
+    testSteps.first { testStep -> testStep.index == index }
+
+private fun List<TestStep>.areTestStepIndexesSame(testSteps: List<TestStep>): Boolean {
+    val sourceIndexes = this.map { it.index }
+    val targetIndexes = testSteps.map { it.index }
+    return sourceIndexes.containsAll(targetIndexes) && targetIndexes.containsAll(sourceIndexes)
+}
+
+private fun List<DataTableRow>.areDataTableRowsSame(dataTableRowsFromTarget: List<DataTableRow>): Boolean {
     return when {
-        this.size != dataTableRowsFromRepository.size -> false
-        else -> this.none { dataTableRow -> !dataTableRow.isSame(getRowByIndex(dataTableRowsFromRepository, dataTableRow.index)) }
+        this.size != dataTableRowsFromTarget.size -> false
+        !this.areDataTableRowIndexesSame(dataTableRowsFromTarget) -> false
+        else -> this.none { dataTableRow -> !dataTableRow.isSame(getRowByIndex(dataTableRowsFromTarget, dataTableRow.index)) }
     }
 }
 
+private fun List<DataTableRow>.areDataTableRowIndexesSame(dataTableRowsFromTarget: List<DataTableRow>): Boolean {
+    val sourceIndexes = this.map { it.index }
+    val targetIndexes = dataTableRowsFromTarget.map { it.index }
+    return sourceIndexes.containsAll(targetIndexes) && targetIndexes.containsAll(sourceIndexes)
+}
+
 private fun DataTableRow.isSame(dataTableRow: DataTableRow): Boolean =
-    this.cells.none { cell -> cell.value != getCellByIndex(dataTableRow.cells, cell.index).value }
+    when {
+        this.cells.size != dataTableRow.cells.size -> false
+        else -> this.cells.none { cell -> cell.value != getCellByIndex(dataTableRow.cells, cell.index).value }
+    }
 
 private fun getRowByIndex(dataTableRows: List<DataTableRow>, index: Int) =
     dataTableRows.first { row -> row.index == index }
