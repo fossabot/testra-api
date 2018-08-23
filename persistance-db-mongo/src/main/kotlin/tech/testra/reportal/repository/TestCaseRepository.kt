@@ -46,5 +46,5 @@ class TestCaseRepository : ITestCaseRepository {
         return template.find(Query(criteria), TestCase::class.java)
     }
 
-    override fun count(): Mono<Long> = findAll().count()
+    override fun count(): Mono<Long> = template.count(Query(), TestCase::class.java)
 }

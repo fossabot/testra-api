@@ -59,7 +59,7 @@ class TestExecutionStatsRepository : ITestExecutionStatsRepository {
     override fun decOtherResults(executionId: String): Mono<Boolean> =
         incOrDecResults("others", -1, executionId)
 
-    override fun count(): Mono<Long> = findAll().count()
+    override fun count(): Mono<Long> = template.count(Query(), TestExecutionStats::class.java)
 
     private fun incOrDecResults(key: String, num: Number, executionId: String): Mono<Boolean> {
         val update = Update().inc(key, num)

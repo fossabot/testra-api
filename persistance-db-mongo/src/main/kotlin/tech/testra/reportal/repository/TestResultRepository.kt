@@ -55,7 +55,7 @@ class TestResultRepository : ITestResultRepository {
     override fun deleteByProjectId(projectId: String): Mono<Void> =
         template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), TestResult::class.java).then()
 
-    override fun count(): Mono<Long> = findAll().count()
+    override fun count(): Mono<Long> = template.count(Query(), TestResult::class.java)
 
     private fun findByQuery(q: Query) = template.find(q, TestResult::class.java)
 }

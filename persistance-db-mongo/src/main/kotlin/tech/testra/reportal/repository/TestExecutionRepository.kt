@@ -41,7 +41,7 @@ class TestExecutionRepository : ITestExecutionRepository {
             .map { it.modifiedCount > 0 }
     }
 
-    override fun count(): Mono<Long> = findAll().count()
+    override fun count(): Mono<Long> = template.count(Query(), TestExecution::class.java)
 
     override fun pushGroupId(executionId: String, groupId: String): Mono<UpdateResult> =
         template.updateFirst(Query.query(Criteria.where("id").isEqualTo(executionId)),
