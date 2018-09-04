@@ -154,5 +154,5 @@ data class SimulationScenario(
 
 data class Percentile(
     val n: Byte,
-    val value: Long
+    val value: BigDecimal
 )
