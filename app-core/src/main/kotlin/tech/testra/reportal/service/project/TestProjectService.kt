@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.Project
+import tech.testra.reportal.domain.valueobjects.ProjectType
 import tech.testra.reportal.exception.ProjectAlreadyExistsException
 import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.extension.flatMapWithResumeOnError
@@ -40,13 +41,21 @@ class TestProjectService(
     override fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project> =
         projectModelMono
             .flatMapWithResumeOnError {
-                saveProject(Project(name = it.name, description = it.description))
+                saveProject(
+                    Project(name = it.name,
+                        type = ProjectType.valueOf(it.type.toString()),
+                        description = it.description))
             }
 
     override fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project> =
         getProject(id)
             .flatMapWithResumeOnError {
-                projectModelMono.flatMap { saveProject(Project(id = id, name = it.name, description = it.description)) }
+                projectModelMono.flatMap {
+                    saveProject(Project(id = id,
+                        name = it.name,
+                        type = ProjectType.valueOf(it.type.toString()),
+                        description = it.description))
+                }
             }
 
     private fun saveProject(project: Project): Mono<Project> =

@@ -7,8 +7,10 @@ import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import tech.testra.reportal.domain.valueobjects.Attachment
 import tech.testra.reportal.domain.valueobjects.GroupType
+import tech.testra.reportal.domain.valueobjects.ProjectType
 import tech.testra.reportal.domain.valueobjects.ResultStatus
 import tech.testra.reportal.domain.valueobjects.ResultType
+import tech.testra.reportal.domain.valueobjects.SimulationScenario
 import tech.testra.reportal.domain.valueobjects.TestStep
 import tech.testra.reportal.domain.valueobjects.TestStepResult
 
@@ -23,6 +25,7 @@ data class Project(
     @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
     val name: String,
     val description: String,
+    val type: ProjectType = ProjectType.TEST,
     val creationDate: Long = System.currentTimeMillis()
 ) : IEntity
 
@@ -103,6 +106,20 @@ data class TestScenario(
     val after: List<TestStep> = emptyList(),
     val backgroundSteps: List<TestStep> = emptyList(),
     val steps: List<TestStep>
+) : IEntity
+
+@Document(collection = "simulations")
+@CompoundIndex(def = "{'projectId': 1, 'executionId': 1}",
+    name = "compound_index_project_execution_on_simulation",
+    direction = IndexDirection.DESCENDING)
+data class Simulation(
+    override val id: String = generatedUniqueId(),
+    val projectId: String,
+    val executionId: String,
+    val name: String,
+    val namespace: String,
+    val scenarios: List<SimulationScenario>,
+    val tags: List<String>
 ) : IEntity
 
 @Document(collection = "groups")

@@ -1,5 +1,7 @@
 package tech.testra.reportal.domain.valueobjects
 
+import java.math.BigDecimal
+
 data class TestStep(
     val index: Int,
     val text: String,
@@ -27,4 +29,25 @@ data class DataTableCell(
 data class DataTableRow(
     val index: Int,
     val cells: List<DataTableCell>
+)
+
+data class SimulationScenario(
+    val request: String,
+    val startTime: Long,
+    val endTime: Long,
+    val durationInMs: Long,
+    val count: Long,
+    val successCount: Long,
+    val errorCount: Long,
+    val min: BigDecimal,
+    val max: BigDecimal,
+    val percentiles: List<Percentile>,
+    val average: BigDecimal,
+    val stdDiv: BigDecimal,
+    val avgRequestPerSec: Long
+)
+
+data class Percentile(
+    val n: Byte,
+    val value: Long
 )

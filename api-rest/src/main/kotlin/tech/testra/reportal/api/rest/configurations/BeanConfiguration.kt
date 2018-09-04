@@ -2,6 +2,7 @@ package tech.testra.reportal.api.rest.configurations
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import tech.testra.reportal.repository.SimulationRepository
 import tech.testra.reportal.repository.TestCaseRepository
 import tech.testra.reportal.repository.TestExecutionRepository
 import tech.testra.reportal.repository.TestExecutionStatsRepository
@@ -13,6 +14,7 @@ import tech.testra.reportal.service.execution.TestExecutionService
 import tech.testra.reportal.service.project.TestProjectService
 import tech.testra.reportal.service.result.TestResultService
 import tech.testra.reportal.service.scenario.TestScenarioService
+import tech.testra.reportal.service.simulation.SimulationService
 import tech.testra.reportal.service.testcase.TestCaseService
 import tech.testra.reportal.service.testgroup.TestGroupService
 
@@ -38,6 +40,9 @@ class BeanConfiguration {
 
     @Bean
     fun testExecutionStatsRepository() = TestExecutionStatsRepository()
+
+    @Bean
+    fun simulationRepository() = SimulationRepository()
 
     @Bean
     fun testProjectService() = TestProjectService(testProjectRepository(),
@@ -72,4 +77,8 @@ class BeanConfiguration {
             testCaseService(),
             testGroupService(),
             testExecutionStatsRepository())
+
+    @Bean
+    fun simulationService() =
+        SimulationService(simulationRepository(), testProjectService(), testExecutionService())
 }

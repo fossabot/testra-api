@@ -4,6 +4,7 @@ import com.mongodb.client.result.UpdateResult
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
+import tech.testra.reportal.domain.entity.Simulation
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
 import tech.testra.reportal.domain.entity.TestExecutionStats
@@ -38,6 +39,10 @@ interface ITestScenarioRepository : IRepository<TestScenario>, IDeletableByProje
 interface ITestCaseRepository : IRepository<TestCase>, IDeletableByProject {
     fun findAll(projectId: String): Flux<TestCase>
     fun findBy(name: String, projectId: String, groupId: String): Flux<TestCase>
+}
+
+interface ISimulationRepository : IRepository<Simulation>, IDeletableByProject {
+    fun findAll(projectId: String, executionId: String): Flux<Simulation>
 }
 
 interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject {

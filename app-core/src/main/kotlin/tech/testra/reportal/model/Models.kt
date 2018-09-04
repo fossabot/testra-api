@@ -1,9 +1,12 @@
 package tech.testra.reportal.model
 
+import java.math.BigDecimal
+
 const val EMPTY_STRING = ""
 
 data class ProjectModel(
     val name: String,
+    val type: ProjectType = ProjectType.TEST,
     val description: String
 )
 
@@ -71,6 +74,13 @@ data class TestScenarioModel(
     val steps: List<TestStep>
 )
 
+data class SimulationModel(
+    val name: String,
+    val namespace: String,
+    val scenarios: List<SimulationScenario>,
+    val tags: List<String> = emptyList()
+)
+
 data class TestStep(
     val index: Int,
     val text: String,
@@ -120,4 +130,29 @@ data class DataTableCell(
 data class DataTableRow(
     val index: Int,
     val cells: List<DataTableCell>
+)
+
+enum class ProjectType {
+    TEST, SIMULATION, SECURITY
+}
+
+data class SimulationScenario(
+    val request: String,
+    val startTime: Long,
+    val endTime: Long,
+    val durationInMs: Long,
+    val count: Long,
+    val successCount: Long,
+    val errorCount: Long,
+    val min: BigDecimal,
+    val max: BigDecimal,
+    val percentiles: List<Percentile>,
+    val average: BigDecimal,
+    val stdDiv: BigDecimal,
+    val avgRequestPerSec: Long
+)
+
+data class Percentile(
+    val n: Byte,
+    val value: Long
 )

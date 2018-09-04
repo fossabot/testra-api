@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.router
 import tech.testra.reportal.api.rest.handlers.CounterHandler
+import tech.testra.reportal.api.rest.handlers.SimulationHandler
 import tech.testra.reportal.api.rest.handlers.TestCaseHandler
 import tech.testra.reportal.api.rest.handlers.TestExecutionHandler
 import tech.testra.reportal.api.rest.handlers.TestGroupHandler
@@ -20,6 +21,7 @@ class Router(
     private val _testCaseHandler: TestCaseHandler,
     private val _testResultHandler: TestResultHandler,
     private val _testGroupHandler: TestGroupHandler,
+    private val _simulationHandler: SimulationHandler,
     private val _counterHandler: CounterHandler
 ) {
 
@@ -30,6 +32,7 @@ class Router(
         const val TESTCASE_ID_IN_RESOURCE = "{testCaseId}"
         const val EXECUTION_ID_IN_RESOURCE = "{executionId}"
         const val RESULT_ID_IN_RESOURCE = "{resultId}"
+        const val SIMULATION_ID_IN_RESOURCE = "{simulationId}"
     }
 
     @Bean
@@ -80,6 +83,12 @@ class Router(
 
                         "/{executionId}/result-stats".nest {
                             GET("/", _testExecutionHandler::resultStats)
+                        }
+
+                        "/{executionId}/simulations".nest {
+                            GET("/", _simulationHandler::findAll)
+                            POST("/", _simulationHandler::create)
+                            DELETE("/$SIMULATION_ID_IN_RESOURCE", _simulationHandler::delete)
                         }
                     }
 
