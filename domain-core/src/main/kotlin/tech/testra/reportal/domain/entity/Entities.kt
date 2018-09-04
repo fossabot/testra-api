@@ -25,7 +25,7 @@ data class Project(
     @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
     val name: String,
     val description: String,
-    val type: ProjectType = ProjectType.TEST,
+    val projectType: ProjectType = ProjectType.TEST,
     val creationDate: Long = System.currentTimeMillis()
 ) : IEntity
 

@@ -6,7 +6,7 @@ const val EMPTY_STRING = ""
 
 data class ProjectModel(
     val name: String,
-    val type: ProjectType = ProjectType.TEST,
+    val projectType: ProjectType = ProjectType.TEST,
     val description: String
 )
 

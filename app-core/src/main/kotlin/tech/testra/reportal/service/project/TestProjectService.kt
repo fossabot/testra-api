@@ -43,7 +43,7 @@ class TestProjectService(
             .flatMapWithResumeOnError {
                 saveProject(
                     Project(name = it.name,
-                        type = ProjectType.valueOf(it.type.toString()),
+                        projectType = ProjectType.valueOf(it.projectType.toString()),
                         description = it.description))
             }
 
@@ -53,7 +53,7 @@ class TestProjectService(
                 projectModelMono.flatMap {
                     saveProject(Project(id = id,
                         name = it.name,
-                        type = ProjectType.valueOf(it.type.toString()),
+                        projectType = ProjectType.valueOf(it.projectType.toString()),
                         description = it.description))
                 }
             }
