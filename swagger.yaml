@@ -26,6 +26,9 @@ tags:
   description: "Everything about Executions"
 - name: "result"
   description: "Everything about Test Results"
+- name: "simulation"
+  description: "Everything about Simulations"
+  
 paths:
   /projects:
     get:
@@ -1010,6 +1013,111 @@ paths:
             type: array
             items:
               $ref: '#/definitions/TestGroup'
+              
+  /projects/{projectId}/executions/{executionId}/simulations:
+    get:
+      tags:
+      - "simulation"
+      summary: List of all simulations
+      description: |
+        Returns list of all simulations within given project and execution
+      operationId: getSimulations
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        type: string
+        description: Project Id
+      - name: executionId
+        in: path
+        required: true
+        type: string
+        description: Execution Id
+      responses:
+        200:
+          description: Successful Response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Simulation'
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+      - "simulation"
+      summary: Create a New Simulation
+      description: >-
+        Adds a new simulation into Testra app. It takes a JSON
+        object containing a name that was not used before.
+      operationId: createSimulation
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        type: string
+        description: Result Id
+      - name: executionId
+        in: path
+        required: true
+        type: string
+        description: Execution Id
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SimulationRequest'
+      responses:
+        201:
+          description: 'Successful creation of Simulation'
+          schema:
+            $ref: '#/definitions/Simulation'
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+            
+  /projects/{projectId}/executions/{executionId}/simulation/{id}:
+    delete:
+      tags:
+      - "simulation"
+      summary: Deletes simulation info
+      operationId: deleteSimulation
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        type: string
+        description: Project Id
+      - name: executionId
+        in: path
+        required: true
+        type: string
+        description: Execution Id
+      - name: id
+        in: path
+        required: true
+        type: string
+        description: Simulation Id
+      responses:
+        200:
+          description: 'Successful deletion of given simulation'
+          schema:
+            $ref: '#/definitions/Simulation'
+        404:
+          description: 'Simulation not found'
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+            - error: SimulationNotFoundException
+              message: Invalid simulation id
+              timestamp: 15678902394
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
   
   /counters:
     get:
@@ -1056,6 +1164,9 @@ definitions:
     properties:
       name:
         type: string
+      projectType:
+        type: string
+        enum: [TEST, SIMULATION, SECURITY]
       description:
         type: string
     required:
@@ -1553,6 +1664,92 @@ definitions:
       - type
       - description
       - subGroup
+      
+  Percentile:
+    title: Percentile
+    type: object
+    properties:
+      n:
+        type: integer
+        format: int32
+      value:
+        type: number
+      
+  SimulationScenario:
+      title: SimulationScenario
+      type: object
+      properties:
+        request:
+          type: string
+        startTime:
+          type: integer
+          format: int64
+        endTime:
+          type: integer
+          format: int64
+        durationInMs:
+          type: integer
+          format: int64
+        count:
+          type: integer
+          format: int64
+        successCount:
+          type: integer
+          format: int64
+        errorCount:
+          type: integer
+          format: int64
+        min:
+          type: number
+        max:
+          type: number
+        percentiles:
+          type: array
+          items:
+            $ref: '#/definitions/Percentile'
+        average:
+          type: number
+        stdDiv:
+          type: number
+        avgRequestPerSec:
+          type: integer
+          format: long
+      
+  SimulationRequest:
+    title: Simulation
+    type: object
+    properties:
+      name:
+        type: string
+      namespace:
+        type: string
+      scenarios:
+        type: array
+        items:
+          $ref: '#/definitions/SimulationScenario'
+    required:
+      - name
+      - namespace
+      - scenarios
+    
+  Simulation:
+    title: Simulation
+    type: object
+    properties:
+      id:
+        type: string
+      projectId:
+        type: string
+      executionId:
+        type: string  
+      name:
+        type: string
+      namespace:
+        type: string
+      scenarios:
+        type: array
+        items:
+          $ref: '#/definitions/SimulationScenario'
       
   Counter:
     title: Counter
