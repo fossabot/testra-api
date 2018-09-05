@@ -11,6 +11,9 @@ import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
+import tech.testra.reportal.domain.entity.Vulnerability
+import tech.testra.reportal.domain.entity.VulnerabilityAlert
+import tech.testra.reportal.domain.entity.VulnerabilityCategory
 import tech.testra.reportal.domain.valueobjects.ExecutionCounter
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.ResultStatus
@@ -50,7 +53,17 @@ interface ISimulationRepository : IRepository<Simulation>, IDeletableByProject, 
     fun findAll(projectId: String, executionId: String): Flux<Simulation>
 }
 
-interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject, ICountableByProject {
+interface IVulnerabilityAlertRepository : IRepository<VulnerabilityAlert>, IDeletableByProject {
+    fun findAll(projectId: String, executionId: String): Flux<VulnerabilityAlert>
+}
+
+interface IVulnerabilityCategoryRepository : IRepository<VulnerabilityCategory>
+
+interface IVulnerabilityRepository : IRepository<Vulnerability> {
+    fun findByName(name: String): Mono<Vulnerability>
+}
+
+interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject {
     fun getRecentExecs(size: Int): Flux<TestExecution>
     fun getExecsCounts(size: Int): Flux<ExecutionCounter>
     fun findAll(projectId: String): Flux<TestExecution>

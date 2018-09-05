@@ -11,6 +11,7 @@ import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
+import tech.testra.reportal.domain.entity.VulnerabilityAlert
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.model.EnrichedTestResultModel
 import tech.testra.reportal.model.ProjectCounterModel
@@ -22,6 +23,7 @@ import tech.testra.reportal.model.TestExecutionFilters
 import tech.testra.reportal.model.TestExecutionModel
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.model.TestScenarioModel
+import tech.testra.reportal.model.VulnerabilityAlertModel
 import tech.testra.reportal.model.ResultStatus as ResultInModel
 
 @Service
@@ -71,7 +73,7 @@ interface ITestCaseService {
 @Service
 interface ISimulationService {
     fun getSimulationByProjectAndExecutionIds(projectId: String, executionId: String): Flux<Simulation>
-    fun getResultById(projectId: String, executionId: String, resultId: String): Mono<Simulation>
+    fun getSimulationById(projectId: String, executionId: String, resultId: String): Mono<Simulation>
     fun createSimulation(
         projectId: String,
         executionId: String,
@@ -79,6 +81,20 @@ interface ISimulationService {
     ): Mono<Simulation>
 
     fun deleteSimulationById(id: String): Mono<Void>
+    fun count(): Mono<Long>
+}
+
+@Service
+interface IVulnerabilityAlertService {
+    fun getVulnerabilityAlertByProjectAndExecutionIds(projectId: String, executionId: String): Flux<VulnerabilityAlert>
+    fun getVulnerabilityAlertById(projectId: String, executionId: String, resultId: String): Mono<VulnerabilityAlert>
+    fun createVulnerabilityAlert(
+        projectId: String,
+        executionId: String,
+        simulationModelM: Mono<VulnerabilityAlertModel>
+    ): Mono<VulnerabilityAlert>
+
+    fun deleteVulnerabilityAlertById(id: String): Mono<Void>
     fun count(): Mono<Long>
 }
 

@@ -12,4 +12,7 @@ class TestResultNotFoundException(id: String) : IllegalArgumentException("Test s
 
 class InvalidGroupException(id: String) : IllegalArgumentException("Invalid group id in request : $id. Either feature id or namespace id.")
 
+class ProjectTypeIsNotSimulationException(id: String) : IllegalArgumentException("Project $id is not type of Simulation")
+class ProjectTypeIsNotSecurityException(id: String) : IllegalArgumentException("Project $id is not type of Security")
+
 class QueryParamMissingException(param: String) : IllegalArgumentException("Required query param missing. param: $param")

@@ -5,7 +5,9 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.Simulation
+import tech.testra.reportal.domain.valueobjects.ProjectType
 import tech.testra.reportal.exception.ProjectNotFoundException
+import tech.testra.reportal.exception.ProjectTypeIsNotSimulationException
 import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.model.SimulationModel
@@ -21,7 +23,7 @@ class SimulationService(
     private val _testExecutionService: ITestExecutionService
 ) : ISimulationService {
 
-    override fun getResultById(projectId: String, executionId: String, resultId: String): Mono<Simulation> =
+    override fun getSimulationById(projectId: String, executionId: String, resultId: String): Mono<Simulation> =
         _testExecutionService.getExecutionById(projectId, executionId)
             .flatMapWithResumeOnError { _simulationRepository.findById(resultId) }
 
@@ -33,14 +35,18 @@ class SimulationService(
         return _testProjectService.getProject(projectId)
             .switchIfEmpty(ProjectNotFoundException(projectId).toMono())
             .flatMap {
-                simulationModelM.flatMap {
-                    val simulation = Simulation(projectId = projectId,
-                        executionId = executionId,
-                        name = it.name,
-                        namespace = it.namespace,
-                        scenarios = it.scenarios.toEntity())
+                if (it.projectType == ProjectType.SIMULATION) {
+                    simulationModelM.flatMap {
+                        val simulation = Simulation(projectId = projectId,
+                            executionId = executionId,
+                            name = it.name,
+                            namespace = it.namespace,
+                            scenarios = it.scenarios.toEntity())
 
-                    _simulationRepository.save(simulation.toMono())
+                        _simulationRepository.save(simulation.toMono())
+                    }
+                } else {
+                    ProjectTypeIsNotSimulationException(it.id).toMono()
                 }
             }
     }

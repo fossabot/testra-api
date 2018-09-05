@@ -13,6 +13,8 @@ import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.domain.valueobjects.SimulationScenario
 import tech.testra.reportal.domain.valueobjects.TestStep
 import tech.testra.reportal.domain.valueobjects.TestStepResult
+import tech.testra.reportal.domain.valueobjects.UrlResource
+import tech.testra.reportal.domain.valueobjects.VulnerabilityRiskLevel
 
 interface IEntity {
     val id: String
@@ -20,7 +22,7 @@ interface IEntity {
 
 @Document(collection = "projects")
 data class Project(
-    override val id: String = generatedUniqueId(),
+    @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
     @Indexed(unique = true) val name: String,
     val description: String,
     val projectType: ProjectType = ProjectType.TEST,
@@ -117,6 +119,37 @@ data class Simulation(
     val name: String,
     val namespace: String,
     val scenarios: List<SimulationScenario>
+) : IEntity
+
+@Document(collection = "vulnerabilities")
+data class Vulnerability(
+    override val id: String = generatedUniqueId(),
+    @Indexed val name: String,
+    val vulnerabilityCatId: String
+) : IEntity
+
+@Document(collection = "vulnerability_categories")
+data class VulnerabilityCategory(
+    @Indexed override val id: String = generatedUniqueId(),
+    val name: String
+) : IEntity
+
+@Document(collection = "vulnerability_alerts")
+@CompoundIndex(def = "{'projectId': 1, 'executionId': 1}",
+    name = "compound_index_project_execution_on_vulnerability_alert",
+    direction = IndexDirection.DESCENDING)
+data class VulnerabilityAlert(
+    override val id: String = generatedUniqueId(),
+    val projectId: String,
+    val executionId: String,
+    val vulnerabilityRefId: String,
+    val vulnerabilityCategoryRefId: String,
+    val description: String,
+    val riskLevel: VulnerabilityRiskLevel,
+    val urls: List<UrlResource>,
+    val solution: String,
+    val otherInfo: String,
+    val reference: String
 ) : IEntity
 
 @Document(collection = "groups")

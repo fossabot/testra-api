@@ -52,6 +52,12 @@ data class Percentile(
     val value: BigDecimal
 )
 
+data class UrlResource(
+    val url: String,
+    val method: HttpMethod,
+    val params: List<String>
+)
+
 data class ExecutionCounter(
     val projectId: String,
     val total: Long

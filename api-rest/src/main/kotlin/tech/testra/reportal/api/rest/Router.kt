@@ -12,6 +12,7 @@ import tech.testra.reportal.api.rest.handlers.TestGroupHandler
 import tech.testra.reportal.api.rest.handlers.TestProjectHandler
 import tech.testra.reportal.api.rest.handlers.TestResultHandler
 import tech.testra.reportal.api.rest.handlers.TestScenarioHandler
+import tech.testra.reportal.api.rest.handlers.VulnerabilityHandler
 
 @Configuration
 class Router(
@@ -22,6 +23,7 @@ class Router(
     private val _testResultHandler: TestResultHandler,
     private val _testGroupHandler: TestGroupHandler,
     private val _simulationHandler: SimulationHandler,
+    private val _vulnerabilityHandler: VulnerabilityHandler,
     private val _counterHandler: CounterHandler
 ) {
 
@@ -91,6 +93,12 @@ class Router(
                             GET("/", _simulationHandler::findAll)
                             POST("/", _simulationHandler::create)
                             DELETE("/$SIMULATION_ID_IN_RESOURCE", _simulationHandler::delete)
+                        }
+
+                        "/{executionId}/vulnerabilities".nest {
+                            GET("/", _vulnerabilityHandler::findAll)
+                            POST("/", _vulnerabilityHandler::create)
+                            DELETE("/$SIMULATION_ID_IN_RESOURCE", _vulnerabilityHandler::delete)
                         }
                     }
 
