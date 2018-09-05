@@ -44,7 +44,7 @@ data class SimulationScenario(
     val percentiles: List<Percentile>,
     val average: BigDecimal,
     val stdDiv: BigDecimal,
-    val avgRequestPerSec: Long
+    val avgRequestPerSec: BigDecimal
 )
 
 data class Percentile(

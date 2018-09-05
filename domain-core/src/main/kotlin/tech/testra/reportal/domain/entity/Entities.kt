@@ -118,8 +118,7 @@ data class Simulation(
     val executionId: String,
     val name: String,
     val namespace: String,
-    val scenarios: List<SimulationScenario>,
-    val tags: List<String>
+    val scenarios: List<SimulationScenario>
 ) : IEntity
 
 @Document(collection = "groups")

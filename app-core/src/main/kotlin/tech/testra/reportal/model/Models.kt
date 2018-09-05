@@ -77,8 +77,7 @@ data class TestScenarioModel(
 data class SimulationModel(
     val name: String,
     val namespace: String,
-    val scenarios: List<SimulationScenario>,
-    val tags: List<String> = emptyList()
+    val scenarios: List<SimulationScenario>
 )
 
 data class TestStep(
@@ -149,7 +148,7 @@ data class SimulationScenario(
     val percentiles: List<Percentile>,
     val average: BigDecimal,
     val stdDiv: BigDecimal,
-    val avgRequestPerSec: Long
+    val avgRequestPerSec: BigDecimal
 )
 
 data class Percentile(

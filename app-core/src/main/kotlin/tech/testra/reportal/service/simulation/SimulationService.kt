@@ -38,8 +38,7 @@ class SimulationService(
                         executionId = executionId,
                         name = it.name,
                         namespace = it.namespace,
-                        scenarios = it.scenarios.toEntity(),
-                        tags = it.tags)
+                        scenarios = it.scenarios.toEntity())
 
                     _simulationRepository.save(simulation.toMono())
                 }
