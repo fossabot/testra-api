@@ -53,7 +53,8 @@ interface ITestCaseService {
     fun getTestCasesByProjectId(projectId: String): Flux<TestCase>
     fun getTestCaseById(projectId: String, testCaseId: String): Mono<TestCase>
     fun createTestCase(projectId: String, testCaseModelMono: Mono<TestCaseModel>): Mono<TestCase>
-    fun updateTestCase(projectId: String,
+    fun updateTestCase(
+        projectId: String,
         testCaseId: String,
         testCaseModelMono: Mono<TestCaseModel>
     ): Mono<TestCase>
@@ -67,8 +68,11 @@ interface ITestCaseService {
 interface ISimulationService {
     fun getSimulationByProjectAndExecutionIds(projectId: String, executionId: String): Flux<Simulation>
     fun getResultById(projectId: String, executionId: String, resultId: String): Mono<Simulation>
-    fun createSimulation(projectId: String,
-        executionId: String, simulationModelM: Mono<SimulationModel>): Mono<Simulation>
+    fun createSimulation(
+        projectId: String,
+        executionId: String,
+        simulationModelM: Mono<SimulationModel>
+    ): Mono<Simulation>
 
     fun deleteSimulationById(id: String): Mono<Void>
     fun count(): Mono<Long>
