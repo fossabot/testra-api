@@ -19,19 +19,16 @@ interface IEntity {
 }
 
 @Document(collection = "projects")
-@CompoundIndex(def = "{'name': 1}",
-    useGeneratedName = true, unique = true)
 data class Project(
-    @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
-    val name: String,
+    override val id: String = generatedUniqueId(),
+    @Indexed(unique = true) val name: String,
     val description: String,
     val projectType: ProjectType = ProjectType.TEST,
     val creationDate: Long = System.currentTimeMillis()
 ) : IEntity
 
 @Document(collection = "testcases")
-@CompoundIndex(def = "{'projectId': 1, 'namespaceId': 1, 'name': 1}",
-    name = "compound_index_project_namespace_testcase")
+@CompoundIndex(def = "{'projectId': 1, 'namespaceId': 1, 'name': 1}", useGeneratedName = true)
 data class TestCase(
     override val id: String = generatedUniqueId(),
     val projectId: String,
@@ -70,7 +67,7 @@ data class TestExecutionStats(
 
 @Document(collection = "results")
 @CompoundIndex(def = "{'projectId': 1, 'executionId': 1}",
-    name = "compound_index_project_execution",
+    useGeneratedName = true,
     direction = IndexDirection.DESCENDING)
 data class TestResult(
     override val id: String = generatedUniqueId(),
@@ -92,7 +89,7 @@ data class TestResult(
 
 @Document(collection = "scenarios")
 @CompoundIndex(def = "{'projectId': 1, 'featureId': 1, 'name': 1}",
-    name = "compound_index_project_featureId_name",
+    useGeneratedName = true,
     direction = IndexDirection.DESCENDING)
 data class TestScenario(
     override val id: String = generatedUniqueId(),
@@ -110,7 +107,7 @@ data class TestScenario(
 
 @Document(collection = "simulations")
 @CompoundIndex(def = "{'projectId': 1, 'executionId': 1}",
-    name = "compound_index_project_execution_on_simulation",
+    useGeneratedName = true,
     direction = IndexDirection.DESCENDING)
 data class Simulation(
     override val id: String = generatedUniqueId(),
@@ -123,7 +120,7 @@ data class Simulation(
 
 @Document(collection = "groups")
 @CompoundIndex(def = "{'projectId': 1, 'name': 1}",
-    name = "compound_index_project_name",
+    useGeneratedName = true,
     direction = IndexDirection.DESCENDING,
     unique = true)
 data class TestGroup(
