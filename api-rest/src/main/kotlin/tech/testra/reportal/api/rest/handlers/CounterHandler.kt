@@ -26,7 +26,7 @@ class CounterHandler(
     private val simulationService: SimulationService
 ) {
     val ZERO: Long = 0
-    
+
     fun get(req: ServerRequest): Mono<ServerResponse> =
         ok().contentType(MediaType.APPLICATION_JSON_UTF8)
             .body(fromPublisher(counterModelPublisher(), CounterModel::class.java))
