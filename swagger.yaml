@@ -195,6 +195,32 @@ paths:
           description: Any other errors
           schema:
             $ref: '#/definitions/ErrorResponse'
+            
+  /projects/top:
+    get:
+      tags:
+      - "project"
+      summary: Top Projects
+      description: |
+        Returns list of top projects sorted by no of executions
+      operationId: topProjects
+      parameters:
+      - name: size
+        in: query
+        type: integer
+        required: true
+        description: No of projects to retrieve
+      responses:
+        200:
+          description: Successful Response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProjectExecutionCounter'
+          examples:
+            application/json:
+            - projectName: Test Project
+              noOfExecutions: 10
 
   /projects/{projectId}/scenarios:
     get:
@@ -757,6 +783,28 @@ paths:
           description: Any other errors
           schema:
             $ref: '#/definitions/ErrorResponse'
+            
+  /executions/recents:
+    get:
+      tags:
+      - "execution"
+      summary: Recent executions
+      description: |
+        Returns list of recent executions sorted by start time
+      operationId: recentExecutions
+      parameters:
+      - name: size
+        in: query
+        required: true
+        type: integer
+        description: No of executions to return
+      responses:
+        200:
+          description: Successful Response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Execution'
 
   /projects/{projectId}/executions/{executionId}/results:
     get:
@@ -1770,12 +1818,33 @@ definitions:
       testResultsCount:
         type: integer
         format: int64
+      simulationsCount:
+        type: integer
+        format: int64
+      vulnerabilityAlertsCount:
+        type: integer
+        format: int64
     required:
       - projectsCount
       - testScenariosCount
       - testCasesCount
       - testExecutionsCount
       - testResultsCount
+      - simulationsCount
+      - vulnerabilityAlertsCount
+      
+  ProjectExecutionCounter:
+    title: ProjectExecutionCounter
+    type: object
+    properties:
+      projectName:
+        type: string
+      noOfExecutions:
+        type: integer
+        format: int64
+    required:
+      - projectName
+      - noOfExecutions
 
   ErrorResponse:
     title: ErrorResponse
