@@ -26,6 +26,14 @@ class TestExecutionService(
     private val _projectService: ITestProjectService
 ) : ITestExecutionService {
 
+    override fun getRecentExecutions(size: Int): Flux<TestExecution> =
+        _testExecutionRepository.getRecentExecs(size)
+            .flatMap {
+                val testExec = it
+                _projectService.getProject(it.projectId)
+                    .map { testExec.copy(projectId = it.name) }
+            }
+
     override fun getExecutionsByProjectId(projectId: String): Flux<TestExecution> =
         _projectService.getProject(projectId)
             .flatMapManyWithResumeOnError { _testExecutionRepository.findAll(it.id) }

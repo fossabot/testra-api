@@ -11,3 +11,5 @@ class TestExecutionNotFoundException(id: String) : IllegalArgumentException("Tes
 class TestResultNotFoundException(id: String) : IllegalArgumentException("Test status not found for the id: $id")
 
 class InvalidGroupException(id: String) : IllegalArgumentException("Invalid group id in request : $id. Either feature id or namespace id.")
+
+class QueryParamMissingException(param: String) : IllegalArgumentException("Required query param missing. param: $param")

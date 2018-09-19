@@ -13,6 +13,8 @@ import reactor.core.publisher.toMono
 import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.exception.ProjectNotFoundException
+import tech.testra.reportal.exception.QueryParamMissingException
+import tech.testra.reportal.model.ProjectExecutionCounter
 import tech.testra.reportal.model.ProjectModel
 import tech.testra.reportal.model.TestExecutionFilters
 import tech.testra.reportal.service.interfaces.ITestExecutionService
@@ -27,6 +29,13 @@ class TestProjectHandler(
     fun getAllProjects(req: ServerRequest): Mono<ServerResponse> =
         ok().contentType(APPLICATION_JSON_UTF8)
             .body(_testProjectService.getProjects(), Project::class.java)
+
+    fun getTopProjects(req: ServerRequest): Mono<ServerResponse> =
+        req.queryParam("size")
+            .map {
+                ok().contentType(APPLICATION_JSON_UTF8)
+                    .body(_testProjectService.getTopProjects(it.toInt()), ProjectExecutionCounter::class.java)
+            }.orElseThrow { QueryParamMissingException("size") }
 
     fun getProjectById(req: ServerRequest): Mono<ServerResponse> =
         ok().contentType(APPLICATION_JSON_UTF8)

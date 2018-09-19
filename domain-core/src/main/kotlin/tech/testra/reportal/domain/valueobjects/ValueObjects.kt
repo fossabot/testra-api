@@ -51,3 +51,8 @@ data class Percentile(
     val n: Byte,
     val value: BigDecimal
 )
+
+data class ExecutionCounter(
+    val projectId: String,
+    val total: Long
+)

@@ -94,11 +94,18 @@ data class TestStepResult(
 )
 
 data class CounterModel(
-    val projectsCount: Long,
-    val testScenariosCount: Long,
-    val testCasesCount: Long,
-    val testExecutionsCount: Long,
-    val testResultsCount: Long
+    val projectsCount: Long = 0,
+    val testScenariosCount: Long = 0,
+    val testCasesCount: Long = 0,
+    val testExecutionsCount: Long = 0,
+    val testResultsCount: Long = 0,
+    val simulationsCount: Long = 0,
+    val vulnerabilityAlertsCount: Long = 0
+)
+
+data class ProjectExecutionCounter(
+    val projectName: String,
+    val noOfExecutions: Long
 )
 
 data class Attachment(

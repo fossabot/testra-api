@@ -41,6 +41,7 @@ class Router(
             ENDPOINT_PREFIX.nest {
                 "/projects".nest {
                     GET("/", _testProjectHandler::getAllProjects)
+                    GET("/top", _testProjectHandler::getTopProjects)
                     POST("/", _testProjectHandler::createProject)
                     GET("/$PROJECT_ID_IN_RESOURCE", _testProjectHandler::getProjectById)
                     PUT("/$PROJECT_ID_IN_RESOURCE", _testProjectHandler::updateProject)
@@ -102,6 +103,9 @@ class Router(
                 }
                 "/counters".nest {
                     GET("/", _counterHandler::get)
+                }
+                "/executions".nest {
+                    GET("/recents", _testExecutionHandler::getRecents)
                 }
             }
         }

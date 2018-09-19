@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.api.rest.extensions.executionId
 import tech.testra.reportal.api.rest.extensions.projectId
+import tech.testra.reportal.exception.QueryParamMissingException
 import tech.testra.reportal.exception.TestExecutionNotFoundException
 import tech.testra.reportal.model.TestExecutionModel
 import tech.testra.reportal.service.interfaces.ITestExecutionService
@@ -22,6 +23,14 @@ class TestExecutionHandler(private val _testExecutionService: ITestExecutionServ
         _testExecutionService.getExecutionsByProjectId(req.projectId())
             .collectList()
             .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
+
+    fun getRecents(req: ServerRequest): Mono<ServerResponse> =
+        req.queryParam("size")
+            .map {
+                _testExecutionService.getRecentExecutions(it.toInt())
+                    .collectList()
+                    .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
+            }.orElseThrow { QueryParamMissingException("size") }
 
     fun findById(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.getExecutionById(req.projectId(), req.executionId())

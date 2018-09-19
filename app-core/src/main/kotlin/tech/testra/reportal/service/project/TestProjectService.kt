@@ -1,6 +1,7 @@
 package tech.testra.reportal.service.project
 
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.Project
@@ -10,6 +11,7 @@ import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.onDuplicateKeyException
 import tech.testra.reportal.extension.orElseGetException
+import tech.testra.reportal.model.ProjectExecutionCounter
 import tech.testra.reportal.model.ProjectModel
 import tech.testra.reportal.repository.ITestCaseRepository
 import tech.testra.reportal.repository.ITestExecutionRepository
@@ -32,6 +34,15 @@ class TestProjectService(
 ) : ITestProjectService {
 
     override fun getProjects() = _testProjectRepository.findAll()
+
+    override fun getTopProjects(size: Int): Flux<ProjectExecutionCounter> =
+        _testExecutionRepository.getExecsCounts(size)
+            .flatMap {
+                val execCount = it.total
+                _testProjectRepository.findById(it.projectId)
+                    .switchIfEmpty(ProjectNotFoundException(it.projectId).toMono())
+                    .map { ProjectExecutionCounter(it.name, execCount) }
+            }
 
     override fun getProject(idOrName: String): Mono<Project> =
         _testProjectRepository.findById(idOrName)

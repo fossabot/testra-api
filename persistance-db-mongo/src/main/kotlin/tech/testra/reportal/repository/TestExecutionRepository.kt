@@ -2,7 +2,14 @@ package tech.testra.reportal.repository
 
 import com.mongodb.client.result.UpdateResult
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
+import org.springframework.data.mongodb.core.aggregation.Aggregation
+import org.springframework.data.mongodb.core.aggregation.Aggregation.group
+import org.springframework.data.mongodb.core.aggregation.Aggregation.limit
+import org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation
+import org.springframework.data.mongodb.core.aggregation.Aggregation.project
+import org.springframework.data.mongodb.core.aggregation.Aggregation.sort
 import org.springframework.data.mongodb.core.findById
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -12,11 +19,28 @@ import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.TestExecution
+import tech.testra.reportal.domain.valueobjects.ExecutionCounter
 
 @Repository
 class TestExecutionRepository : ITestExecutionRepository {
     @Autowired
     lateinit var template: ReactiveMongoTemplate
+
+    override fun getExecsCounts(size: Int): Flux<ExecutionCounter> {
+        val agg: Aggregation = newAggregation(
+            group("projectId").count().`as`("total")
+                .addToSet("projectId").`as`("projectId"),
+            sort(Sort.Direction.DESC, "total"),
+            project("projectId", "total"),
+            limit(size.toLong()))
+
+        return template.aggregate(agg, TestExecution::class.java, ExecutionCounter::class.java)
+    }
+
+    override fun getRecentExecs(size: Int): Flux<TestExecution> {
+        val query = Query().with(Sort(Sort.Direction.DESC, "startTime")).limit(size)
+        return template.find(query, TestExecution::class.java)
+    }
 
     override fun save(executionMono: Mono<TestExecution>): Mono<TestExecution> = template.save(executionMono)
 

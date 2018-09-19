@@ -43,7 +43,7 @@ data class TestExecution(
     override val id: String = ObjectId().toString(),
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val description: String,
-    val startTime: Long = System.currentTimeMillis(),
+    @Indexed val startTime: Long = System.currentTimeMillis(),
     val endTime: Long?,
     val host: String,
     val parallel: Boolean,

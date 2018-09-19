@@ -11,6 +11,7 @@ import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
+import tech.testra.reportal.domain.valueobjects.ExecutionCounter
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.ResultStatus
 
@@ -46,6 +47,8 @@ interface ISimulationRepository : IRepository<Simulation>, IDeletableByProject {
 }
 
 interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject {
+    fun getRecentExecs(size: Int): Flux<TestExecution>
+    fun getExecsCounts(size: Int): Flux<ExecutionCounter>
     fun findAll(projectId: String): Flux<TestExecution>
     fun updateEndTime(id: String, endTime: Long): Mono<Boolean>
     fun pushGroupId(executionId: String, groupId: String): Mono<UpdateResult>
