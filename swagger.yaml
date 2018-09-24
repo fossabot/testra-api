@@ -196,6 +196,46 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
             
+  /projects/{id}/counters:
+    get:
+      tags:
+      - "project"
+      summary: Get couters for project children
+      description: Returns counts of Executions, Results, Scenarios, Testcases, SImulations and Vulnerability alerts
+      operationId: getProjectCounters
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+        description: Project Id
+      responses:
+        200:
+          description: 'Success return of counts'
+          schema:
+            $ref: '#/definitions/ProjectCounter'
+          examples:
+            application/json:
+            - testExecutionsCount: 10
+              testResultsCount: 10
+              testScenariosCount: 10
+              testCasesCount: 10
+              simulationsCount: 10
+              vulnerabilityAlertsCount: 10
+        404:
+          description: 'Project not found'
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+          examples:
+            application/json:
+            - error: ProjectNotFoundException
+              message: Invalid project id
+              timestamp: 15678902394
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+            
   /projects/top:
     get:
       tags:
@@ -1826,6 +1866,36 @@ definitions:
         format: int64
     required:
       - projectsCount
+      - testScenariosCount
+      - testCasesCount
+      - testExecutionsCount
+      - testResultsCount
+      - simulationsCount
+      - vulnerabilityAlertsCount
+      
+  ProjectCounter:
+    title: ProjectCounter
+    type: object
+    properties:
+      testExecutionsCount:
+        type: integer
+        format: int64
+      testResultsCount:
+        type: integer
+        format: int64
+      testScenariosCount:
+        type: integer
+        format: int64
+      testCasesCount:
+        type: integer
+        format: int64
+      simulationsCount:
+        type: integer
+        format: int64
+      vulnerabilityAlertsCount:
+        type: integer
+        format: int64
+    required:
       - testScenariosCount
       - testCasesCount
       - testExecutionsCount
