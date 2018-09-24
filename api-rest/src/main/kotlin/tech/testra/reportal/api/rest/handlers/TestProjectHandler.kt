@@ -14,6 +14,7 @@ import tech.testra.reportal.api.rest.extensions.projectId
 import tech.testra.reportal.domain.entity.Project
 import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.exception.QueryParamMissingException
+import tech.testra.reportal.model.ProjectCounterModel
 import tech.testra.reportal.model.ProjectExecutionCounter
 import tech.testra.reportal.model.ProjectModel
 import tech.testra.reportal.model.TestExecutionFilters
@@ -36,6 +37,10 @@ class TestProjectHandler(
                 ok().contentType(APPLICATION_JSON_UTF8)
                     .body(_testProjectService.getTopProjects(it.toInt()), ProjectExecutionCounter::class.java)
             }.orElseThrow { QueryParamMissingException("size") }
+
+    fun getProjectCounter(req: ServerRequest): Mono<ServerResponse> =
+        ok().contentType(APPLICATION_JSON_UTF8)
+            .body(fromPublisher(_testProjectService.getProjectCounters(req.projectId()), ProjectCounterModel::class.java))
 
     fun getProjectById(req: ServerRequest): Mono<ServerResponse> =
         ok().contentType(APPLICATION_JSON_UTF8)

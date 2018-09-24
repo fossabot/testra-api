@@ -103,6 +103,15 @@ data class CounterModel(
     val vulnerabilityAlertsCount: Long = 0
 )
 
+data class ProjectCounterModel(
+    val testExecutionsCount: Long = 0,
+    val testResultsCount: Long = 0,
+    val testScenariosCount: Long = 0,
+    val testCasesCount: Long = 0,
+    val simulationsCount: Long = 0,
+    val vulnerabilityAlertsCount: Long = 0
+)
+
 data class ProjectExecutionCounter(
     val projectName: String,
     val noOfExecutions: Long

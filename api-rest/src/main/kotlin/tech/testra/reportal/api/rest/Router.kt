@@ -42,6 +42,7 @@ class Router(
                 "/projects".nest {
                     GET("/", _testProjectHandler::getAllProjects)
                     GET("/top", _testProjectHandler::getTopProjects)
+                    GET("/$PROJECT_ID_IN_RESOURCE/counters", _testProjectHandler::getProjectCounter)
                     POST("/", _testProjectHandler::createProject)
                     GET("/$PROJECT_ID_IN_RESOURCE", _testProjectHandler::getProjectById)
                     PUT("/$PROJECT_ID_IN_RESOURCE", _testProjectHandler::updateProject)

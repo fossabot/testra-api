@@ -38,4 +38,9 @@ class SimulationRepository : ISimulationRepository {
         template.remove(Query(Criteria.where("projectId").isEqualTo(projectId)), Simulation::class.java).then()
 
     override fun count(): Mono<Long> = template.count(Query(), Simulation::class.java)
+
+    override fun countByProjectId(projectId: String): Mono<Long> {
+        val criteria = Criteria.where("projectId").isEqualTo(projectId)
+        return template.count(Query(criteria), Simulation::class.java)
+    }
 }

@@ -47,4 +47,9 @@ class TestCaseRepository : ITestCaseRepository {
     }
 
     override fun count(): Mono<Long> = template.count(Query(), TestCase::class.java)
+
+    override fun countByProjectId(projectId: String): Mono<Long> {
+        val criteria = Criteria.where("projectId").isEqualTo(projectId)
+        return template.count(Query(criteria), TestCase::class.java)
+    }
 }

@@ -11,8 +11,10 @@ import tech.testra.reportal.exception.ProjectNotFoundException
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.onDuplicateKeyException
 import tech.testra.reportal.extension.orElseGetException
+import tech.testra.reportal.model.ProjectCounterModel
 import tech.testra.reportal.model.ProjectExecutionCounter
 import tech.testra.reportal.model.ProjectModel
+import tech.testra.reportal.repository.ISimulationRepository
 import tech.testra.reportal.repository.ITestCaseRepository
 import tech.testra.reportal.repository.ITestExecutionRepository
 import tech.testra.reportal.repository.ITestExecutionStatsRepository
@@ -30,9 +32,9 @@ class TestProjectService(
     private val _testScenarioRepository: ITestScenarioRepository,
     private val _testCaseRepository: ITestCaseRepository,
     private val _testGroupRepository: ITestGroupRepository,
-    private val _testExecutionStatsRepository: ITestExecutionStatsRepository
+    private val _testExecutionStatsRepository: ITestExecutionStatsRepository,
+    private val simulationRepository: ISimulationRepository
 ) : ITestProjectService {
-
     override fun getProjects() = _testProjectRepository.findAll()
 
     override fun getTopProjects(size: Int): Flux<ProjectExecutionCounter> =
@@ -42,6 +44,20 @@ class TestProjectService(
                 _testProjectRepository.findById(it.projectId)
                     .switchIfEmpty(ProjectNotFoundException(it.projectId).toMono())
                     .map { ProjectExecutionCounter(it.name, execCount) }
+            }
+
+    override fun getProjectCounters(projectId: String): Mono<ProjectCounterModel> =
+        getProject(projectId)
+            .flatMapWithResumeOnError {
+                Flux.zip(
+                    _testExecutionRepository.countByProjectId(projectId),
+                    _testResultRepository.countByProjectId(projectId),
+                    _testScenarioRepository.countByProjectId(projectId),
+                    _testCaseRepository.countByProjectId(projectId),
+                    simulationRepository.countByProjectId(projectId)
+                ).map {
+                    ProjectCounterModel(it.t1, it.t2, it.t3, it.t4, it.t5)
+                }.toMono()
             }
 
     override fun getProject(idOrName: String): Mono<Project> =

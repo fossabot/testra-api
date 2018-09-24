@@ -57,5 +57,10 @@ class TestResultRepository : ITestResultRepository {
 
     override fun count(): Mono<Long> = template.count(Query(), TestResult::class.java)
 
+    override fun countByProjectId(projectId: String): Mono<Long> {
+        val criteria = Criteria.where("projectId").isEqualTo(projectId)
+        return template.count(Query(criteria), TestResult::class.java)
+    }
+
     private fun findByQuery(q: Query) = template.find(q, TestResult::class.java)
 }

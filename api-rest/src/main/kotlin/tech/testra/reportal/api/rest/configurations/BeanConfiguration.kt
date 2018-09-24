@@ -51,7 +51,8 @@ class BeanConfiguration {
         testScenarioRepository(),
         testCaseRepository(),
         testGroupRepository(),
-        testExecutionStatsRepository())
+        testExecutionStatsRepository(),
+        simulationRepository())
 
     @Bean
     fun testGroupService() =

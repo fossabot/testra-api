@@ -27,26 +27,30 @@ interface IDeletableByProject {
     fun deleteByProjectId(projectId: String): Mono<Void>
 }
 
+interface ICountableByProject {
+    fun countByProjectId(projectId: String): Mono<Long>
+}
+
 interface ITestProjectRepository : IRepository<Project> {
     fun findBy(name: String): Mono<Project>
 }
 
-interface ITestScenarioRepository : IRepository<TestScenario>, IDeletableByProject {
+interface ITestScenarioRepository : IRepository<TestScenario>, IDeletableByProject, ICountableByProject {
     fun findAllByProjectId(projectId: String): Flux<TestScenario>
     fun findAllByGroupId(groupId: String): Flux<TestScenario>
     fun findBy(name: String, projectId: String, groupId: String): Flux<TestScenario>
 }
 
-interface ITestCaseRepository : IRepository<TestCase>, IDeletableByProject {
+interface ITestCaseRepository : IRepository<TestCase>, IDeletableByProject, ICountableByProject {
     fun findAll(projectId: String): Flux<TestCase>
     fun findBy(name: String, projectId: String, groupId: String): Flux<TestCase>
 }
 
-interface ISimulationRepository : IRepository<Simulation>, IDeletableByProject {
+interface ISimulationRepository : IRepository<Simulation>, IDeletableByProject, ICountableByProject {
     fun findAll(projectId: String, executionId: String): Flux<Simulation>
 }
 
-interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject {
+interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject, ICountableByProject {
     fun getRecentExecs(size: Int): Flux<TestExecution>
     fun getExecsCounts(size: Int): Flux<ExecutionCounter>
     fun findAll(projectId: String): Flux<TestExecution>
@@ -66,7 +70,7 @@ interface ITestExecutionStatsRepository : IRepository<TestExecutionStats>, IDele
     fun decOtherResults(executionId: String): Mono<Boolean>
 }
 
-interface ITestResultRepository : IRepository<TestResult>, IDeletableByProject {
+interface ITestResultRepository : IRepository<TestResult>, IDeletableByProject, ICountableByProject {
     fun findAll(projectId: String, executionId: String): Flux<TestResult>
     fun findAll(projectId: String, executionId: String, resultStatus: ResultStatus): Flux<TestResult>
     fun findAll(projectId: String, executionId: String, groupId: String): Flux<TestResult>

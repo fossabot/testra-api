@@ -70,4 +70,9 @@ class TestExecutionRepository : ITestExecutionRepository {
     override fun pushGroupId(executionId: String, groupId: String): Mono<UpdateResult> =
         template.updateFirst(Query.query(Criteria.where("id").isEqualTo(executionId)),
             Update().addToSet("groupIds", groupId), TestExecution::class.java)
+
+    override fun countByProjectId(projectId: String): Mono<Long> {
+        val criteria = Criteria.where("projectId").isEqualTo(projectId)
+        return template.count(Query(criteria), TestExecution::class.java)
+    }
 }

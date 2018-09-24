@@ -13,6 +13,7 @@ import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.model.EnrichedTestResultModel
+import tech.testra.reportal.model.ProjectCounterModel
 import tech.testra.reportal.model.ProjectExecutionCounter
 import tech.testra.reportal.model.ProjectModel
 import tech.testra.reportal.model.SimulationModel
@@ -27,6 +28,7 @@ import tech.testra.reportal.model.ResultStatus as ResultInModel
 interface ITestProjectService {
     fun getProjects(): Flux<Project>
     fun getTopProjects(size: Int): Flux<ProjectExecutionCounter>
+    fun getProjectCounters(projectId: String): Mono<ProjectCounterModel>
     fun getProject(idOrName: String): Mono<Project>
     fun createProject(projectModelMono: Mono<ProjectModel>): Mono<Project>
     fun updateProject(id: String, projectModelMono: Mono<ProjectModel>): Mono<Project>
