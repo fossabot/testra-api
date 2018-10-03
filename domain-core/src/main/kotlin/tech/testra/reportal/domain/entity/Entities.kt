@@ -31,7 +31,7 @@ data class Project(
 @CompoundIndex(def = "{'projectId': 1, 'namespaceId': 1, 'name': 1}", useGeneratedName = true)
 data class TestCase(
     override val id: String = generatedUniqueId(),
-    val projectId: String,
+    @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val name: String,
     val namespaceId: String,
     val manual: Boolean,
@@ -62,6 +62,7 @@ data class TestExecutionStats(
     val passed: Long = 0,
     val failed: Long = 0,
     val expectedFailures: Long = 0,
+    val manual: Long = 0,
     val others: Long = 0
 ) : IEntity
 
@@ -71,7 +72,7 @@ data class TestExecutionStats(
     direction = IndexDirection.DESCENDING)
 data class TestResult(
     override val id: String = generatedUniqueId(),
-    val projectId: String,
+    @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val executionId: String,
     val targetId: String,
     val groupId: String,
@@ -111,7 +112,7 @@ data class TestScenario(
     direction = IndexDirection.DESCENDING)
 data class Simulation(
     override val id: String = generatedUniqueId(),
-    val projectId: String,
+    @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val executionId: String,
     val name: String,
     val namespace: String,

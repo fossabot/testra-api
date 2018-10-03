@@ -32,10 +32,18 @@ class TestResultRepository : ITestResultRepository {
     }
 
     override fun findAll(projectId: String, executionId: String, resultStatus: ResultStatus): Flux<TestResult> {
+        val statusCriteria = if (resultStatus == ResultStatus.OTHERS) {
+            Criteria().orOperator(
+                Criteria.where("status").isEqualTo(ResultStatus.PASSED).not(),
+                Criteria.where("status").isEqualTo(ResultStatus.FAILED).not()
+            )
+        } else {
+            Criteria.where("status").isEqualTo(resultStatus)
+        }
         val criteria: Criteria = Criteria().andOperator(
             Criteria.where("projectId").isEqualTo(projectId),
             Criteria.where("executionId").isEqualTo(executionId),
-            Criteria.where("status").isEqualTo(resultStatus)
+            statusCriteria
         )
         return findByQuery(Query(criteria))
     }

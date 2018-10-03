@@ -114,7 +114,7 @@ class TestResultService(
                         attachments = it.attachments.toAttachmentEntity()
                     )
                     updateTestExecution(executionId, it)
-                    updateTestExecutionStats(executionId, previousTestResult, it)
+                    updateTestExecutionStats(projectId, executionId, previousTestResult, it)
                     if (previousTestResult == null)
                         _testResultRepository.save(testResult.toMono())
                     else
@@ -129,17 +129,18 @@ class TestResultService(
     }
 
     private fun updateTestExecutionStats(
+        projectId: String,
         executionId: String,
         previousTestResult: TestResult?,
         testResultModel: TestResultModel
     ) {
         if (previousTestResult == null) {
-            incTestExecutionStats(testResultModel, executionId)
+            incTestExecutionStats(projectId, testResultModel, executionId)
         } else {
             if (previousTestResult.status.toString() == testResultModel.status.toString())
                 return
 
-            incTestExecutionStats(testResultModel, executionId)
+            incTestExecutionStats(projectId, testResultModel, executionId)
 
             when (previousTestResult.status) {
                 ResultStatus.PASSED -> _testExecutionStatsRepository.decPassedResults(executionId)
@@ -154,7 +155,7 @@ class TestResultService(
         }
     }
 
-    private fun incTestExecutionStats(testResultModel: TestResultModel, executionId: String) {
+    private fun incTestExecutionStats(projectId: String, testResultModel: TestResultModel, executionId: String) {
         when (testResultModel.status) {
             ResultInModel.PASSED -> _testExecutionStatsRepository.incPassedResults(executionId)
             ResultInModel.FAILED -> {
@@ -162,6 +163,29 @@ class TestResultService(
                     _testExecutionStatsRepository.incExpectedFailedResults(executionId).subscribe()
                 }
                 _testExecutionStatsRepository.incFailedResults(executionId)
+            }
+            ResultInModel.SKIPPED -> {
+                if (testResultModel.resultType == tech.testra.reportal.model.ResultType.SCENARIO) {
+                    _testScenarioService.getScenarioById(projectId, testResultModel.targetId)
+                        .flatMap {
+                            if (it.manual) {
+                                _testExecutionStatsRepository.incManualResults(executionId)
+                            } else {
+                                Mono.empty()
+                            }
+                        }
+                } else {
+                    _testCaseService.getTestCaseById(projectId, testResultModel.targetId)
+                        .flatMap {
+                            if (it.manual) {
+                                _testExecutionStatsRepository.incManualResults(executionId)
+                            } else {
+                                Mono.empty()
+                            }
+                        }
+                }.subscribe()
+
+                _testExecutionStatsRepository.incOtherResults(executionId)
             }
             else -> _testExecutionStatsRepository.incOtherResults(executionId)
         }.subscribe()

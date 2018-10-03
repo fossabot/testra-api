@@ -64,6 +64,7 @@ interface ITestExecutionStatsRepository : IRepository<TestExecutionStats>, IDele
     fun incFailedResults(executionId: String): Mono<Boolean>
     fun incExpectedFailedResults(executionId: String): Mono<Boolean>
     fun incOtherResults(executionId: String): Mono<Boolean>
+    fun incManualResults(executionId: String): Mono<Boolean>
     fun decPassedResults(executionId: String): Mono<Boolean>
     fun decFailedResults(executionId: String): Mono<Boolean>
     fun decExpectedFailedResults(executionId: String): Mono<Boolean>

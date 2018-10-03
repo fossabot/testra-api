@@ -130,7 +130,7 @@ data class TestExecutionFilters(
 )
 
 enum class ResultStatus {
-    PASSED, FAILED, SKIPPED, PENDING, AMBIGUOUS, UNDEFINED, UNKNOWN
+    PASSED, FAILED, OTHERS, SKIPPED, PENDING, AMBIGUOUS, UNDEFINED, UNKNOWN
 }
 
 enum class ResultType {

@@ -47,6 +47,9 @@ class TestExecutionStatsRepository : ITestExecutionStatsRepository {
     override fun incOtherResults(executionId: String): Mono<Boolean> =
         incOrDecResults("others", 1, executionId)
 
+    override fun incManualResults(executionId: String): Mono<Boolean> =
+        incOrDecResults("manual", 1, executionId)
+
     override fun decPassedResults(executionId: String): Mono<Boolean> =
         incOrDecResults("passed", -1, executionId)
 
