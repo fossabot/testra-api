@@ -34,8 +34,11 @@ class TestResultRepository : ITestResultRepository {
     override fun findAll(projectId: String, executionId: String, resultStatus: ResultStatus): Flux<TestResult> {
         val statusCriteria = if (resultStatus == ResultStatus.OTHERS) {
             Criteria().orOperator(
-                Criteria.where("status").isEqualTo(ResultStatus.PASSED).not(),
-                Criteria.where("status").isEqualTo(ResultStatus.FAILED).not()
+                Criteria.where("status").isEqualTo(ResultStatus.SKIPPED),
+                Criteria.where("status").isEqualTo(ResultStatus.UNKNOWN),
+                Criteria.where("status").isEqualTo(ResultStatus.UNDEFINED),
+                Criteria.where("status").isEqualTo(ResultStatus.PENDING),
+                Criteria.where("status").isEqualTo(ResultStatus.AMBIGUOUS)
             )
         } else {
             Criteria.where("status").isEqualTo(resultStatus)
