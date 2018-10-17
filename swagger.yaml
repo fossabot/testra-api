@@ -1259,6 +1259,7 @@ definitions:
         type: string
     required:
       - name
+      - description
     example:
       name: Test Project
 
