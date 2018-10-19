@@ -63,7 +63,7 @@ interface IVulnerabilityRepository : IRepository<Vulnerability> {
     fun findByName(name: String): Mono<Vulnerability>
 }
 
-interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject {
+interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject, ICountableByProject {
     fun getRecentExecs(size: Int): Flux<TestExecution>
     fun getExecsCounts(size: Int): Flux<ExecutionCounter>
     fun findAll(projectId: String): Flux<TestExecution>
