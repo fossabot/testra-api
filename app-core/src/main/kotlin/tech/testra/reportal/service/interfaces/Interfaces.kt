@@ -91,7 +91,7 @@ interface IVulnerabilityAlertService {
     fun createVulnerabilityAlert(
         projectId: String,
         executionId: String,
-        simulationModelM: Mono<VulnerabilityAlertModel>
+        vulnerabilityAlertModel: Mono<VulnerabilityAlertModel>
     ): Mono<VulnerabilityAlert>
 
     fun deleteVulnerabilityAlertById(id: String): Mono<Void>
