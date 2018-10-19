@@ -22,7 +22,7 @@ interface IEntity {
 
 @Document(collection = "projects")
 data class Project(
-    @Indexed(direction = IndexDirection.DESCENDING) override val id: String = generatedUniqueId(),
+    override val id: String = generatedUniqueId(),
     @Indexed(unique = true) val name: String,
     val description: String,
     val projectType: ProjectType = ProjectType.TEST,
@@ -130,7 +130,7 @@ data class Vulnerability(
 
 @Document(collection = "vulnerability_categories")
 data class VulnerabilityCategory(
-    @Indexed override val id: String = generatedUniqueId(),
+    override val id: String = generatedUniqueId(),
     val name: String
 ) : IEntity
 
