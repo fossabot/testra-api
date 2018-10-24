@@ -95,10 +95,10 @@ class Router(
                             DELETE("/$SIMULATION_ID_IN_RESOURCE", _simulationHandler::delete)
                         }
 
-                        "/{executionId}/vulnerabilities".nest {
+                        "/{executionId}/vulnerability-alerts".nest {
                             GET("/", _vulnerabilityHandler::findAll)
                             POST("/", _vulnerabilityHandler::create)
-                            DELETE("/$SIMULATION_ID_IN_RESOURCE", _vulnerabilityHandler::delete)
+                            DELETE("/$EXECUTION_ID_IN_RESOURCE", _vulnerabilityHandler::delete)
                         }
                     }
 

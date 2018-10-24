@@ -11,6 +11,7 @@ import tech.testra.reportal.repository.TestProjectRepository
 import tech.testra.reportal.repository.TestResultRepository
 import tech.testra.reportal.repository.TestScenarioRepository
 import tech.testra.reportal.repository.VulnerabilityAlertRepository
+import tech.testra.reportal.repository.VulnerabilityCategoryRepository
 import tech.testra.reportal.repository.VulnerabilityRepository
 import tech.testra.reportal.service.execution.TestExecutionService
 import tech.testra.reportal.service.project.TestProjectService
@@ -52,6 +53,9 @@ class BeanConfiguration {
 
     @Bean
     fun vulnerabilityRepository() = VulnerabilityRepository()
+
+    @Bean
+    fun vulnerabilityCategoryRepository() = VulnerabilityCategoryRepository()
 
     @Bean
     fun testProjectService() = TestProjectService(testProjectRepository(),

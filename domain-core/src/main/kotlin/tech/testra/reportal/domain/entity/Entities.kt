@@ -23,7 +23,7 @@ interface IEntity {
 @Document(collection = "projects")
 data class Project(
     override val id: String = generatedUniqueId(),
-    @Indexed(unique = true) val name: String,
+    @Indexed(unique = true, useGeneratedName = true) val name: String,
     val description: String,
     val projectType: ProjectType = ProjectType.TEST,
     val creationDate: Long = System.currentTimeMillis()
@@ -124,19 +124,19 @@ data class Simulation(
 @Document(collection = "vulnerabilities")
 data class Vulnerability(
     override val id: String = generatedUniqueId(),
-    @Indexed val name: String,
+    @Indexed(unique = true, useGeneratedName = true) val name: String,
     val vulnerabilityCatId: String
 ) : IEntity
 
 @Document(collection = "vulnerability_categories")
 data class VulnerabilityCategory(
     override val id: String = generatedUniqueId(),
-    val name: String
+    @Indexed(unique = true, useGeneratedName = true) val name: String
 ) : IEntity
 
 @Document(collection = "vulnerability_alerts")
 @CompoundIndex(def = "{'projectId': 1, 'executionId': 1}",
-    name = "compound_index_project_execution_on_vulnerability_alert",
+    useGeneratedName = true,
     direction = IndexDirection.DESCENDING)
 data class VulnerabilityAlert(
     override val id: String = generatedUniqueId(),

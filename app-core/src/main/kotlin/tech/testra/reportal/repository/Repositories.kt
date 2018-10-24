@@ -55,6 +55,7 @@ interface ISimulationRepository : IRepository<Simulation>, IDeletableByProject, 
 
 interface IVulnerabilityAlertRepository : IRepository<VulnerabilityAlert>, IDeletableByProject {
     fun findAll(projectId: String, executionId: String): Flux<VulnerabilityAlert>
+    fun saveAll(vulnerabilityAlerts: Mono<List<VulnerabilityAlert>>): Mono<Void>
 }
 
 interface IVulnerabilityCategoryRepository : IRepository<VulnerabilityCategory>

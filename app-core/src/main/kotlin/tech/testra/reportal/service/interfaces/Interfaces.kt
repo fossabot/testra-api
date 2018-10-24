@@ -23,7 +23,6 @@ import tech.testra.reportal.model.TestExecutionFilters
 import tech.testra.reportal.model.TestExecutionModel
 import tech.testra.reportal.model.TestResultModel
 import tech.testra.reportal.model.TestScenarioModel
-import tech.testra.reportal.model.VulnerabilityAlertModel
 import tech.testra.reportal.model.ResultStatus as ResultInModel
 
 @Service
@@ -86,13 +85,13 @@ interface ISimulationService {
 
 @Service
 interface IVulnerabilityAlertService {
-    fun getVulnerabilityAlertByProjectAndExecutionIds(projectId: String, executionId: String): Flux<VulnerabilityAlert>
+    fun getVulnerabilityAlertByProjectAndExecutionId(projectId: String, executionId: String): Flux<VulnerabilityAlert>
     fun getVulnerabilityAlertById(projectId: String, executionId: String, resultId: String): Mono<VulnerabilityAlert>
     fun createVulnerabilityAlert(
         projectId: String,
         executionId: String,
-        vulnerabilityAlertModel: Mono<VulnerabilityAlertModel>
-    ): Mono<VulnerabilityAlert>
+        vulnerabilityAlerts: Mono<tech.testra.reportal.model.VulnerabilityAlerts>
+    ): Mono<Void>
 
     fun deleteVulnerabilityAlertById(id: String): Mono<Void>
     fun count(): Mono<Long>

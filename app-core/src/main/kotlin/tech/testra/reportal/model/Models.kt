@@ -93,7 +93,16 @@ data class SimulationModel(
     val scenarios: List<SimulationScenario>
 )
 
-data class VulnerabilityAlertModel(
+data class VulnerabilityAlerts(
+    val scanner: VulnerabilityScanner,
+    val alerts: List<VulnerabilityAlert>
+)
+
+enum class VulnerabilityScanner {
+    ZAP, Nessus
+}
+
+data class VulnerabilityAlert(
     val name: String,
     val description: String,
     val riskLevel: VulnerabilityRiskLevel,
