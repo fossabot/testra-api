@@ -62,3 +62,16 @@ data class ExecutionCounter(
     val projectId: String,
     val total: Long
 )
+
+data class VulnerabilityAlert(
+    val executionId: String,
+    val vulnerabilityRefId: String,
+    val vulnerabilityCategoryRefId: String,
+    val description: String,
+    val riskLevel: VulnerabilityRiskLevel,
+    val urls: List<UrlResource>,
+    val domain: String,
+    val solution: String,
+    val otherInfo: String,
+    val reference: String
+)

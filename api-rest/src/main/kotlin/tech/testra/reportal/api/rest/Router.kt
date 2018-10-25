@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.router
 import tech.testra.reportal.api.rest.handlers.CounterHandler
+import tech.testra.reportal.api.rest.handlers.SecurityScanResultHandler
 import tech.testra.reportal.api.rest.handlers.SimulationHandler
 import tech.testra.reportal.api.rest.handlers.TestCaseHandler
 import tech.testra.reportal.api.rest.handlers.TestExecutionHandler
@@ -12,7 +13,6 @@ import tech.testra.reportal.api.rest.handlers.TestGroupHandler
 import tech.testra.reportal.api.rest.handlers.TestProjectHandler
 import tech.testra.reportal.api.rest.handlers.TestResultHandler
 import tech.testra.reportal.api.rest.handlers.TestScenarioHandler
-import tech.testra.reportal.api.rest.handlers.VulnerabilityHandler
 
 @Configuration
 class Router(
@@ -23,7 +23,7 @@ class Router(
     private val _testResultHandler: TestResultHandler,
     private val _testGroupHandler: TestGroupHandler,
     private val _simulationHandler: SimulationHandler,
-    private val _vulnerabilityHandler: VulnerabilityHandler,
+    private val _securityScanResultHandler: SecurityScanResultHandler,
     private val _counterHandler: CounterHandler
 ) {
 
@@ -95,10 +95,9 @@ class Router(
                             DELETE("/$SIMULATION_ID_IN_RESOURCE", _simulationHandler::delete)
                         }
 
-                        "/{executionId}/vulnerability-alerts".nest {
-                            GET("/", _vulnerabilityHandler::findAll)
-                            POST("/", _vulnerabilityHandler::create)
-                            DELETE("/$EXECUTION_ID_IN_RESOURCE", _vulnerabilityHandler::delete)
+                        "/{executionId}/scan-results".nest {
+                            GET("/", _securityScanResultHandler::find)
+                            POST("/", _securityScanResultHandler::create)
                         }
                     }
 

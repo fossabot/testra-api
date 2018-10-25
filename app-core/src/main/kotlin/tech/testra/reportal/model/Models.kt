@@ -93,12 +93,13 @@ data class SimulationModel(
     val scenarios: List<SimulationScenario>
 )
 
-data class VulnerabilityAlerts(
-    val scanner: VulnerabilityScanner,
+data class SecurityScanResult(
+    val scanner: SecurityScanner,
+    val scannerVersion: String = EMPTY_STRING,
     val alerts: List<VulnerabilityAlert>
 )
 
-enum class VulnerabilityScanner {
+enum class SecurityScanner {
     ZAP, Nessus
 }
 
@@ -106,6 +107,7 @@ data class VulnerabilityAlert(
     val name: String,
     val description: String,
     val riskLevel: VulnerabilityRiskLevel,
+    val domain: String,
     val urls: List<UrlResource>,
     val solution: String,
     val otherInfo: String = EMPTY_STRING,

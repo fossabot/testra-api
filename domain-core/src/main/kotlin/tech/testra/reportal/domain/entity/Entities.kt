@@ -13,8 +13,7 @@ import tech.testra.reportal.domain.valueobjects.ResultType
 import tech.testra.reportal.domain.valueobjects.SimulationScenario
 import tech.testra.reportal.domain.valueobjects.TestStep
 import tech.testra.reportal.domain.valueobjects.TestStepResult
-import tech.testra.reportal.domain.valueobjects.UrlResource
-import tech.testra.reportal.domain.valueobjects.VulnerabilityRiskLevel
+import tech.testra.reportal.domain.valueobjects.VulnerabilityAlert
 
 interface IEntity {
     val id: String
@@ -134,22 +133,17 @@ data class VulnerabilityCategory(
     @Indexed(unique = true, useGeneratedName = true) val name: String
 ) : IEntity
 
-@Document(collection = "vulnerability_alerts")
+@Document(collection = "scan_results")
 @CompoundIndex(def = "{'projectId': 1, 'executionId': 1}",
     useGeneratedName = true,
     direction = IndexDirection.DESCENDING)
-data class VulnerabilityAlert(
+data class ScanResult(
     override val id: String = generatedUniqueId(),
     val projectId: String,
     val executionId: String,
-    val vulnerabilityRefId: String,
-    val vulnerabilityCategoryRefId: String,
-    val description: String,
-    val riskLevel: VulnerabilityRiskLevel,
-    val urls: List<UrlResource>,
-    val solution: String,
-    val otherInfo: String,
-    val reference: String
+    val scanner: String,
+    val scannerVersion: String,
+    val alerts: List<VulnerabilityAlert>
 ) : IEntity
 
 @Document(collection = "groups")

@@ -13,6 +13,7 @@ import org.springframework.web.reactive.config.EnableWebFlux
 import reactor.core.publisher.toMono
 import tech.testra.reportal.domain.entity.Vulnerability
 import tech.testra.reportal.domain.entity.VulnerabilityCategory
+import tech.testra.reportal.repository.IScanResultRepository
 import tech.testra.reportal.repository.ISimulationRepository
 import tech.testra.reportal.repository.ITestCaseRepository
 import tech.testra.reportal.repository.ITestExecutionRepository
@@ -61,6 +62,9 @@ class WarmUpRepositories : CommandLineRunner {
     @Autowired
     lateinit var simulationRepository: ISimulationRepository
 
+    @Autowired
+    lateinit var securityScanRepository: IScanResultRepository
+
     override fun run(vararg args: String?) {
         projectRepository.count()
             .then(scenarioRepository.count())
@@ -68,6 +72,7 @@ class WarmUpRepositories : CommandLineRunner {
             .then(executionRepository.count())
             .then(resultRepository.count())
             .then(simulationRepository.count())
+            .then(securityScanRepository.count())
             .subscribe()
     }
 }

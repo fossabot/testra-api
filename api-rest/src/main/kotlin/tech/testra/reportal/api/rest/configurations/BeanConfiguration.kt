@@ -2,6 +2,7 @@ package tech.testra.reportal.api.rest.configurations
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import tech.testra.reportal.repository.ScanResultRepository
 import tech.testra.reportal.repository.SimulationRepository
 import tech.testra.reportal.repository.TestCaseRepository
 import tech.testra.reportal.repository.TestExecutionRepository
@@ -10,7 +11,6 @@ import tech.testra.reportal.repository.TestGroupRepository
 import tech.testra.reportal.repository.TestProjectRepository
 import tech.testra.reportal.repository.TestResultRepository
 import tech.testra.reportal.repository.TestScenarioRepository
-import tech.testra.reportal.repository.VulnerabilityAlertRepository
 import tech.testra.reportal.repository.VulnerabilityCategoryRepository
 import tech.testra.reportal.repository.VulnerabilityRepository
 import tech.testra.reportal.service.execution.TestExecutionService
@@ -20,7 +20,7 @@ import tech.testra.reportal.service.scenario.TestScenarioService
 import tech.testra.reportal.service.simulation.SimulationService
 import tech.testra.reportal.service.testcase.TestCaseService
 import tech.testra.reportal.service.testgroup.TestGroupService
-import tech.testra.reportal.service.vulnerability.VulnerabilityAlertService
+import tech.testra.reportal.service.vulnerability.SecurityScanResultService
 
 @Configuration
 class BeanConfiguration {
@@ -49,7 +49,7 @@ class BeanConfiguration {
     fun simulationRepository() = SimulationRepository()
 
     @Bean
-    fun vulnerabilityAlertRepository() = VulnerabilityAlertRepository()
+    fun vulnerabilityAlertRepository() = ScanResultRepository()
 
     @Bean
     fun vulnerabilityRepository() = VulnerabilityRepository()
@@ -96,6 +96,6 @@ class BeanConfiguration {
         SimulationService(simulationRepository(), testProjectService(), testExecutionService())
 
     @Bean
-    fun vulnerabilityService() = VulnerabilityAlertService(vulnerabilityAlertRepository(),
+    fun vulnerabilityService() = SecurityScanResultService(vulnerabilityAlertRepository(),
         vulnerabilityRepository(), testProjectService(), testExecutionService())
 }

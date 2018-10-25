@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
+import tech.testra.reportal.domain.entity.ScanResult
 import tech.testra.reportal.domain.entity.Simulation
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
@@ -11,7 +12,6 @@ import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
-import tech.testra.reportal.domain.entity.VulnerabilityAlert
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.model.EnrichedTestResultModel
 import tech.testra.reportal.model.ProjectCounterModel
@@ -84,16 +84,16 @@ interface ISimulationService {
 }
 
 @Service
-interface IVulnerabilityAlertService {
-    fun getVulnerabilityAlertByProjectAndExecutionId(projectId: String, executionId: String): Flux<VulnerabilityAlert>
-    fun getVulnerabilityAlertById(projectId: String, executionId: String, resultId: String): Mono<VulnerabilityAlert>
-    fun createVulnerabilityAlert(
+interface ISecurityScanResultService {
+    fun getScanResultsByProjectAndExecutionId(projectId: String, executionId: String): Flux<ScanResult>
+    fun getScanResultById(projectId: String, executionId: String, resultId: String): Mono<ScanResult>
+    fun createScanResult(
         projectId: String,
         executionId: String,
-        vulnerabilityAlerts: Mono<tech.testra.reportal.model.VulnerabilityAlerts>
+        securityScanResult: Mono<tech.testra.reportal.model.SecurityScanResult>
     ): Mono<Void>
 
-    fun deleteVulnerabilityAlertById(id: String): Mono<Void>
+    fun deleteScanResultById(id: String): Mono<Void>
     fun count(): Mono<Long>
 }
 
