@@ -4,6 +4,7 @@ import com.mongodb.client.result.UpdateResult
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
+import tech.testra.reportal.domain.entity.ScanResult
 import tech.testra.reportal.domain.entity.Simulation
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
@@ -11,6 +12,8 @@ import tech.testra.reportal.domain.entity.TestExecutionStats
 import tech.testra.reportal.domain.entity.TestGroup
 import tech.testra.reportal.domain.entity.TestResult
 import tech.testra.reportal.domain.entity.TestScenario
+import tech.testra.reportal.domain.entity.Vulnerability
+import tech.testra.reportal.domain.entity.VulnerabilityCategory
 import tech.testra.reportal.domain.valueobjects.ExecutionCounter
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.ResultStatus
@@ -48,6 +51,16 @@ interface ITestCaseRepository : IRepository<TestCase>, IDeletableByProject, ICou
 
 interface ISimulationRepository : IRepository<Simulation>, IDeletableByProject, ICountableByProject {
     fun findAll(projectId: String, executionId: String): Flux<Simulation>
+}
+
+interface IScanResultRepository : IRepository<ScanResult>, IDeletableByProject {
+    fun findAll(projectId: String, executionId: String): Flux<ScanResult>
+}
+
+interface IVulnerabilityCategoryRepository : IRepository<VulnerabilityCategory>
+
+interface IVulnerabilityRepository : IRepository<Vulnerability> {
+    fun findByName(name: String): Mono<Vulnerability>
 }
 
 interface ITestExecutionRepository : IRepository<TestExecution>, IDeletableByProject, ICountableByProject {

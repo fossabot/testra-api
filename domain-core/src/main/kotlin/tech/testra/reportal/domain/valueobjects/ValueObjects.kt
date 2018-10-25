@@ -52,7 +52,26 @@ data class Percentile(
     val value: BigDecimal
 )
 
+data class UrlResource(
+    val url: String,
+    val method: HttpMethod,
+    val params: List<String>
+)
+
 data class ExecutionCounter(
     val projectId: String,
     val total: Long
+)
+
+data class VulnerabilityAlert(
+    val executionId: String,
+    val vulnerabilityRefId: String,
+    val vulnerabilityCategoryRefId: String,
+    val description: String,
+    val riskLevel: VulnerabilityRiskLevel,
+    val urls: List<UrlResource>,
+    val domain: String,
+    val solution: String,
+    val otherInfo: String,
+    val reference: String
 )

@@ -28,7 +28,9 @@ tags:
   description: "Everything about Test Results"
 - name: "simulation"
   description: "Everything about Simulations"
-  
+- name: "security-scan"
+  description: "Everything about Security scans"
+
 paths:
   /projects:
     get:
@@ -1206,6 +1208,69 @@ paths:
           description: Any other errors
           schema:
             $ref: '#/definitions/ErrorResponse'
+
+  /projects/{projectId}/executions/{executionId}/scan-results:
+    get:
+      tags:
+      - "security-scan"
+      summary: Get security scan results
+      description: |
+        Returns security scan result for the given project and execution
+      operationId: getSecurityScanResult
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        type: string
+        description: Project Id
+      - name: executionId
+        in: path
+        required: true
+        type: string
+        description: Execution Id
+      responses:
+        200:
+          description: Successful Response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ScanResult'
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+      - "security-scan"
+      summary: Add a new security scan result
+      description: >-
+        Adds a new security scan result into Testra app
+      operationId: createSecurityScanResult
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        type: string
+        description: Project Id
+      - name: executionId
+        in: path
+        required: true
+        type: string
+        description: Execution Id
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ScanResultRequest'
+      responses:
+        201:
+          description: 'Successful creation of Scan Result'
+          schema:
+            $ref: '#/definitions/ScanResult'
+        default:
+          description: Any other errors
+          schema:
+            $ref: '#/definitions/ErrorResponse'
   
   /counters:
     get:
@@ -1839,7 +1904,99 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/SimulationScenario'
-      
+
+  ScanResultRequest:
+    title: ScanResultRequest
+    type: object
+    properties:
+      scanner:
+        type: string
+      scannerVersion:
+        type: string
+      alerts:
+        type: array
+        items:
+          $ref: '#/definitions/VulnerabilityAlert'
+    required:
+    - scanner
+    - scannerVersion
+    - alerts
+
+  ScanResult:
+    title: ScanResult
+    type: object
+    properties:
+      id:
+        type: string
+      projectId:
+        type: string
+      executionId:
+        type: string
+      scanner:
+        type: string
+      scannerVersion:
+        type: string
+      alerts:
+        type: array
+        items:
+          $ref: '#/definitions/VulnerabilityAlert'
+    required:
+    - id
+    - projectId
+    - executionId
+    - scanner
+    - scannerVersion
+    - alerts
+
+  VulnerabilityAlert:
+    title: VulnerabilityAlert
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      riskLevel:
+        type: string
+      solution:
+        type: string
+      otherInfo:
+        type: string
+      reference:
+        type: string
+      domain:
+        type: string
+      urls:
+        type: array
+        items:
+          $ref: '#/definitions/UrlResource'
+    required:
+    - name
+    - description
+    - riskLevel
+    - solution
+    - otherInfo
+    - reference
+    - domain
+    - urls
+
+  UrlResource:
+    title: UrlResource
+    type: object
+    properties:
+      url:
+        type: string
+      method:
+        type: string
+      params:
+        type: array
+        items:
+          type: string
+    required:
+    - url
+    - method
+    - params
+
   Counter:
     title: Counter
     type: object

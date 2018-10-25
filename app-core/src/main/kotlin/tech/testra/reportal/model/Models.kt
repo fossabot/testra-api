@@ -74,12 +74,6 @@ data class TestScenarioModel(
     val steps: List<TestStep>
 )
 
-data class SimulationModel(
-    val name: String,
-    val namespace: String,
-    val scenarios: List<SimulationScenario>
-)
-
 data class TestStep(
     val index: Int,
     val text: String,
@@ -91,6 +85,39 @@ data class TestStepResult(
     val status: ResultStatus,
     val durationInMs: Long = 0,
     val error: String = EMPTY_STRING
+)
+
+data class SimulationModel(
+    val name: String,
+    val namespace: String,
+    val scenarios: List<SimulationScenario>
+)
+
+data class SecurityScanResult(
+    val scanner: SecurityScanner,
+    val scannerVersion: String = EMPTY_STRING,
+    val alerts: List<VulnerabilityAlert>
+)
+
+enum class SecurityScanner {
+    ZAP, Nessus
+}
+
+data class VulnerabilityAlert(
+    val name: String,
+    val description: String,
+    val riskLevel: VulnerabilityRiskLevel,
+    val domain: String,
+    val urls: List<UrlResource>,
+    val solution: String,
+    val otherInfo: String = EMPTY_STRING,
+    val reference: String = EMPTY_STRING
+)
+
+data class UrlResource(
+    val url: String,
+    val method: HttpMethod,
+    val params: List<String>
 )
 
 data class CounterModel(
@@ -171,3 +198,11 @@ data class Percentile(
     val n: Byte,
     val value: BigDecimal
 )
+
+enum class VulnerabilityRiskLevel {
+    INFO, LOW, MEDIUM, HIGH
+}
+
+enum class HttpMethod {
+    GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH, CONNECT
+}

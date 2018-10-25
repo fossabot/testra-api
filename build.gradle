@@ -70,6 +70,7 @@ subprojects {
             dependency 'org.apache.commons:commons-lang3:3.0'
             dependency 'io.mockk:mockk:1.8.5'
             dependency 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.6'
+            dependency 'org.apache.commons:commons-csv:1.6'
         }
     }
 

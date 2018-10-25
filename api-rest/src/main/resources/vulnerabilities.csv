@@ -1,0 +1,150 @@
+Application Error scanner,Application
+Base64 Disclosure,Application
+Check for buffer overflow in back end C code,Application
+Check for proper format string handling in back end c code.,Application
+Check for proper integer handling in back end c code.,Application
+Content Security Policy Scanner,Application
+External Redirect,Application
+Heartbleed OpenSSL Vulnerability,Application
+In Page Banner Info Leak,Application
+Information disclosure - database error messages [Deprecated],Application
+Information disclosure - debug error messages,Application
+Information disclosure - sensitive information in URL,Application
+Information disclosure - sensitive information on HTTP Referrer header,Application
+Information disclosure - suspicious comments,Application
+Insecure Component,Application
+Insufficient Authentication,Application
+Insufficient Authorization,Application
+Parameter tampering,Application
+Proxy Disclosure,Application
+Server Leaks PII in response body,Application
+Server side include,Application
+Session Fixation,Application
+Username Enumeration,Application
+Weak Authentication Method,Application
+Cacheability and Retrievability Content,Cache Control
+Cookie poisoning,Cache Control
+Incomplete or no cache-control and pragma HTTP Header set,Cache Control
+Password Autocomplete in browser [Deprecated],Cache Control
+Retrieved from Cache,Cache Control
+Secure page browser cache [Deprecated],Cache Control
+Code Injection,Code Injection
+Command Injection,Code Injection
+SOAP Action Spoofing,Code Injection
+Cookie set without HttpOnly flag,Cookie
+Cookie set without SameSite attribute,Cookie
+Cookie set without secure flag,Cookie
+Cookie Slack Detector,Cookie
+Loosely Scoped Cookie,Cookie
+CRLF injection,Cross Site Injection
+Cross Site Scripting - Detection by Callback,Cross Site Injection
+Cross site scripting (DOM),Cross Site Injection
+Cross Site Scripting (Reflected),Cross Site Injection
+Cross site scripting [Deprecated],Cross Site Injection
+Cross site scripting in SCRIPT section [Deprecated],Cross Site Injection
+Cross site scripting in TAG [Deprecated],Cross Site Injection
+Cross Site Scripting in TAG Attribute [Deprecated],Cross Site Injection
+Cross site scripting without brackets [Deprecated],Cross Site Injection
+Cross-domain JavaScript source file inclusion,Cross Site Injection
+Cross-Domain Misconfiguration,Cross Site Injection
+Cross-Domain Requests Permitted,Cross Site Injection
+LDAP Injection,Cross Site Injection
+Persistent XSS (Attack),Cross Site Injection
+Persistent XSS (Prime),Cross Site Injection
+Persistent XSS (Spider),Cross Site Injection
+User controllable javascript event (XSS),Cross Site Injection
+Backup File Disclosure,Directory-Path-File
+BEA WebLogic example files [Deprecated],Directory-Path-File
+Cold Fusion default file [Deprecated],Directory-Path-File
+Directory browsing,Directory-Path-File
+Directory Browsing,Directory-Path-File
+Directory/Path traversal,Directory-Path-File
+Example file active rule,Directory-Path-File
+Example file passive rule,Directory-Path-File
+Example simple active rule,Directory-Path-File
+Example simple passive rule,Directory-Path-File
+IBM WebSphere default files [Deprecated],Directory-Path-File
+IIS default file [Deprecated],Directory-Path-File
+Lotus Domino default files [Deprecated],Directory-Path-File
+Macromedia JRun default files [Deprecated],Directory-Path-File
+Obsolete file [Deprecated],Directory-Path-File
+Obsolete file extended check [Deprecated],Directory-Path-File
+Potential File Path Manipulation,Directory-Path-File
+Private IP disclosure,Directory-Path-File
+Relative Path Confusion,Directory-Path-File
+Remote File Inclusion,Directory-Path-File
+Tomcat source file disclosure [Deprecated],Directory-Path-File
+Viewstate scanner,Directory-Path-File
+WSDL File Detection,Directory-Path-File
+Absence of Anti-CSRF Tokens,Header
+Anti CSRF Tokens Scanner,Header
+Apache Range Header DoS (CVE-2011-3192),Header
+Charset Mismatch,Header
+Content Security Policy (CSP) Header Not Set,Header
+Content-Type header missing,Header
+Cross Site Request Forgery [Deprecated],Header
+Hash Disclosure,Header
+Httpoxy - Proxy Header Misuse,Header
+Session ID in URL rewrite,Header
+Timestamp Disclosure,Header
+User controllable charset,Header
+User controllable HTML element attribute (potential XSS),Header
+Web Browser XSS Protection Not Enabled,Header
+X-Backend-Server Header Information Leak,Header
+X-ChromeLogger-Data Header Information Leak,Header
+X-Content-Type-Options header missing,Header
+X-Frame-Options header not set,Header
+Beast (via HTTPS Info Extension),HTTP
+Big Redirect Response,HTTP
+Blank link target,HTTP
+Client/Server HTTP Error Response Codes [Script],HTTP
+Crime (via HTTPS Info Extension),HTTP
+Freak (via HTTPS Info Extension),HTTP
+Fuzzer HTTP Processor scripts,HTTP
+Heartbleed OpenSSL Vulnerability,HTTP
+Http Only Site,HTTP
+HTTP Parameter Override,HTTP
+HTTP Parameter Pollution,HTTP
+Http Parameter Pollution (Client Side),HTTP
+Http Parameter Pollution (Server Side),HTTP
+HTTP to HTTPS insecure transition in form post,HTTP
+HTTPS Content Available via HTTP,HTTP
+HTTPS to HTTP insecure transition in form post,HTTP
+Insecure HTTP Method,HTTP
+Open redirect,HTTP
+Robot (via HTTPS Info Extension),HTTP
+Secure pages including mixed content,HTTP
+Server Leaks Information via "X-AspNet-Version"/"X-AspNetMvc-Version" HTTP Response Header Field(s),HTTP
+Server Leaks Information via "X-Powered-By" HTTP Response Header Field(s),HTTP
+Server Leaks Version Information via "Server" HTTP Response Header Field,HTTP
+Strict-Transport-Security Header Not Set,HTTP
+Unexpected Content Types [Script],HTTP
+URL Redirector Abuse,HTTP
+Weak HTTP authentication over an unsecured connection [Deprecated],HTTP
+Username Hash iDOR Scanner,HTTP | Header | Cookie
+NoSQL Injection MongoDB,No SQL Injection
+Source Code Disclosure,Source Code Disclosure
+Source Code Disclosure - CVE-2012-1823,Source Code Disclosure
+Source Code Disclosure - File Inclusion,Source Code Disclosure
+Source Code Disclosure - Git,Source Code Disclosure
+Source Code Disclosure - SVN,Source Code Disclosure
+Source Code Disclosure - WEB-INF folder,Source Code Disclosure
+Untrusted domains in JavaScript source code,Source Code Disclosure
+Generic Padding Oracle,SQL Injection
+MS SQL Injection Enumeration [Deprecated],SQL Injection
+Oracle SQL Injection Enumeration [Deprecated],SQL Injection
+SQL Injection,SQL Injection
+SQL Injection [Deprecated],SQL Injection
+SQL Injection Fingerprinting [Deprecated],SQL Injection
+SQL Injection Hypersonic,SQL Injection
+SQL Injection MsSQL,SQL Injection
+SQL Injection MySQL,SQL Injection
+SQL Injection Oracle,SQL Injection
+SQL Injection Postgresql,SQL Injection
+SQL Injection SQLite,SQL Injection
+SQL Injection SQLMap,SQL Injection
+Expression Language Injection,XPath Injection
+Xpath Injection,XPath Injection
+XXE External Entity,XPath Injection
+SOAP XML Injection,XSLT Injection
+XSLT Injection,XSLT Injection

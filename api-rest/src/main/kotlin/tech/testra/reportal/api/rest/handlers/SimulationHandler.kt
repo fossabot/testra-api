@@ -33,7 +33,7 @@ class SimulationHandler(val simulationService: ISimulationService) {
             .flatMap { created(req.uri()).contentType(MediaType.APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun delete(req: ServerRequest): Mono<ServerResponse> =
-        simulationService.getResultById(req.projectId(), req.executionId(), req.resultId())
+        simulationService.getSimulationById(req.projectId(), req.executionId(), req.resultId())
             .switchIfEmpty(TestResultNotFoundException(req.resultId()).toMono())
             .flatMap { noContent().build(simulationService.deleteSimulationById(req.resultId())) }
 }

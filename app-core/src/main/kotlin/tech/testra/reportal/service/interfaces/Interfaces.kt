@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import tech.testra.reportal.domain.entity.Project
+import tech.testra.reportal.domain.entity.ScanResult
 import tech.testra.reportal.domain.entity.Simulation
 import tech.testra.reportal.domain.entity.TestCase
 import tech.testra.reportal.domain.entity.TestExecution
@@ -71,7 +72,7 @@ interface ITestCaseService {
 @Service
 interface ISimulationService {
     fun getSimulationByProjectAndExecutionIds(projectId: String, executionId: String): Flux<Simulation>
-    fun getResultById(projectId: String, executionId: String, resultId: String): Mono<Simulation>
+    fun getSimulationById(projectId: String, executionId: String, resultId: String): Mono<Simulation>
     fun createSimulation(
         projectId: String,
         executionId: String,
@@ -79,6 +80,20 @@ interface ISimulationService {
     ): Mono<Simulation>
 
     fun deleteSimulationById(id: String): Mono<Void>
+    fun count(): Mono<Long>
+}
+
+@Service
+interface ISecurityScanResultService {
+    fun getScanResultsByProjectAndExecutionId(projectId: String, executionId: String): Flux<ScanResult>
+    fun getScanResultById(projectId: String, executionId: String, resultId: String): Mono<ScanResult>
+    fun createScanResult(
+        projectId: String,
+        executionId: String,
+        securityScanResult: Mono<tech.testra.reportal.model.SecurityScanResult>
+    ): Mono<Void>
+
+    fun deleteScanResultById(id: String): Mono<Void>
     fun count(): Mono<Long>
 }
 
