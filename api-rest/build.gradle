@@ -14,10 +14,10 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-devtools'
     compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
     compile 'org.apache.commons:commons-csv'
+    compile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 
     compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 
-    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'io.projectreactor:reactor-test'
 }
@@ -42,6 +42,6 @@ jacocoTestReport {
     reports {
         xml.enabled true
         csv.enabled false
-        html.destination "${buildDir}/reports/coverage"
+        html.destination new File("${buildDir}/reports/coverage")
     }
 }
