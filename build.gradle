@@ -67,7 +67,7 @@ subprojects {
         dependencies {
             dependency 'org.modelmapper:modelmapper:2.3.2'
             dependency "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-            dependency 'org.apache.commons:commons-lang3:3.0'
+            dependency 'org.apache.commons:commons-lang3:3.8.1'
             dependency 'io.mockk:mockk:1.9'
             dependency 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.6'
             dependency 'org.apache.commons:commons-csv:1.6'
