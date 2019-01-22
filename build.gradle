@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlinVersion = '1.3.11'
-        springBootVersion = '2.1.1.RELEASE'
+        springBootVersion = '2.1.2.RELEASE'
         js2pPluginVersion = '1.0.0'
         dependencyManagementVersion = '1.0.6.RELEASE'
         kotlinLinterVersion = '1.15.1'
