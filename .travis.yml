@@ -9,12 +9,22 @@ cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
+  
+stages:
+- compile_and_test
+- name: docker_publish
+  if: tag IS present
 
-script:
-- "./gradlew check"
-- "./gradlew jacocoTestReport"
-- "echo \"$DOCKER_PASSWORD\" | docker login -u \"$DOCKER_USERNAME\" --password-stdin"
-- "./gradlew buildDocker -PpublishDocker"
+jobs:
+  include:
+  - stage: compile_and_test
+    script:
+    - "./gradlew check"
+    - "./gradlew jacocoTestReport"
+  - stage: docker_publish
+    script:
+    - "echo \"$DOCKER_PASSWORD\" | docker login -u \"$DOCKER_USERNAME\" --password-stdin"
+    - "./gradlew buildDocker -PpublishDocker"   
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
