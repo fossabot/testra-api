@@ -32,7 +32,7 @@ apply plugin: 'idea'
 
 allprojects {
     group 'tech.testra'
-    version '0.2'
+    version '0.3'
 
     apply plugin: 'project-report'
 
