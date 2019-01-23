@@ -99,7 +99,7 @@ data class TestScenario(
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val featureId: String,
     val featureDescription: String,
-    val namespace: String,
+    val namespace: String = "", // Backward compatible
     val name: String,
     val manual: Boolean,
     val tags: List<String> = emptyList(),
