@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.IndexDirection
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import tech.testra.reportal.domain.valueobjects.Attachment
+import tech.testra.reportal.domain.valueobjects.DataTableRow
 import tech.testra.reportal.domain.valueobjects.GroupType
 import tech.testra.reportal.domain.valueobjects.ProjectType
 import tech.testra.reportal.domain.valueobjects.ResultStatus
@@ -98,13 +99,15 @@ data class TestScenario(
     @Indexed(direction = IndexDirection.DESCENDING) val projectId: String,
     val featureId: String,
     val featureDescription: String,
+    val namespace: String,
     val name: String,
     val manual: Boolean,
     val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
     val after: List<TestStep> = emptyList(),
     val backgroundSteps: List<TestStep> = emptyList(),
-    val steps: List<TestStep>
+    val steps: List<TestStep>,
+    val dataRows: List<DataTableRow> = emptyList()
 ) : IEntity
 
 @Document(collection = "simulations")
@@ -147,7 +150,7 @@ data class ScanResult(
 ) : IEntity
 
 @Document(collection = "groups")
-@CompoundIndex(def = "{'projectId': 1, 'name': 1}",
+@CompoundIndex(def = "{'projectId': 1, 'name': 1, 'description': 1}",
     useGeneratedName = true,
     direction = IndexDirection.DESCENDING,
     unique = true)

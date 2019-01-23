@@ -91,7 +91,7 @@ interface ITestResultRepository : IRepository<TestResult>, IDeletableByProject, 
 }
 
 interface ITestGroupRepository : IRepository<TestGroup>, IDeletableByProject {
-    fun findBy(name: String, projectId: String): Mono<TestGroup>
+    fun findBy(name: String, description: String, projectId: String): Mono<TestGroup>
     fun findAll(projectId: String): Flux<TestGroup>
     fun findAll(projectId: String, type: GroupType): Flux<TestGroup>
 }

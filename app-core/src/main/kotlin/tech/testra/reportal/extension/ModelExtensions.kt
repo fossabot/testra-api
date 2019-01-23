@@ -25,11 +25,14 @@ fun List<TestStepModel>.toTestStepEntity(): List<TestStep> =
     this.map { TestStep(it.index, it.text, it.dataTableRows.toDataTableRowVO()) }
 
 fun List<TestStep>.toTestStepModel(): List<TestStepModel> =
-    this.map { TestStepModel(it.index, it.text, it.dataTableRows.toDataTableRowModel()) }
+    this.map { TestStepModel(it.index, it.text, it.dataTableRows.toDataTableRowsModel()) }
 
 fun TestScenario.isSame(testScenario: TestScenario): Boolean {
-    return this.backgroundSteps.areTestStepsSame(testScenario.backgroundSteps) &&
-        this.steps.areTestStepsSame(testScenario.steps) && this.tags.sorted() == testScenario.tags.sorted()
+    return this.namespace == testScenario.namespace &&
+        this.backgroundSteps.areTestStepsSame(testScenario.backgroundSteps) &&
+        this.steps.areTestStepsSame(testScenario.steps) &&
+        this.tags.sorted() == testScenario.tags.sorted() &&
+        this.dataRows.areDataTableRowsSame(testScenario.dataRows)
 }
 
 fun TestCase.isSame(testCase: TestCase): Boolean {
@@ -87,14 +90,8 @@ private fun getCellByIndex(dataTableCells: List<DataTableCell>, index: Int) =
 fun List<DataTableRowModel>.toDataTableRowVO(): List<DataTableRow> =
     this.map { DataTableRow(it.index, it.cells.toDataTableCellVO()) }
 
-fun List<DataTableRow>.toDataTableRowModel(): List<DataTableRowModel> =
-    this.map { DataTableRowModel(it.index, it.cells.toDataTableCellModel()) }
-
 fun List<DataTableCellModel>.toDataTableCellVO(): List<DataTableCell> =
     this.map { DataTableCell(it.index, it.value) }
-
-fun List<DataTableCell>.toDataTableCellModel(): List<DataTableCellModel> =
-    this.map { DataTableCellModel(it.index, it.value) }
 
 fun List<TestStepResultModel>.toTestStepResultEntity(): List<TestStepResult> =
     this.map { TestStepResult(it.index, ResultStatus.valueOf(it.status.toString()), it.durationInMs, it.error) }
@@ -113,13 +110,21 @@ fun TestScenario.toTestScenarioModel(testGroup: TestGroup): TestScenarioModel =
         name = this.name,
         featureName = testGroup.name,
         featureDescription = testGroup.description,
+        namespace = this.namespace,
         manual = this.manual,
         before = this.before.toTestStepModel(),
         after = this.after.toTestStepModel(),
         backgroundSteps = this.backgroundSteps.toTestStepModel(),
         steps = this.steps.toTestStepModel(),
-        tags = this.tags
+        tags = this.tags,
+        dataRows = this.dataRows.toDataTableRowsModel()
     )
+
+private fun List<DataTableRow>.toDataTableRowsModel(): List<DataTableRowModel> =
+    this.map { DataTableRowModel(it.index, it.cells.toDataTableCellsModel()) }
+
+private fun List<DataTableCell>.toDataTableCellsModel(): List<DataTableCellModel> =
+    this.map { DataTableCellModel(it.index, it.value) }
 
 fun TestCase.toTestCaseModel(testGroup: TestGroup): TestCaseModel =
     TestCaseModel(

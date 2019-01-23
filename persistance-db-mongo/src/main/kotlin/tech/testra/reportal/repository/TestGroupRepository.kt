@@ -21,10 +21,11 @@ class TestGroupRepository : ITestGroupRepository {
 
     override fun findById(id: String) = template.findById<TestGroup>(id)
 
-    override fun findBy(name: String, projectId: String): Mono<TestGroup> {
+    override fun findBy(name: String, description: String, projectId: String): Mono<TestGroup> {
         val criteria: Criteria = Criteria().andOperator(
             Criteria.where("projectId").isEqualTo(projectId),
-            Criteria.where("name").isEqualTo(name)
+            Criteria.where("name").isEqualTo(name),
+            Criteria.where("description").isEqualTo(description)
         )
         return template.findOne(Query(criteria), TestGroup::class.java)
     }

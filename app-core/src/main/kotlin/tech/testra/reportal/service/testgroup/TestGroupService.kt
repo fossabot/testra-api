@@ -42,7 +42,7 @@ class TestGroupService(
         type: GroupType,
         projectId: String
     ): Mono<String> {
-        return _testGroupRepository.findBy(groupName, projectId)
+        return _testGroupRepository.findBy(groupName, groupDescription, projectId)
             .map { it.id }
             .switchIfEmpty(
                 _testGroupRepository
@@ -55,7 +55,7 @@ class TestGroupService(
                     // Handles race condition
                     .onErrorResume(DuplicateKeyException::class.java) {
                         _testGroupRepository
-                            .findBy(groupName, projectId)
+                            .findBy(groupName, groupDescription, projectId)
                             .map { it.id }
                     }
             )

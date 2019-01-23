@@ -12,6 +12,7 @@ import tech.testra.reportal.extension.flatMapManyWithResumeOnError
 import tech.testra.reportal.extension.flatMapWithResumeOnError
 import tech.testra.reportal.extension.isSame
 import tech.testra.reportal.extension.orElseGetException
+import tech.testra.reportal.extension.toDataTableRowVO
 import tech.testra.reportal.extension.toTestStepEntity
 import tech.testra.reportal.model.TestScenarioModel
 import tech.testra.reportal.repository.ITestScenarioRepository
@@ -62,10 +63,12 @@ class TestScenarioService(
                                 name = testScenarioModel.name,
                                 featureId = it,
                                 featureDescription = testScenarioModel.featureDescription,
+                                namespace = testScenarioModel.namespace,
                                 manual = testScenarioModel.manual,
                                 tags = testScenarioModel.tags,
                                 backgroundSteps = testScenarioModel.backgroundSteps.toTestStepEntity(),
-                                steps = testScenarioModel.steps.toTestStepEntity())
+                                steps = testScenarioModel.steps.toTestStepEntity(),
+                                dataRows = testScenarioModel.dataRows.toDataTableRowVO())
 
                             tsr.findBy(testScenarioModel.name, projectId, it)
                                 .filter { ts -> ts.isSame(testScenario) }
@@ -105,10 +108,12 @@ class TestScenarioService(
                                         name = testScenarioModel.name,
                                         featureId = it,
                                         featureDescription = testScenarioModel.featureDescription,
+                                        namespace = testScenarioModel.namespace,
                                         manual = testScenarioModel.manual,
                                         tags = testScenarioModel.tags,
                                         backgroundSteps = testScenarioModel.backgroundSteps.toTestStepEntity(),
-                                        steps = testScenarioModel.steps.toTestStepEntity())
+                                        steps = testScenarioModel.steps.toTestStepEntity(),
+                                        dataRows = testScenarioModel.dataRows.toDataTableRowVO())
 
                                     saveScenario(testScenario)
                                 }

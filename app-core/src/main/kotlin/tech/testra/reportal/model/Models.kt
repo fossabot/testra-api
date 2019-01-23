@@ -66,12 +66,14 @@ data class TestScenarioModel(
     val name: String,
     val featureName: String,
     val featureDescription: String = EMPTY_STRING,
+    val namespace: String = EMPTY_STRING,
     val manual: Boolean,
     val tags: List<String> = emptyList(),
     val before: List<TestStep> = emptyList(),
     val after: List<TestStep> = emptyList(),
     val backgroundSteps: List<TestStep> = emptyList(),
-    val steps: List<TestStep>
+    val steps: List<TestStep>,
+    val dataRows: List<DataTableRow>
 )
 
 data class TestStep(
