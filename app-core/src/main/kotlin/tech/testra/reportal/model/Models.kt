@@ -73,7 +73,7 @@ data class TestScenarioModel(
     val after: List<TestStep> = emptyList(),
     val backgroundSteps: List<TestStep> = emptyList(),
     val steps: List<TestStep>,
-    val dataRows: List<DataTableRow>
+    val dataRows: List<DataTableRow> = emptyList()
 )
 
 data class TestStep(
