@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters.fromObject
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.ServerResponse.created
 import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
@@ -42,7 +43,7 @@ class TestExecutionHandler(private val _testExecutionService: ITestExecutionServ
 
     fun createExecution(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.createExecution(req.projectId(), req.bodyToMono(TestExecutionModel::class.java))
-            .flatMap { ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
+            .flatMap { created(req.uri()).contentType(APPLICATION_JSON_UTF8).body(fromObject(it)) }
 
     fun updateExecution(req: ServerRequest): Mono<ServerResponse> =
         _testExecutionService.createExecution(req.projectId(), req.bodyToMono(TestExecutionModel::class.java))
